@@ -1,0 +1,129 @@
+* {
+    box-sizing: border-box;
+}
+
+main {
+    display: grid;
+    grid-template-areas:
+        "name   name   name "
+        "class  class  assgn"
+        "snd    abils  equip"
+        "snd    knacks bonds"
+        "snd    refr   fall";
+    grid-template-columns: 20ch repeat(2, minmax(10em, 20em));
+    grid-auto-rows: minmax(5em, max-content);
+    gap: 2rem 1rem;
+    flex: 1 0 auto;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: "Staatliches", cursive;
+    font-size: 2rem;
+    margin: 0;
+}
+
+body {
+    margin: 0;
+    padding: 2em 4em;
+    gap: 2em 1em;
+    min-width: 50em;
+    max-width: 70em;
+
+    height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+}
+
+footer {
+    display: flex;
+    flex-shrink: 0;
+    margin-top: auto;
+    /* position: sticky; */
+}
+
+footer > :last-child {
+    margin-left: auto;
+}
+
+body,
+input,
+textarea,
+button {
+    font-family: "Source Code Pro", monospace;
+    font-size: large;
+}
+
+textarea {
+    overflow: auto;
+    padding: 1ch;
+    width: 90%;
+}
+
+input[type="text"] {
+    padding: 0.5rem;
+    font-size: 1.5rem;
+}
+
+.name {
+    grid-area: name;
+}
+
+.name input {
+    font-family: "Libre Barcode 39 Text", cursive;
+    font-size: 3rem;
+}
+
+.class {
+    grid-area: class;
+}
+
+.class input {
+    width: 90%;
+}
+
+.assignment {
+    grid-area: assgn;
+}
+
+.knacks {
+    grid-area: knacks;
+}
+
+.equipment {
+    grid-area: equip;
+}
+
+.refresh {
+    grid-area: refr;
+}
+
+.abilities {
+    grid-area: abils;
+}
+
+.bonds {
+    grid-area: bonds;
+}
+
+.skills-and-domains {
+    grid-area: snd;
+}
+
+.fallout {
+    grid-area: fall;
+}
+
+.io {
+    grid-area: io;
+}

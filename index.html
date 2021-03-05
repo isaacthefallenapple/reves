@@ -1,0 +1,30 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Main</title>
+	<link rel="stylesheet" href="style.css">
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link
+		href="https://fonts.googleapis.com/css2?family=Libre+Barcode+39+Text&family=Source+Code+Pro:ital@0;1&family=Staatliches&display=swap"
+		rel="stylesheet">
+	<script src="app.js"></script>
+</head>
+
+<body>
+	<script>
+		const localKey = 'local-character';
+		const state = localStorage.getItem(localKey);
+
+		const app = Elm.Main.init({
+			flags: state
+		});
+
+		app.ports.storeCharacter.subscribe((char) => {
+			localStorage.setItem(localKey, char);
+		});
+	</script>
+</body>
+
+</html>
