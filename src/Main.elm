@@ -16,7 +16,7 @@ import TypedDict exposing (TypedDict)
 
 
 
--- TYPE
+-- TYPES
 
 
 type Model
@@ -36,7 +36,25 @@ type alias Stats =
     , abilities : String
     , bonds : String
     , fallout : String
+    , resistances : Resistances
     }
+
+
+type alias Resistances =
+    { body : Int
+    , resolve : Int
+    , resources : Int
+    , shadow : Int
+    , reputation : Int
+    }
+
+
+type Resistance
+    = Body
+    | Resolve
+    | Resources
+    | Shadow
+    | Reputation
 
 
 blankCharacter : Stats
@@ -52,6 +70,13 @@ blankCharacter =
     , abilities = ""
     , bonds = ""
     , fallout = ""
+    , resistances =
+        { body = 0
+        , resolve = 0
+        , resources = 0
+        , shadow = 0
+        , reputation = 0
+        }
     }
 
 
@@ -272,7 +297,21 @@ encode character =
         , ( "bonds", Encode.string character.bonds )
         , ( "skills", encodeSkills character.skills )
         , ( "domains", encodeDomains character.domains )
+        , ( "resistances", encodeResistances character.resistances )
         ]
+
+
+encodeResistances : Resistances -> Encode.Value
+encodeResistances resistances =
+    Encode.object
+        (List.map (\( field, getter ) -> ( field, Encode.int (getter resistances) ))
+            [ ( "body", .body )
+            , ( "resolve", .resolve )
+            , ( "resources", .resources )
+            , ( "shadow", .shadow )
+            , ( "reputation", .reputation )
+            ]
+        )
 
 
 encodeSkills : Skills -> Encode.Value
@@ -312,6 +351,7 @@ decoder =
         |> Pipeline.required "abilities" Decode.string
         |> Pipeline.required "bonds" Decode.string
         |> Pipeline.required "fallout" Decode.string
+        |> Pipeline.required "resistances" resistancesDecoder
 
 
 decodeLocalCharacter : String -> Stats
@@ -337,6 +377,16 @@ domainsDecoder =
             >> TypedDict.from
         )
         (Decode.keyValuePairs Decode.bool)
+
+
+resistancesDecoder : Decode.Decoder Resistances
+resistancesDecoder =
+    Decode.succeed Resistances
+        |> Pipeline.required "body" Decode.int
+        |> Pipeline.required "resolve" Decode.int
+        |> Pipeline.required "resources" Decode.int
+        |> Pipeline.required "shadow" Decode.int
+        |> Pipeline.required "reputation" Decode.int
 
 
 
