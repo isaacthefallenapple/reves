@@ -10,6 +10,7 @@ import Html.Events exposing (..)
 import Json.Decode as Decode
 import Json.Decode.Pipeline as Pipeline
 import Json.Encode as Encode
+import Maybe
 import Ports
 import Task
 import TypedDict exposing (TypedDict)
@@ -41,12 +42,18 @@ type alias Stats =
 
 
 type alias Resistances =
-    { body : Int
-    , resolve : Int
-    , resources : Int
-    , shadow : Int
-    , reputation : Int
-    }
+    TypedDict Resistance Int
+
+
+newResistances : Resistances
+newResistances =
+    TypedDict.fromListWithDefault 0
+        [ Body
+        , Resolve
+        , Resources
+        , Shadow
+        , Reputation
+        ]
 
 
 type Resistance
@@ -55,6 +62,47 @@ type Resistance
     | Resources
     | Shadow
     | Reputation
+
+
+resistanceToString : Resistance -> String
+resistanceToString resistance =
+    case resistance of
+        Body ->
+            "Body"
+
+        Resolve ->
+            "Resolve"
+
+        Resources ->
+            "Resources"
+
+        Shadow ->
+            "Shadow"
+
+        Reputation ->
+            "Reputation"
+
+
+stringToResistance : String -> Maybe Resistance
+stringToResistance s =
+    case s of
+        "Body" ->
+            Just Body
+
+        "Resolve" ->
+            Just Resolve
+
+        "Resources" ->
+            Just Resources
+
+        "Shadow" ->
+            Just Shadow
+
+        "Reputation" ->
+            Just Reputation
+
+        _ ->
+            Nothing
 
 
 blankCharacter : Stats
@@ -70,13 +118,7 @@ blankCharacter =
     , abilities = ""
     , bonds = ""
     , fallout = ""
-    , resistances =
-        { body = 0
-        , resolve = 0
-        , resources = 0
-        , shadow = 0
-        , reputation = 0
-        }
+    , resistances = newResistances
     }
 
 
@@ -256,6 +298,46 @@ type alias Domains =
     TypedDict Domain Bool
 
 
+type Boon
+    = ResistanceUp Resistance Int
+    | NewDomain Domain
+    | NewSkill Skill
+    | NewAbility String
+    | NewEquipment String
+    | NewRefresh String
+
+
+applyBoon : Boon -> Stats -> Stats
+applyBoon boon character =
+    case boon of
+        ResistanceUp resistance bonus ->
+            { character | resistances = TypedDict.update resistance ((+) bonus >> clamp 0 5) character.resistances }
+
+        NewDomain domain ->
+            { character | domains = TypedDict.set domain True character.domains }
+
+        NewSkill skill ->
+            { character | skills = TypedDict.set skill True character.skills }
+
+        NewAbility ability ->
+            { character | abilities = character.abilities ++ "\n\n" ++ ability }
+
+        NewEquipment equipment ->
+            { character | equipment = character.equipment ++ "\n\n" ++ equipment }
+
+        NewRefresh refresh ->
+            { character | refresh = character.refresh ++ "\n\n" ++ refresh }
+
+
+applyBoons : List Boon -> Stats -> Stats
+applyBoons boons character =
+    List.foldl applyBoon character boons
+
+
+
+-- MSG
+
+
 type Msg
     = UpdatedName String
     | UpdatedClass String
@@ -268,6 +350,7 @@ type Msg
     | UpdatedAbilities String
     | UpdatedBonds String
     | UpdatedFallout String
+    | UpdatedResistances Resistances
     | ClickedOpenFile
     | FileLoaded File
     | ReadFile String
@@ -302,16 +385,8 @@ encode character =
 
 
 encodeResistances : Resistances -> Encode.Value
-encodeResistances resistances =
-    Encode.object
-        (List.map (\( field, getter ) -> ( field, Encode.int (getter resistances) ))
-            [ ( "body", .body )
-            , ( "resolve", .resolve )
-            , ( "resources", .resources )
-            , ( "shadow", .shadow )
-            , ( "reputation", .reputation )
-            ]
-        )
+encodeResistances =
+    TypedDict.encode resistanceToString Encode.int
 
 
 encodeSkills : Skills -> Encode.Value
@@ -340,18 +415,18 @@ encodeBoolDict stringer dict =
 decoder : Decode.Decoder Stats
 decoder =
     Decode.succeed Stats
-        |> Pipeline.required "name" Decode.string
-        |> Pipeline.required "class" Decode.string
-        |> Pipeline.required "assignment" Decode.string
-        |> Pipeline.required "skills" skillsDecoder
-        |> Pipeline.required "domains" domainsDecoder
-        |> Pipeline.required "knacks" Decode.string
-        |> Pipeline.required "equipment" Decode.string
-        |> Pipeline.required "refresh" Decode.string
-        |> Pipeline.required "abilities" Decode.string
-        |> Pipeline.required "bonds" Decode.string
-        |> Pipeline.required "fallout" Decode.string
-        |> Pipeline.required "resistances" resistancesDecoder
+        |> Pipeline.optional "name" Decode.string ""
+        |> Pipeline.optional "class" Decode.string ""
+        |> Pipeline.optional "assignment" Decode.string ""
+        |> Pipeline.optional "skills" skillsDecoder newSkills
+        |> Pipeline.optional "domains" domainsDecoder newDomains
+        |> Pipeline.optional "knacks" Decode.string ""
+        |> Pipeline.optional "equipment" Decode.string ""
+        |> Pipeline.optional "refresh" Decode.string ""
+        |> Pipeline.optional "abilities" Decode.string ""
+        |> Pipeline.optional "bonds" Decode.string ""
+        |> Pipeline.optional "fallout" Decode.string ""
+        |> Pipeline.optional "resistances" resistancesDecoder newResistances
 
 
 decodeLocalCharacter : String -> Stats
@@ -361,32 +436,17 @@ decodeLocalCharacter storedState =
 
 skillsDecoder : Decode.Decoder Skills
 skillsDecoder =
-    Decode.map
-        (List.map
-            (Tuple.mapFirst (stringToSkill >> Maybe.withDefault Compel))
-            >> TypedDict.from
-        )
-        (Decode.keyValuePairs Decode.bool)
+    TypedDict.decoder (stringToSkill >> Maybe.withDefault Compel) Decode.bool
 
 
 domainsDecoder : Decode.Decoder Domains
 domainsDecoder =
-    Decode.map
-        (List.map
-            (Tuple.mapFirst (stringToDomain >> Maybe.withDefault LowSociety))
-            >> TypedDict.from
-        )
-        (Decode.keyValuePairs Decode.bool)
+    TypedDict.decoder (stringToDomain >> Maybe.withDefault LowSociety) Decode.bool
 
 
 resistancesDecoder : Decode.Decoder Resistances
 resistancesDecoder =
-    Decode.succeed Resistances
-        |> Pipeline.required "body" Decode.int
-        |> Pipeline.required "resolve" Decode.int
-        |> Pipeline.required "resources" Decode.int
-        |> Pipeline.required "shadow" Decode.int
-        |> Pipeline.required "reputation" Decode.int
+    TypedDict.decoder (stringToResistance >> Maybe.withDefault Body) Decode.int
 
 
 
@@ -452,6 +512,10 @@ view model =
                             , input [ type_ "text", value character.assignment, onInput UpdatedAssignment ]
                                 []
                             ]
+                        ]
+                    , section
+                        [ class "resistances" ]
+                        [ viewResistances UpdatedResistances character.resistances
                         ]
                     , div
                         [ class "skills-and-domains" ]
@@ -538,6 +602,58 @@ view model =
             }
 
 
+viewResistances : (Resistances -> msg) -> Resistances -> Html msg
+viewResistances toMsg resistances =
+    let
+        resistancesList =
+            [ Body, Resolve, Resources, Shadow, Reputation ]
+    in
+    table
+        []
+        [ thead
+            []
+            [ tr
+                []
+                (List.map (resistanceToString >> text >> List.singleton >> th [])
+                    resistancesList
+                )
+            ]
+        , tbody
+            []
+            [ tr
+                []
+                (List.map
+                    (\r ->
+                        td
+                            []
+                            [ input
+                                [ type_ "number"
+                                , value
+                                    (String.fromInt
+                                        (Maybe.withDefault 0 (TypedDict.get r resistances))
+                                    )
+                                , onInput
+                                    (\s ->
+                                        toMsg
+                                            (TypedDict.set r
+                                                (s
+                                                    |> String.toInt
+                                                    |> Maybe.withDefault 0
+                                                    |> clamp 0 5
+                                                )
+                                                resistances
+                                            )
+                                    )
+                                ]
+                                []
+                            ]
+                    )
+                    resistancesList
+                )
+            ]
+        ]
+
+
 viewBoolDict : (TypedDict k Bool -> msg) -> (k -> String) -> TypedDict k Bool -> Html msg
 viewBoolDict toMsg labeller dict =
     let
@@ -616,6 +732,10 @@ update msg model =
 
         ( Character character, UpdatedFallout fallout ) ->
             ( { character | fallout = fallout }, Cmd.none )
+                |> updateCharacter
+
+        ( Character character, UpdatedResistances resistances ) ->
+            ( { character | resistances = resistances }, Cmd.none )
                 |> updateCharacter
 
         ( Character character, ClickedSave ) ->

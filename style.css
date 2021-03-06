@@ -7,6 +7,7 @@ main {
     grid-template-areas:
         "name   name   name "
         "class  class  assgn"
+        "res    res    res  "
         "snd    abils  equip"
         "snd    knacks bonds"
         "snd    refr   fall";
@@ -126,4 +127,33 @@ input[type="text"] {
 
 .io {
     grid-area: io;
+}
+
+.resistances {
+    grid-area: res;
+}
+
+.resistances input[type="number"] {
+    width: 11ch;
+    text-align: center;
+}
+
+.resistances table {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    justify-content: center;
+    align-items: center;
+}
+
+.resistances thead,
+.resistances tbody,
+.resistances thead tr,
+.resistances tbody tr {
+    display: contents;
+}
+
+.resistances td {
+    display: flex;
+    justify-content: center;
 }
