@@ -1,5 +1,11 @@
-module Character exposing (Domain(..), Resistance(..), Skill(..), Stats, blank, decodeLocalCharacter, decoder, encode, view)
+module Character exposing (Stats, applyBoons, blank, decodeLocalCharacter, decoder, encode, view)
 
+-- import Ability exposing (Ability)
+
+import Boon exposing (Ability, Boon(..))
+import Boon.Domain as Domains exposing (Domains)
+import Boon.Resistance as Resistances exposing (Resistances)
+import Boon.Skill as Skills exposing (Skills)
 import Browser
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -19,7 +25,7 @@ type alias Stats =
     , knacks : String
     , equipment : String
     , refresh : String
-    , abilities : String
+    , abilities : List Ability
     , bonds : String
     , fallout : String
     , resistances : Resistances
@@ -31,256 +37,48 @@ blank =
     { name = ""
     , class = ""
     , assignment = ""
-    , skills = newSkills
-    , domains = newDomains
+    , skills = Skills.new
+    , domains = Domains.new
     , knacks = ""
     , equipment = ""
     , refresh = ""
-    , abilities = ""
+    , abilities = []
     , bonds = ""
     , fallout = ""
-    , resistances = newResistances
+    , resistances = Resistances.new
     }
 
 
-type Skill
-    = Compel
-    | Deceive
-    | Hack
-    | Investigate
-    | Patch
-    | Resist
-    | Scramble
-    | Scrap
-    | Skulk
-    | Steal
-
-
-skillToString : Skill -> String
-skillToString skill =
-    case skill of
-        Compel ->
-            "Compel"
-
-        Deceive ->
-            "Deceive"
-
-        Hack ->
-            "Hack"
-
-        Patch ->
-            "Patch"
-
-        Scramble ->
-            "Scramble"
-
-        Scrap ->
-            "Scrap"
-
-        Skulk ->
-            "Skulk"
-
-        Investigate ->
-            "Investigate"
-
-        Steal ->
-            "Steal"
-
-        Resist ->
-            "Resist"
-
-
-stringToSkill : String -> Maybe Skill
-stringToSkill s =
-    case s of
-        "Compel" ->
-            Just Compel
-
-        "Deceive" ->
-            Just Deceive
-
-        "Hack" ->
-            Just Hack
-
-        "Patch" ->
-            Just Patch
-
-        "Scramble" ->
-            Just Scramble
-
-        "Scrap" ->
-            Just Scrap
-
-        "Skulk" ->
-            Just Skulk
-
-        "Investigate" ->
-            Just Investigate
-
-        "Steal" ->
-            Just Steal
-
-        "Resist" ->
-            Just Resist
-
-        _ ->
-            Nothing
-
-
-type Domain
-    = Criminal
-    | HighSociety
-    | LowSociety
-    | Weirdness
-    | Hegemony
-    | Science
-
-
-domainToString : Domain -> String
-domainToString domain =
-    case domain of
-        Criminal ->
-            "Criminal"
-
-        HighSociety ->
-            "High Society"
-
-        LowSociety ->
-            "Low Society"
-
-        Weirdness ->
-            "Weirdness"
-
-        Hegemony ->
-            "Hegemony"
-
-        Science ->
-            "Science"
-
-
-stringToDomain : String -> Maybe Domain
-stringToDomain s =
-    case s of
-        "Criminal" ->
-            Just Criminal
-
-        "High Society" ->
-            Just HighSociety
-
-        "Low Society" ->
-            Just LowSociety
-
-        "Weirdness" ->
-            Just Weirdness
-
-        "Hegemony" ->
-            Just Hegemony
-
-        "Science" ->
-            Just Science
-
-        _ ->
-            Nothing
-
-
-type alias Skills =
-    TypedDict Skill Bool
-
-
-newSkills : Skills
-newSkills =
-    TypedDict.fromListWithDefault False
-        [ Compel
-        , Deceive
-        , Hack
-        , Patch
-        , Scramble
-        , Scrap
-        , Skulk
-        , Investigate
-        , Steal
-        , Resist
-        ]
-
-
-newDomains : Domains
-newDomains =
-    TypedDict.fromListWithDefault False
-        [ Criminal
-        , HighSociety
-        , LowSociety
-        , Weirdness
-        , Hegemony
-        , Science
-        ]
-
-
-type alias Domains =
-    TypedDict Domain Bool
-
-
-type alias Resistances =
-    TypedDict Resistance Int
-
-
-newResistances : Resistances
-newResistances =
-    TypedDict.fromListWithDefault 0
-        [ Body
-        , Resolve
-        , Resources
-        , Shadow
-        , Reputation
-        ]
-
-
-type Resistance
-    = Body
-    | Resolve
-    | Resources
-    | Shadow
-    | Reputation
-
-
-resistanceToString : Resistance -> String
-resistanceToString resistance =
-    case resistance of
-        Body ->
-            "Body"
-
-        Resolve ->
-            "Resolve"
-
-        Resources ->
-            "Resources"
-
-        Shadow ->
-            "Shadow"
-
-        Reputation ->
-            "Reputation"
-
-
-stringToResistance : String -> Maybe Resistance
-stringToResistance s =
-    case s of
-        "Body" ->
-            Just Body
-
-        "Resolve" ->
-            Just Resolve
-
-        "Resources" ->
-            Just Resources
-
-        "Shadow" ->
-            Just Shadow
-
-        "Reputation" ->
-            Just Reputation
-
-        _ ->
-            Nothing
+applyBoon : Boon -> Stats -> Stats
+applyBoon boon character =
+    case boon of
+        ResistanceUp resistance bonus ->
+            { character | resistances = TypedDict.update resistance ((+) bonus >> clamp 0 5) character.resistances }
+
+        NewDomain domain ->
+            { character | domains = TypedDict.set domain True character.domains }
+
+        NewSkill skill ->
+            { character | skills = TypedDict.set skill True character.skills }
+
+        NewAbility ability ->
+            applyBoons ability.boons
+                { character
+                    | abilities =
+                        character.abilities
+                            ++ [ ability ]
+                }
+
+        NewEquipment equipment ->
+            { character | equipment = character.equipment ++ "\n\n" ++ equipment }
+
+        NewRefresh refresh ->
+            { character | refresh = character.refresh ++ "\n\n" ++ refresh }
+
+
+applyBoons : List Boon -> Stats -> Stats
+applyBoons boons character =
+    List.foldl applyBoon character boons
 
 
 
@@ -295,38 +93,14 @@ encode character =
         , ( "assignment", Encode.string character.assignment )
         , ( "knacks", Encode.string character.knacks )
         , ( "equipment", Encode.string character.equipment )
-        , ( "abilities", Encode.string character.abilities )
+        , ( "abilities", Encode.list Boon.encodeAbility character.abilities )
         , ( "fallout", Encode.string character.fallout )
         , ( "refresh", Encode.string character.refresh )
         , ( "bonds", Encode.string character.bonds )
-        , ( "skills", encodeSkills character.skills )
-        , ( "domains", encodeDomains character.domains )
-        , ( "resistances", encodeResistances character.resistances )
+        , ( "skills", Skills.encode character.skills )
+        , ( "domains", Domains.encode character.domains )
+        , ( "resistances", Resistances.encode character.resistances )
         ]
-
-
-encodeResistances : Resistances -> Encode.Value
-encodeResistances =
-    TypedDict.encode resistanceToString Encode.int
-
-
-encodeSkills : Skills -> Encode.Value
-encodeSkills =
-    encodeBoolDict skillToString
-
-
-encodeDomains : Domains -> Encode.Value
-encodeDomains =
-    encodeBoolDict domainToString
-
-
-encodeBoolDict : (k -> String) -> TypedDict k Bool -> Encode.Value
-encodeBoolDict stringer dict =
-    let
-        list =
-            TypedDict.unwrap dict
-    in
-    Encode.object (List.map (Tuple.mapBoth stringer Encode.bool) list)
 
 
 
@@ -339,35 +113,20 @@ decoder =
         |> Pipeline.optional "name" Decode.string ""
         |> Pipeline.optional "class" Decode.string ""
         |> Pipeline.optional "assignment" Decode.string ""
-        |> Pipeline.optional "skills" skillsDecoder newSkills
-        |> Pipeline.optional "domains" domainsDecoder newDomains
+        |> Pipeline.optional "skills" Skills.decoder Skills.new
+        |> Pipeline.optional "domains" Domains.decoder Domains.new
         |> Pipeline.optional "knacks" Decode.string ""
         |> Pipeline.optional "equipment" Decode.string ""
         |> Pipeline.optional "refresh" Decode.string ""
-        |> Pipeline.optional "abilities" Decode.string ""
+        |> Pipeline.optional "abilities" (Decode.list Boon.abilityDecoder) []
         |> Pipeline.optional "bonds" Decode.string ""
         |> Pipeline.optional "fallout" Decode.string ""
-        |> Pipeline.optional "resistances" resistancesDecoder newResistances
+        |> Pipeline.optional "resistances" Resistances.decoder Resistances.new
 
 
 decodeLocalCharacter : String -> Stats
 decodeLocalCharacter storedState =
     Result.withDefault blank (Decode.decodeString decoder storedState)
-
-
-skillsDecoder : Decode.Decoder Skills
-skillsDecoder =
-    TypedDict.decoder (stringToSkill >> Maybe.withDefault Compel) Decode.bool
-
-
-domainsDecoder : Decode.Decoder Domains
-domainsDecoder =
-    TypedDict.decoder (stringToDomain >> Maybe.withDefault LowSociety) Decode.bool
-
-
-resistancesDecoder : Decode.Decoder Resistances
-resistancesDecoder =
-    TypedDict.decoder (stringToResistance >> Maybe.withDefault Body) Decode.int
 
 
 
@@ -415,7 +174,7 @@ view toMsg character =
                 ]
             , section
                 [ class "resistances" ]
-                [ viewResistances (\resistances -> toMsg { character | resistances = resistances }) character.resistances
+                [ Resistances.view (\resistances -> toMsg { character | resistances = resistances }) character.resistances
                 ]
             , div
                 [ class "skills-and-domains" ]
@@ -424,14 +183,14 @@ view toMsg character =
                     [ h2
                         []
                         [ text "Skills" ]
-                    , viewBoolDict (\skills -> toMsg { character | skills = skills }) skillToString character.skills
+                    , viewBoolDict (\skills -> toMsg { character | skills = skills }) Skills.toString character.skills
                     ]
                 , section
                     [ class "domains" ]
                     [ h2
                         []
                         [ text "Domains" ]
-                    , viewBoolDict (\domains -> toMsg { character | domains = domains }) domainToString character.domains
+                    , viewBoolDict (\domains -> toMsg { character | domains = domains }) Domains.toString character.domains
                     ]
                 ]
             , section
@@ -439,9 +198,15 @@ view toMsg character =
                 [ h2
                     []
                     [ text "Abilities" ]
-                , textarea
-                    [ onInput (\abilities -> toMsg { character | abilities = abilities }) ]
-                    [ text character.abilities ]
+                , ul
+                    []
+                    (List.map
+                        (\ability ->
+                            li []
+                                [ Boon.viewAbility ability ]
+                        )
+                        character.abilities
+                    )
                 ]
             , section
                 [ class "fallout" ]
@@ -491,58 +256,6 @@ view toMsg character =
             ]
         ]
     }
-
-
-viewResistances : (Resistances -> msg) -> Resistances -> Html msg
-viewResistances toMsg resistances =
-    let
-        resistancesList =
-            [ Body, Resolve, Resources, Shadow, Reputation ]
-    in
-    table
-        []
-        [ thead
-            []
-            [ tr
-                []
-                (List.map (resistanceToString >> text >> List.singleton >> th [])
-                    resistancesList
-                )
-            ]
-        , tbody
-            []
-            [ tr
-                []
-                (List.map
-                    (\r ->
-                        td
-                            []
-                            [ input
-                                [ type_ "number"
-                                , value
-                                    (String.fromInt
-                                        (Maybe.withDefault 0 (TypedDict.get r resistances))
-                                    )
-                                , onInput
-                                    (\s ->
-                                        toMsg
-                                            (TypedDict.set r
-                                                (s
-                                                    |> String.toInt
-                                                    |> Maybe.withDefault 0
-                                                    |> clamp 0 5
-                                                )
-                                                resistances
-                                            )
-                                    )
-                                ]
-                                []
-                            ]
-                    )
-                    resistancesList
-                )
-            ]
-        ]
 
 
 viewBoolDict : (TypedDict k Bool -> msg) -> (k -> String) -> TypedDict k Bool -> Html msg

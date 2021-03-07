@@ -1,5 +1,6 @@
 module Main exposing (main)
 
+import Boon
 import Browser
 import Character
 import File exposing (File)
@@ -72,10 +73,22 @@ view model =
             }
 
         Character character ->
-            Character.view UpdatedCharacter character
+            let
+                characterView =
+                    Character.view UpdatedCharacter character
+            in
+            { title = characterView.title
+            , body =
+                characterView.body
+                    ++ [ button
+                            [ onClick (UpdatedCharacter (Character.applyBoons Boon.doc character)) ]
+                            [ text "become doc" ]
+                       ]
+            }
 
 
 
+-- characterView
 -- UPDATE
 -- updateCharacter : ( Stats, Cmd Msg ) -> ( Model, Cmd Msg )
 -- updateCharacter ( character, msg ) =
