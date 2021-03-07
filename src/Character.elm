@@ -1,4 +1,4 @@
-module Character exposing (Stats, applyBoons, blank, decodeLocalCharacter, decoder, encode, view)
+module Character exposing (Stats, applyAssignment, applyBoons, applyClass, blank, decodeLocalCharacter, decoder, encode, view)
 
 -- import Ability exposing (Ability)
 
@@ -47,6 +47,16 @@ blank =
     , fallout = ""
     , resistances = Resistances.new
     }
+
+
+applyClass : Boon.Class -> Stats -> Stats
+applyClass { name, boons } character =
+    applyBoons boons { character | class = name }
+
+
+applyAssignment : Boon.Assignment -> Stats -> Stats
+applyAssignment { name, boons } character =
+    applyBoons boons { character | assignment = name }
 
 
 applyBoon : Boon -> Stats -> Stats

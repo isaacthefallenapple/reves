@@ -11,7 +11,6 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Json.Decode as Decode
 import Json.Encode as Encode
-import Maybe
 import Ports
 import Task
 
@@ -21,7 +20,9 @@ import Task
 
 
 type Model
-    = Character Character.Stats
+    = PickClass
+    | PickAssignment Boon.Class
+    | Character Character.Stats
     | DecodeErr Decode.Error
 
 
@@ -30,7 +31,9 @@ type Model
 
 
 type Msg
-    = UpdatedCharacter Character.Stats
+    = PickedClass Boon.Class
+    | PickedAssignment Boon.Assignment
+    | UpdatedCharacter Character.Stats
     | ClickedOpenFile
     | FileLoaded File
     | ReadFile String
@@ -72,6 +75,38 @@ view model =
                 ]
             }
 
+        PickClass ->
+            { title = "Pick a class"
+            , body =
+                [ div
+                    [ class "class-picker" ]
+                    (List.map
+                        (\class_ ->
+                            button
+                                [ onClick (PickedClass class_) ]
+                                [ text class_.name ]
+                        )
+                        Boon.classes
+                    )
+                ]
+            }
+
+        PickAssignment _ ->
+            { title = "Pick an assignment"
+            , body =
+                [ div
+                    [ class "assignment-picker" ]
+                    (List.map
+                        (\assignment ->
+                            button
+                                [ onClick (PickedAssignment assignment) ]
+                                [ text assignment.name ]
+                        )
+                        Boon.assignments
+                    )
+                ]
+            }
+
         Character character ->
             let
                 characterView =
@@ -81,23 +116,34 @@ view model =
             , body =
                 characterView.body
                     ++ [ button
-                            [ onClick (UpdatedCharacter (Character.applyBoons Boon.doc character)) ]
+                            [ onClick (UpdatedCharacter (Character.applyClass Boon.doc character)) ]
                             [ text "become doc" ]
                        ]
             }
 
 
 
--- characterView
 -- UPDATE
--- updateCharacter : ( Stats, Cmd Msg ) -> ( Model, Cmd Msg )
--- updateCharacter ( character, msg ) =
---     ( Character character, Cmd.batch [ msg, saveCharacter character ] )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case ( model, msg ) of
+        ( PickClass, PickedClass class ) ->
+            ( PickAssignment class, Cmd.none )
+
+        ( PickAssignment class, PickedAssignment assignment ) ->
+            let
+                character =
+                    Character.blank
+                        |> Character.applyClass class
+                        |> Character.applyAssignment assignment
+            in
+            ( Character
+                character
+            , saveCharacter character
+            )
+
         ( Character _, UpdatedCharacter updatedCharacter ) ->
             ( Character updatedCharacter, saveCharacter updatedCharacter )
 
@@ -134,7 +180,12 @@ update msg model =
 
 init : Maybe String -> ( Model, Cmd Msg )
 init flags =
-    ( Character (Maybe.withDefault Character.blank (Maybe.map Character.decodeLocalCharacter flags))
+    ( case flags of
+        Nothing ->
+            PickClass
+
+        Just json ->
+            Character (Character.decodeLocalCharacter json)
     , Cmd.none
     )
 
