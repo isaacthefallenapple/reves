@@ -3,6 +3,7 @@ module Main exposing (main)
 import Boon
 import Browser
 import Character
+import Class
 import File exposing (File)
 import File.Download as Download
 import File.Select as Select
@@ -21,7 +22,7 @@ import Task
 
 type Model
     = PickClass
-    | PickAssignment Boon.Class
+    | PickAssignment Class.Class
     | Character Character.Stats
     | DecodeErr Decode.Error
 
@@ -31,7 +32,7 @@ type Model
 
 
 type Msg
-    = PickedClass Boon.Class
+    = PickedClass Class.Class
     | PickedAssignment Boon.Assignment
     | UpdatedCharacter Character.Stats
     | ClickedOpenFile
@@ -86,7 +87,7 @@ view model =
                                 [ onClick (PickedClass class_) ]
                                 [ text class_.name ]
                         )
-                        Boon.classes
+                        Class.classes
                     )
                 ]
             }
@@ -115,10 +116,6 @@ view model =
             { title = characterView.title
             , body =
                 characterView.body
-                    ++ [ button
-                            [ onClick (UpdatedCharacter (Character.applyClass Boon.doc character)) ]
-                            [ text "become doc" ]
-                       ]
             }
 
 

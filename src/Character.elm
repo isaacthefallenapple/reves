@@ -2,11 +2,13 @@ module Character exposing (Stats, applyAssignment, applyBoons, applyClass, blank
 
 -- import Ability exposing (Ability)
 
-import Boon exposing (Ability, Boon(..))
+import Ability exposing (Ability)
+import Boon exposing (Boon(..))
 import Boon.Domain as Domains exposing (Domains)
 import Boon.Resistance as Resistances exposing (Resistances)
 import Boon.Skill as Skills exposing (Skills)
 import Browser
+import Class exposing (Class)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
@@ -49,7 +51,7 @@ blank =
     }
 
 
-applyClass : Boon.Class -> Stats -> Stats
+applyClass : Class -> Stats -> Stats
 applyClass { name, boons, coreAbilities } character =
     applyBoons boons
         { character
@@ -99,7 +101,7 @@ encode character =
         , ( "assignment", Encode.string character.assignment )
         , ( "knacks", Encode.string character.knacks )
         , ( "equipment", Encode.string character.equipment )
-        , ( "abilities", Encode.list Boon.encodeAbility character.abilities )
+        , ( "abilities", Encode.list Ability.encode character.abilities )
         , ( "fallout", Encode.string character.fallout )
         , ( "refresh", Encode.string character.refresh )
         , ( "bonds", Encode.string character.bonds )
@@ -124,7 +126,7 @@ decoder =
         |> Pipeline.optional "knacks" Decode.string ""
         |> Pipeline.optional "equipment" Decode.string ""
         |> Pipeline.optional "refresh" Decode.string ""
-        |> Pipeline.optional "abilities" (Decode.list Boon.abilityDecoder) []
+        |> Pipeline.optional "abilities" (Decode.list Ability.decoder) []
         |> Pipeline.optional "bonds" Decode.string ""
         |> Pipeline.optional "fallout" Decode.string ""
         |> Pipeline.optional "resistances" Resistances.decoder Resistances.new
@@ -209,7 +211,7 @@ view toMsg character =
                     (List.map
                         (\ability ->
                             li []
-                                [ Boon.viewAbility ability ]
+                                [ Ability.view ability ]
                         )
                         character.abilities
                     )
