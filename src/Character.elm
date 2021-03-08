@@ -62,16 +62,16 @@ applyAssignment { name, boons } character =
 applyBoon : Boon -> Stats -> Stats
 applyBoon boon character =
     case boon of
-        ResistanceUp resistance bonus ->
+        GainResistance resistance bonus ->
             { character | resistances = TypedDict.update resistance ((+) bonus >> clamp 0 5) character.resistances }
 
-        NewDomain domain ->
-            { character | domains = TypedDict.set domain True character.domains }
+        GainDomains domains ->
+            { character | domains = TypedDict.setAll (List.map (\d -> ( d, True )) domains) character.domains }
 
-        NewSkill skill ->
-            { character | skills = TypedDict.set skill True character.skills }
+        GainSkills skills ->
+            { character | skills = TypedDict.setAll (List.map (\s -> ( s, True )) skills) character.skills }
 
-        NewAbility ability ->
+        GainAbility ability ->
             applyBoons ability.boons
                 { character
                     | abilities =
@@ -79,11 +79,11 @@ applyBoon boon character =
                             ++ [ ability ]
                 }
 
-        NewEquipment equipment ->
-            { character | equipment = character.equipment ++ "\n\n" ++ equipment }
+        GainEquipment equipment ->
+            { character | equipment = character.equipment ++ String.join "\n\n" equipment ++ "\n\n" }
 
-        NewRefresh refresh ->
-            { character | refresh = character.refresh ++ "\n\n" ++ refresh }
+        GainRefresh refresh ->
+            { character | refresh = character.refresh ++ String.join "\n\n" refresh ++ "\n\n" }
 
 
 applyBoons : List Boon -> Stats -> Stats

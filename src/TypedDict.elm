@@ -1,4 +1,4 @@
-module TypedDict exposing (TypedDict, decoder, encode, from, fromListWithDefault, get, set, unwrap, update)
+module TypedDict exposing (TypedDict, decoder, encode, from, fromListWithDefault, get, set, setAll, unwrap, update)
 
 import Json.Decode as Decode
 import Json.Encode as Encode
@@ -58,6 +58,11 @@ set key val (TypedDict dict) =
         )
         dict
         |> TypedDict
+
+
+setAll : List ( k, v ) -> TypedDict k v -> TypedDict k v
+setAll kvPairs dict =
+    List.foldl (\( k, v ) -> set k v) dict kvPairs
 
 
 update : k -> (v -> v) -> TypedDict k v -> TypedDict k v

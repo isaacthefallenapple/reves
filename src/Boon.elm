@@ -23,12 +23,12 @@ type alias Ability =
 
 
 type Boon
-    = ResistanceUp Resistance Int
-    | NewDomain Domain
-    | NewSkill Skill
-    | NewAbility Ability
-    | NewEquipment String
-    | NewRefresh String
+    = GainResistance Resistance Int
+    | GainDomains (List Domain)
+    | GainSkills (List Skill)
+    | GainAbility Ability
+    | GainEquipment (List String)
+    | GainRefresh (List String)
 
 
 
@@ -50,8 +50,8 @@ labour : Assignment
 labour =
     { name = "Labour"
     , boons =
-        [ ResistanceUp Body 2
-        , NewSkill Steal
+        [ GainResistance Body 2
+        , GainSkills [ Steal ]
         ]
     }
 
@@ -60,8 +60,8 @@ personalAssistant : Assignment
 personalAssistant =
     { name = "Personal Assistant"
     , boons =
-        [ ResistanceUp Resources 2
-        , NewSkill Investigate
+        [ GainResistance Resources 2
+        , GainSkills [ Investigate ]
         ]
     }
 
@@ -70,8 +70,8 @@ dogsbody : Assignment
 dogsbody =
     { name = "Dogsbody"
     , boons =
-        [ ResistanceUp Resolve 2
-        , NewDomain LowSociety
+        [ GainResistance Resolve 2
+        , GainDomains [ LowSociety ]
         ]
     }
 
@@ -97,22 +97,19 @@ doc : Class
 doc =
     { name = "Doc"
     , boons =
-        [ ResistanceUp Resolve 2
-        , ResistanceUp Reputation 2
-        , NewRefresh "Help those who cannot help themselves."
-        , NewSkill Patch
-        , NewSkill Compel
-        , NewDomain Science
-        , NewDomain LowSociety
-        , NewEquipment "The common red medic outfit bearing the official white medic seal of the Hegemony."
-        , NewEquipment "A less than ideally stocked medkit."
-        , NewAbility
+        [ GainResistance Resolve 2
+        , GainResistance Reputation 2
+        , GainRefresh [ "Help those who cannot help themselves." ]
+        , GainSkills [ Patch, Compel ]
+        , GainDomains [ Science, LowSociety ]
+        , GainEquipment [ "The common red medic outfit bearing the official white medic seal of the Hegemony.", "A less than ideally stocked medkit." ]
+        , GainAbility
             { name = "Medical Attention"
             , flavor = Just "You take some time to check on your allies and stitch them up if need be."
             , boons = []
             , text = "Once per session, help your allies heal, physically and mentally. All allies present may restore 3 stress from Body or Resolve."
             }
-        , NewAbility
+        , GainAbility
             { name = "Bedside Manner"
             , flavor = Just "People are grateful for your help."
             , boons = []
@@ -126,22 +123,19 @@ cloak : Class
 cloak =
     { name = "Cloak"
     , boons =
-        [ ResistanceUp Shadow 3
-        , ResistanceUp Body 1
-        , NewRefresh ""
-        , NewSkill Skulk
-        , NewSkill Scrap
-        , NewDomain Criminal
-        , NewDomain HighSociety
-        , NewEquipment "Light body armour (Armour 2)"
-        , NewEquipment "Climbing gear and ropes"
-        , NewAbility
+        [ GainResistance Shadow 3
+        , GainResistance Body 1
+        , GainRefresh [ "" ]
+        , GainSkills [ Skulk, Scrap ]
+        , GainDomains [ Criminal, HighSociety ]
+        , GainEquipment [ "Light body armour (Armour 2)", "Climbing gear and ropes" ]
+        , GainAbility
             { name = "Surprise Infiltration"
             , flavor = Just "Nothing can keep you out."
             , boons = []
             , text = "Once per session, insert yourself into a situation where you are not currently present, so long as there’s some conceivable way you could get in there."
             }
-        , NewAbility
+        , GainAbility
             { name = "Tactician"
             , flavor = Just "You are a trained infiltrator, and others would do well to heed your words."
             , boons = []
@@ -182,22 +176,22 @@ encode : Boon -> Encode.Value
 encode boon =
     Encode.object <|
         case boon of
-            ResistanceUp resistance bonus ->
+            GainResistance resistance bonus ->
                 [ ( "resistance", Resistance.encodeResistance resistance ), ( "bonus", Encode.int bonus ) ]
 
-            NewDomain domain ->
-                [ ( "domain", Domain.encodeDomain domain ) ]
+            GainDomains domain ->
+                [ ( "domain", Encode.list Domain.encodeDomain domain ) ]
 
-            NewSkill skill ->
-                [ ( "skill", Skill.encodeSkill skill ) ]
+            GainSkills skill ->
+                [ ( "skill", Encode.list Skill.encodeSkill skill ) ]
 
-            NewEquipment equipment ->
-                [ ( "equipment", Encode.string equipment ) ]
+            GainEquipment equipment ->
+                [ ( "equipment", Encode.list Encode.string equipment ) ]
 
-            NewRefresh refresh ->
-                [ ( "refresh", Encode.string refresh ) ]
+            GainRefresh refresh ->
+                [ ( "refresh", Encode.list Encode.string refresh ) ]
 
-            NewAbility ability ->
+            GainAbility ability ->
                 [ ( "ability", encodeAbility ability ) ]
 
 
@@ -221,38 +215,38 @@ encodeAbility ability =
 
 resistanceUpDecoder : Decoder Boon
 resistanceUpDecoder =
-    Decode.map2 ResistanceUp
+    Decode.map2 GainResistance
         (Decode.field "resistance" Resistance.resistanceDecoder)
         (Decode.field "bonus" Decode.int)
 
 
 newSkillDecoder : Decoder Boon
 newSkillDecoder =
-    Decode.map NewSkill
-        (Decode.field "skill" Skill.skillDecoder)
+    Decode.map GainSkills
+        (Decode.field "skill" (Decode.list Skill.skillDecoder))
 
 
 newDomainDecoder : Decoder Boon
 newDomainDecoder =
-    Decode.map NewDomain
-        (Decode.field "domain" Domain.domainDecoder)
+    Decode.map GainDomains
+        (Decode.field "domain" (Decode.list Domain.domainDecoder))
 
 
 newEquipmentDecoder : Decoder Boon
 newEquipmentDecoder =
-    Decode.map NewEquipment
-        (Decode.field "equipment" Decode.string)
+    Decode.map GainEquipment
+        (Decode.field "equipment" (Decode.list Decode.string))
 
 
 newRefreshDecoder : Decoder Boon
 newRefreshDecoder =
-    Decode.map NewRefresh
-        (Decode.field "refresh" Decode.string)
+    Decode.map GainRefresh
+        (Decode.field "refresh" (Decode.list Decode.string))
 
 
 newAbilityDecoder : Decoder Boon
 newAbilityDecoder =
-    Decode.map NewAbility
+    Decode.map GainAbility
         (Decode.field "ability" abilityDecoder)
 
 
