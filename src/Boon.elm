@@ -31,6 +31,53 @@ type Boon
     | GainRefresh (List String)
 
 
+toString : Boon -> String
+toString boon =
+    case boon of
+        GainResistance resistance bonus ->
+            Resistance.toString resistance ++ "+" ++ String.fromInt bonus
+
+        GainDomains domains ->
+            let
+                isMultiple =
+                    List.length domains > 1
+            in
+            "Gain the "
+                ++ String.join ", " (List.map Domain.toString domains)
+                ++ " skill"
+                ++ (if isMultiple then
+                        "s"
+
+                    else
+                        "" ++ "."
+                   )
+
+        GainSkills skills ->
+            let
+                isMultiple =
+                    List.length skills > 1
+            in
+            "Gain the "
+                ++ String.join ", " (List.map Skill.toString skills)
+                ++ " domain"
+                ++ (if isMultiple then
+                        "s"
+
+                    else
+                        ""
+                            ++ "."
+                   )
+
+        GainEquipment equipment ->
+            "Gain " ++ String.join ", " equipment ++ "."
+
+        GainRefresh refresh ->
+            "Gain " ++ String.join ", " refresh ++ " as a refresh."
+
+        _ ->
+            ""
+
+
 
 -- ASSIGNMENTS
 
@@ -141,6 +188,12 @@ cloak =
             , boons = []
             , text = "When you enter a dangerous situation, you can name up to three features or opportunities that your allies can take advantage of. The first time you or an ally uses an opportunity, they roll with mastery (for example: cover with a good view of the battlefield, an exit, a badly-guarded door, a stack of barrels, etc.)."
             }
+        , GainAbility
+            { name = "Just a Scratch"
+            , flavor = Just "You word your diagnosis as kindly as possible."
+            , boons = [ GainSkills [ Deceive ] ]
+            , text = "When you or an ally suffer Body fallout, you may roll Deceive+Science. On a success, the effects of the fallout can be ignored until the end of the situation."
+            }
         ]
     }
 
@@ -162,6 +215,12 @@ viewAbility ability =
                 |> Maybe.map (\flavor -> [ i [] [ text (flavor ++ " ") ] ])
                 |> Maybe.withDefault []
              )
+                ++ (if not (List.isEmpty ability.boons) then
+                        [ text (String.join ". " (List.map toString ability.boons) ++ " ") ]
+
+                    else
+                        []
+                   )
                 ++ [ text ability.text
                    ]
             )
