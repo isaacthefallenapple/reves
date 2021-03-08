@@ -50,8 +50,12 @@ blank =
 
 
 applyClass : Boon.Class -> Stats -> Stats
-applyClass { name, boons } character =
-    applyBoons boons { character | class = name }
+applyClass { name, boons, coreAbilities } character =
+    applyBoons boons
+        { character
+            | class = name
+            , abilities = character.abilities ++ coreAbilities
+        }
 
 
 applyAssignment : Boon.Assignment -> Stats -> Stats
@@ -70,14 +74,6 @@ applyBoon boon character =
 
         GainSkills skills ->
             { character | skills = TypedDict.setAll (List.map (\s -> ( s, True )) skills) character.skills }
-
-        GainAbility ability ->
-            applyBoons ability.boons
-                { character
-                    | abilities =
-                        character.abilities
-                            ++ [ ability ]
-                }
 
         GainEquipment equipment ->
             { character | equipment = character.equipment ++ String.join "\n\n" equipment ++ "\n\n" }
