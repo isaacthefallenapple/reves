@@ -1,4 +1,4 @@
-module Character exposing (Stats, applyAssignment, applyBoons, applyClass, blank, decodeLocalCharacter, decoder, encode, view)
+module Character exposing (Msg(..), Stats, applyAssignment, applyBoons, applyClass, blank, decodeLocalCharacter, decoder, encode, update, view)
 
 -- import Ability exposing (Ability)
 
@@ -138,10 +138,67 @@ decodeLocalCharacter storedState =
 
 
 
+-- MSG
+
+
+type Msg
+    = Updated CharacterUpdateMsg
+    | ClickedViewAbilities
+
+
+type CharacterUpdateMsg
+    = UpdatedName String
+    | UpdatedSkills Skills
+    | UpdatedDomains Domains
+    | UpdatedKnacks String
+    | UpdatedRefresh String
+    | UpdatedEquipment String
+    | UpdatedFallout String
+    | UpdatedBonds String
+    | UpdatedResistances Resistances
+
+
+
+-- UPDATE
+
+
+update : CharacterUpdateMsg -> Stats -> Stats
+update msg character =
+    case msg of
+        UpdatedName name ->
+            { character | name = name }
+
+        UpdatedSkills skills ->
+            { character | skills = skills }
+
+        UpdatedDomains domains ->
+            { character | domains = domains }
+
+        UpdatedKnacks knacks ->
+            { character | knacks = knacks }
+
+        UpdatedRefresh refresh ->
+            { character | refresh = refresh }
+
+        UpdatedEquipment equipment ->
+            { character | equipment = equipment }
+
+        UpdatedFallout fallout ->
+            { character | fallout = fallout }
+
+        UpdatedBonds bonds ->
+            { character | bonds = bonds }
+
+        UpdatedResistances resistances ->
+            { character | resistances = resistances }
+
+
+
+-- Debug.todo ""
 -- VIEW
 
 
-view : (Stats -> msg) -> Stats -> Browser.Document msg
+view : (Msg -> msg) -> Stats -> Browser.Document msg
 view toMsg character =
     { title = character.name
     , body =
@@ -154,7 +211,7 @@ view toMsg character =
                     [ h2
                         []
                         [ text "Name" ]
-                    , input [ type_ "text", value character.name, onInput (\name -> toMsg { character | name = name }) ]
+                    , input [ type_ "text", value character.name, onInput (UpdatedName >> Updated >> toMsg) ]
                         []
                     ]
                 ]
@@ -165,7 +222,7 @@ view toMsg character =
                     [ h2
                         []
                         [ text "Class" ]
-                    , input [ type_ "text", value character.class, onInput (\class -> toMsg { character | class = class }) ]
+                    , input [ type_ "text", value character.class ]
                         []
                     ]
                 ]
@@ -176,13 +233,13 @@ view toMsg character =
                     [ h2
                         []
                         [ text "Assignment" ]
-                    , input [ type_ "text", value character.assignment, onInput (\assignment -> toMsg { character | assignment = assignment }) ]
+                    , input [ type_ "text", value character.assignment ]
                         []
                     ]
                 ]
             , section
                 [ class "resistances" ]
-                [ Resistances.view (\resistances -> toMsg { character | resistances = resistances }) character.resistances
+                [ Resistances.view (UpdatedResistances >> Updated >> toMsg) character.resistances
                 ]
             , div
                 [ class "skills-and-domains" ]
@@ -191,14 +248,14 @@ view toMsg character =
                     [ h2
                         []
                         [ text "Skills" ]
-                    , viewBoolDict (\skills -> toMsg { character | skills = skills }) Skills.toString character.skills
+                    , viewBoolDict (UpdatedSkills >> Updated >> toMsg) Skills.toString character.skills
                     ]
                 , section
                     [ class "domains" ]
                     [ h2
                         []
                         [ text "Domains" ]
-                    , viewBoolDict (\domains -> toMsg { character | domains = domains }) Domains.toString character.domains
+                    , viewBoolDict (UpdatedDomains >> Updated >> toMsg) Domains.toString character.domains
                     ]
                 ]
             , section
@@ -206,6 +263,9 @@ view toMsg character =
                 [ h2
                     []
                     [ text "Abilities" ]
+                , button
+                    [ onClick (toMsg ClickedViewAbilities) ]
+                    [ text "view" ]
                 , ul
                     []
                     (List.map
@@ -222,7 +282,7 @@ view toMsg character =
                     []
                     [ text "Fallout" ]
                 , textarea
-                    [ onInput (\fallout -> toMsg { character | fallout = fallout }) ]
+                    [ onInput (UpdatedFallout >> Updated >> toMsg) ]
                     [ text character.fallout ]
                 ]
             , section
@@ -231,7 +291,7 @@ view toMsg character =
                     []
                     [ text "Equipment" ]
                 , textarea
-                    [ onInput (\equipment -> toMsg { character | equipment = equipment }) ]
+                    [ onInput (UpdatedEquipment >> Updated >> toMsg) ]
                     [ text character.equipment ]
                 ]
             , section
@@ -240,7 +300,7 @@ view toMsg character =
                     []
                     [ text "Refresh" ]
                 , textarea
-                    [ onInput (\refresh -> toMsg { character | refresh = refresh }) ]
+                    [ onInput (UpdatedRefresh >> Updated >> toMsg) ]
                     [ text character.refresh ]
                 ]
             , section
@@ -249,7 +309,7 @@ view toMsg character =
                     []
                     [ text "Bonds" ]
                 , textarea
-                    [ onInput (\bonds -> toMsg { character | bonds = bonds }) ]
+                    [ onInput (UpdatedBonds >> Updated >> toMsg) ]
                     [ text character.bonds ]
                 ]
             , section
@@ -258,7 +318,7 @@ view toMsg character =
                     []
                     [ text "Knacks" ]
                 , textarea
-                    [ onInput (\knacks -> toMsg { character | knacks = knacks }) ]
+                    [ onInput (UpdatedKnacks >> Updated >> toMsg) ]
                     [ text character.knacks ]
                 ]
             ]

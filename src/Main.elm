@@ -1,8 +1,11 @@
 module Main exposing (main)
 
+import Abilities exposing (Abilities)
+import Ability exposing (Ability)
 import Boon
 import Browser
-import Character
+import Browser.Navigation as Nav
+import Character exposing (Msg(..))
 import Class
 import File exposing (File)
 import File.Download as Download
@@ -10,10 +13,12 @@ import File.Select as Select
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
+import Http
 import Json.Decode as Decode
 import Json.Encode as Encode
 import Ports
 import Task
+import Url
 
 
 
@@ -25,6 +30,7 @@ type Model
     | PickAssignment Class.Class
     | Character Character.Stats
     | DecodeErr Decode.Error
+    | Abilities Abilities
 
 
 
@@ -34,11 +40,14 @@ type Model
 type Msg
     = PickedClass Class.Class
     | PickedAssignment Boon.Assignment
-    | UpdatedCharacter Character.Stats
+    | UpdatedCharacter Character.Msg
     | ClickedOpenFile
     | FileLoaded File
     | ReadFile String
+    | RequestedAbilities (Result Http.Error Abilities.Advances)
     | ClickedSave
+    | LinkClicked Browser.UrlRequest
+    | UrlChanged Url.Url
 
 
 
@@ -118,6 +127,11 @@ view model =
                 characterView.body
             }
 
+        Abilities abilities ->
+            { title = abilities.title
+            , body = [ Abilities.view abilities ]
+            }
+
 
 
 -- UPDATE
@@ -136,13 +150,22 @@ update msg model =
                         |> Character.applyClass class
                         |> Character.applyAssignment assignment
             in
-            ( Character
-                character
+            ( Character character
             , saveCharacter character
             )
 
-        ( Character _, UpdatedCharacter updatedCharacter ) ->
+        ( Character character, UpdatedCharacter (Updated m) ) ->
+            let
+                updatedCharacter =
+                    Character.update m character
+            in
             ( Character updatedCharacter, saveCharacter updatedCharacter )
+
+        ( Character character, UpdatedCharacter ClickedViewAbilities ) ->
+            Tuple.mapFirst Abilities (Abilities.init RequestedAbilities character)
+
+        ( Abilities abilities, RequestedAbilities response ) ->
+            ( Abilities (Abilities.update response abilities), Cmd.none )
 
         ( Character character, ClickedSave ) ->
             ( model
