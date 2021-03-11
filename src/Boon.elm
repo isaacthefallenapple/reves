@@ -40,8 +40,9 @@ toString boon =
                         "s"
 
                     else
-                        "" ++ "."
+                        ""
                    )
+                ++ "."
 
         GainSkills skills ->
             let
@@ -56,8 +57,8 @@ toString boon =
 
                     else
                         ""
-                            ++ "."
                    )
+                ++ "."
 
         GainEquipment equipment ->
             "Gain " ++ String.join ", " equipment ++ "."
