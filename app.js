@@ -4708,10 +4708,33 @@ function _Http_track(router, xhr, tracker)
 			size: event.lengthComputable ? $elm$core$Maybe$Just(event.total) : $elm$core$Maybe$Nothing
 		}))));
 	});
+}
+
+function _Url_percentEncode(string)
+{
+	return encodeURIComponent(string);
+}
+
+function _Url_percentDecode(string)
+{
+	try
+	{
+		return $elm$core$Maybe$Just(decodeURIComponent(string));
+	}
+	catch (e)
+	{
+		return $elm$core$Maybe$Nothing;
+	}
 }var $elm$core$Maybe$Just = function (a) {
 	return {$: 'Just', a: a};
 };
+var $author$project$Main$LinkClicked = function (a) {
+	return {$: 'LinkClicked', a: a};
+};
 var $elm$core$Maybe$Nothing = {$: 'Nothing'};
+var $author$project$Main$UrlChanged = function (a) {
+	return {$: 'UrlChanged', a: a};
+};
 var $elm$core$Basics$EQ = {$: 'EQ'};
 var $elm$core$Basics$GT = {$: 'GT'};
 var $elm$core$Basics$LT = {$: 'LT'};
@@ -5496,11 +5519,14 @@ var $elm$core$Task$perform = F2(
 			$elm$core$Task$Perform(
 				A2($elm$core$Task$map, toMessage, task)));
 	});
-var $elm$browser$Browser$document = _Browser_document;
-var $author$project$Main$Character = function (a) {
-	return {$: 'Character', a: a};
+var $elm$browser$Browser$application = _Browser_application;
+var $author$project$Main$Character = F2(
+	function (a, b) {
+		return {$: 'Character', a: a, b: b};
+	});
+var $author$project$Main$PickClass = function (a) {
+	return {$: 'PickClass', a: a};
 };
-var $author$project$Main$PickClass = {$: 'PickClass'};
 var $author$project$Boon$Domain$Criminal = {$: 'Criminal'};
 var $author$project$Boon$Domain$Hegemony = {$: 'Hegemony'};
 var $author$project$Boon$Domain$HighSociety = {$: 'HighSociety'};
@@ -5949,41 +5975,47 @@ var $author$project$Character$decodeLocalCharacter = function (storedState) {
 };
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
-var $author$project$Main$init = function (flags) {
-	return _Utils_Tuple2(
-		function () {
-			if (flags.$ === 'Nothing') {
-				return $author$project$Main$PickClass;
-			} else {
-				var json = flags.a;
-				return $author$project$Main$Character(
-					$author$project$Character$decodeLocalCharacter(json));
-			}
-		}(),
-		$elm$core$Platform$Cmd$none);
-};
+var $author$project$Main$init = F3(
+	function (flags, _v0, navKey) {
+		return _Utils_Tuple2(
+			function () {
+				if (flags.$ === 'Nothing') {
+					return $author$project$Main$PickClass(navKey);
+				} else {
+					var json = flags.a;
+					return A2(
+						$author$project$Main$Character,
+						navKey,
+						$author$project$Character$decodeLocalCharacter(json));
+				}
+			}(),
+			$elm$core$Platform$Cmd$none);
+	});
 var $elm$core$Platform$Sub$batch = _Platform_batch;
 var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
 var $author$project$Main$subscriptions = function (_v0) {
 	return $elm$core$Platform$Sub$none;
 };
-var $author$project$Main$Abilities = function (a) {
-	return {$: 'Abilities', a: a};
+var $author$project$Main$Abilities = F2(
+	function (a, b) {
+		return {$: 'Abilities', a: a, b: b};
+	});
+var $author$project$Main$AbilitiesMsg = function (a) {
+	return {$: 'AbilitiesMsg', a: a};
 };
-var $author$project$Main$DecodeErr = function (a) {
-	return {$: 'DecodeErr', a: a};
-};
+var $author$project$Main$DecodeErr = F2(
+	function (a, b) {
+		return {$: 'DecodeErr', a: a, b: b};
+	});
 var $author$project$Main$FileLoaded = function (a) {
 	return {$: 'FileLoaded', a: a};
 };
-var $author$project$Main$PickAssignment = function (a) {
-	return {$: 'PickAssignment', a: a};
-};
+var $author$project$Main$PickAssignment = F2(
+	function (a, b) {
+		return {$: 'PickAssignment', a: a, b: b};
+	});
 var $author$project$Main$ReadFile = function (a) {
 	return {$: 'ReadFile', a: a};
-};
-var $author$project$Main$RequestedAbilities = function (a) {
-	return {$: 'RequestedAbilities', a: a};
 };
 var $elm$core$Basics$clamp = F3(
 	function (low, high, number) {
@@ -6360,27 +6392,12 @@ var $elm$file$File$Select$file = F2(
 			toMsg,
 			_File_uploadOne(mimes));
 	});
+var $author$project$Abilities$GotMetadata = function (a) {
+	return {$: 'GotMetadata', a: a};
+};
 var $author$project$Abilities$Loading = {$: 'Loading'};
-var $author$project$Abilities$Advances = F3(
-	function (low, medium, high) {
-		return {high: high, low: low, medium: medium};
-	});
-var $elm$json$Json$Decode$map3 = _Json_map3;
-var $author$project$Abilities$decoder = A4(
-	$elm$json$Json$Decode$map3,
-	$author$project$Abilities$Advances,
-	A2(
-		$elm$json$Json$Decode$field,
-		'low',
-		$elm$json$Json$Decode$list($author$project$Ability$decoder)),
-	A2(
-		$elm$json$Json$Decode$field,
-		'medium',
-		$elm$json$Json$Decode$list($author$project$Ability$decoder)),
-	A2(
-		$elm$json$Json$Decode$field,
-		'high',
-		$elm$json$Json$Decode$list($author$project$Ability$decoder)));
+var $elm$core$Dict$RBEmpty_elm_builtin = {$: 'RBEmpty_elm_builtin'};
+var $elm$core$Dict$empty = $elm$core$Dict$RBEmpty_elm_builtin;
 var $elm$http$Http$BadStatus_ = F2(
 	function (a, b) {
 		return {$: 'BadStatus_', a: a, b: b};
@@ -6400,8 +6417,6 @@ var $elm$http$Http$Sending = function (a) {
 	return {$: 'Sending', a: a};
 };
 var $elm$http$Http$Timeout_ = {$: 'Timeout_'};
-var $elm$core$Dict$RBEmpty_elm_builtin = {$: 'RBEmpty_elm_builtin'};
-var $elm$core$Dict$empty = $elm$core$Dict$RBEmpty_elm_builtin;
 var $elm$core$Maybe$isJust = function (maybe) {
 	if (maybe.$ === 'Just') {
 		return true;
@@ -7162,19 +7177,312 @@ var $elm$http$Http$get = function (r) {
 	return $elm$http$Http$request(
 		{body: $elm$http$Http$emptyBody, expect: r.expect, headers: _List_Nil, method: 'GET', timeout: $elm$core$Maybe$Nothing, tracker: $elm$core$Maybe$Nothing, url: r.url});
 };
-var $author$project$Abilities$url = function (name) {
-	return 'data/abilities/' + (name + '.json');
+var $elm$core$Dict$fromList = function (assocs) {
+	return A3(
+		$elm$core$List$foldl,
+		F2(
+			function (_v0, dict) {
+				var key = _v0.a;
+				var value = _v0.b;
+				return A3($elm$core$Dict$insert, key, value, dict);
+			}),
+		$elm$core$Dict$empty,
+		assocs);
 };
+var $elm$json$Json$Decode$dict = function (decoder) {
+	return A2(
+		$elm$json$Json$Decode$map,
+		$elm$core$Dict$fromList,
+		$elm$json$Json$Decode$keyValuePairs(decoder));
+};
+var $author$project$Abilities$metadataDecoder = $elm$json$Json$Decode$dict($elm$json$Json$Decode$string);
+var $author$project$Abilities$location = '/data/abilities/';
+var $author$project$Abilities$metadataLocation = $author$project$Abilities$location + 'metadata.json';
 var $author$project$Abilities$init = F2(
-	function (toMsg, character) {
+	function (maybeSelected, character) {
 		return _Utils_Tuple2(
-			{advances: $author$project$Abilities$Loading, character: character, title: character._class},
-			$elm$http$Http$get(
-				{
-					expect: A2($elm$http$Http$expectJson, toMsg, $author$project$Abilities$decoder),
-					url: $author$project$Abilities$url(character._class)
-				}));
+			{
+				character: character,
+				metadata: $author$project$Abilities$Loading,
+				primary: character._class,
+				selected: A2($elm$core$Maybe$withDefault, character._class, maybeSelected),
+				tabs: $elm$core$Dict$empty
+			},
+			$elm$core$Platform$Cmd$batch(
+				_List_fromArray(
+					[
+						$elm$http$Http$get(
+						{
+							expect: A2($elm$http$Http$expectJson, $author$project$Abilities$GotMetadata, $author$project$Abilities$metadataDecoder),
+							url: $author$project$Abilities$metadataLocation
+						})
+					])));
 	});
+var $elm$browser$Browser$Navigation$load = _Browser_load;
+var $elm$core$Debug$log = _Debug_log;
+var $elm$core$Platform$Cmd$map = _Platform_map;
+var $elm$url$Url$Parser$State = F5(
+	function (visited, unvisited, params, frag, value) {
+		return {frag: frag, params: params, unvisited: unvisited, value: value, visited: visited};
+	});
+var $elm$url$Url$Parser$getFirstMatch = function (states) {
+	getFirstMatch:
+	while (true) {
+		if (!states.b) {
+			return $elm$core$Maybe$Nothing;
+		} else {
+			var state = states.a;
+			var rest = states.b;
+			var _v1 = state.unvisited;
+			if (!_v1.b) {
+				return $elm$core$Maybe$Just(state.value);
+			} else {
+				if ((_v1.a === '') && (!_v1.b.b)) {
+					return $elm$core$Maybe$Just(state.value);
+				} else {
+					var $temp$states = rest;
+					states = $temp$states;
+					continue getFirstMatch;
+				}
+			}
+		}
+	}
+};
+var $elm$url$Url$Parser$removeFinalEmpty = function (segments) {
+	if (!segments.b) {
+		return _List_Nil;
+	} else {
+		if ((segments.a === '') && (!segments.b.b)) {
+			return _List_Nil;
+		} else {
+			var segment = segments.a;
+			var rest = segments.b;
+			return A2(
+				$elm$core$List$cons,
+				segment,
+				$elm$url$Url$Parser$removeFinalEmpty(rest));
+		}
+	}
+};
+var $elm$url$Url$Parser$preparePath = function (path) {
+	var _v0 = A2($elm$core$String$split, '/', path);
+	if (_v0.b && (_v0.a === '')) {
+		var segments = _v0.b;
+		return $elm$url$Url$Parser$removeFinalEmpty(segments);
+	} else {
+		var segments = _v0;
+		return $elm$url$Url$Parser$removeFinalEmpty(segments);
+	}
+};
+var $elm$url$Url$Parser$addToParametersHelp = F2(
+	function (value, maybeList) {
+		if (maybeList.$ === 'Nothing') {
+			return $elm$core$Maybe$Just(
+				_List_fromArray(
+					[value]));
+		} else {
+			var list = maybeList.a;
+			return $elm$core$Maybe$Just(
+				A2($elm$core$List$cons, value, list));
+		}
+	});
+var $elm$url$Url$percentDecode = _Url_percentDecode;
+var $elm$url$Url$Parser$addParam = F2(
+	function (segment, dict) {
+		var _v0 = A2($elm$core$String$split, '=', segment);
+		if ((_v0.b && _v0.b.b) && (!_v0.b.b.b)) {
+			var rawKey = _v0.a;
+			var _v1 = _v0.b;
+			var rawValue = _v1.a;
+			var _v2 = $elm$url$Url$percentDecode(rawKey);
+			if (_v2.$ === 'Nothing') {
+				return dict;
+			} else {
+				var key = _v2.a;
+				var _v3 = $elm$url$Url$percentDecode(rawValue);
+				if (_v3.$ === 'Nothing') {
+					return dict;
+				} else {
+					var value = _v3.a;
+					return A3(
+						$elm$core$Dict$update,
+						key,
+						$elm$url$Url$Parser$addToParametersHelp(value),
+						dict);
+				}
+			}
+		} else {
+			return dict;
+		}
+	});
+var $elm$url$Url$Parser$prepareQuery = function (maybeQuery) {
+	if (maybeQuery.$ === 'Nothing') {
+		return $elm$core$Dict$empty;
+	} else {
+		var qry = maybeQuery.a;
+		return A3(
+			$elm$core$List$foldr,
+			$elm$url$Url$Parser$addParam,
+			$elm$core$Dict$empty,
+			A2($elm$core$String$split, '&', qry));
+	}
+};
+var $elm$url$Url$Parser$parse = F2(
+	function (_v0, url) {
+		var parser = _v0.a;
+		return $elm$url$Url$Parser$getFirstMatch(
+			parser(
+				A5(
+					$elm$url$Url$Parser$State,
+					_List_Nil,
+					$elm$url$Url$Parser$preparePath(url.path),
+					$elm$url$Url$Parser$prepareQuery(url.query),
+					url.fragment,
+					$elm$core$Basics$identity)));
+	});
+var $author$project$Route$Abilities = function (a) {
+	return {$: 'Abilities', a: a};
+};
+var $author$project$Route$Root = {$: 'Root'};
+var $elm$url$Url$Parser$Parser = function (a) {
+	return {$: 'Parser', a: a};
+};
+var $elm$url$Url$Parser$fragment = function (toFrag) {
+	return $elm$url$Url$Parser$Parser(
+		function (_v0) {
+			var visited = _v0.visited;
+			var unvisited = _v0.unvisited;
+			var params = _v0.params;
+			var frag = _v0.frag;
+			var value = _v0.value;
+			return _List_fromArray(
+				[
+					A5(
+					$elm$url$Url$Parser$State,
+					visited,
+					unvisited,
+					params,
+					frag,
+					value(
+						toFrag(frag)))
+				]);
+		});
+};
+var $elm$url$Url$Parser$mapState = F2(
+	function (func, _v0) {
+		var visited = _v0.visited;
+		var unvisited = _v0.unvisited;
+		var params = _v0.params;
+		var frag = _v0.frag;
+		var value = _v0.value;
+		return A5(
+			$elm$url$Url$Parser$State,
+			visited,
+			unvisited,
+			params,
+			frag,
+			func(value));
+	});
+var $elm$url$Url$Parser$map = F2(
+	function (subValue, _v0) {
+		var parseArg = _v0.a;
+		return $elm$url$Url$Parser$Parser(
+			function (_v1) {
+				var visited = _v1.visited;
+				var unvisited = _v1.unvisited;
+				var params = _v1.params;
+				var frag = _v1.frag;
+				var value = _v1.value;
+				return A2(
+					$elm$core$List$map,
+					$elm$url$Url$Parser$mapState(value),
+					parseArg(
+						A5($elm$url$Url$Parser$State, visited, unvisited, params, frag, subValue)));
+			});
+	});
+var $elm$core$List$append = F2(
+	function (xs, ys) {
+		if (!ys.b) {
+			return xs;
+		} else {
+			return A3($elm$core$List$foldr, $elm$core$List$cons, ys, xs);
+		}
+	});
+var $elm$core$List$concat = function (lists) {
+	return A3($elm$core$List$foldr, $elm$core$List$append, _List_Nil, lists);
+};
+var $elm$core$List$concatMap = F2(
+	function (f, list) {
+		return $elm$core$List$concat(
+			A2($elm$core$List$map, f, list));
+	});
+var $elm$url$Url$Parser$oneOf = function (parsers) {
+	return $elm$url$Url$Parser$Parser(
+		function (state) {
+			return A2(
+				$elm$core$List$concatMap,
+				function (_v0) {
+					var parser = _v0.a;
+					return parser(state);
+				},
+				parsers);
+		});
+};
+var $elm$url$Url$Parser$s = function (str) {
+	return $elm$url$Url$Parser$Parser(
+		function (_v0) {
+			var visited = _v0.visited;
+			var unvisited = _v0.unvisited;
+			var params = _v0.params;
+			var frag = _v0.frag;
+			var value = _v0.value;
+			if (!unvisited.b) {
+				return _List_Nil;
+			} else {
+				var next = unvisited.a;
+				var rest = unvisited.b;
+				return _Utils_eq(next, str) ? _List_fromArray(
+					[
+						A5(
+						$elm$url$Url$Parser$State,
+						A2($elm$core$List$cons, next, visited),
+						rest,
+						params,
+						frag,
+						value)
+					]) : _List_Nil;
+			}
+		});
+};
+var $elm$url$Url$Parser$slash = F2(
+	function (_v0, _v1) {
+		var parseBefore = _v0.a;
+		var parseAfter = _v1.a;
+		return $elm$url$Url$Parser$Parser(
+			function (state) {
+				return A2(
+					$elm$core$List$concatMap,
+					parseAfter,
+					parseBefore(state));
+			});
+	});
+var $author$project$Route$route = $elm$url$Url$Parser$oneOf(
+	_List_fromArray(
+		[
+			A2(
+			$elm$url$Url$Parser$map,
+			$author$project$Route$Root,
+			$elm$url$Url$Parser$s('')),
+			A2(
+			$elm$url$Url$Parser$map,
+			$author$project$Route$Abilities,
+			A2(
+				$elm$url$Url$Parser$slash,
+				$elm$url$Url$Parser$s('abilities'),
+				$elm$url$Url$Parser$fragment($elm$core$Basics$identity)))
+		]));
+var $author$project$Route$parse = $elm$url$Url$Parser$parse($author$project$Route$route);
+var $elm$browser$Browser$Navigation$pushUrl = _Browser_pushUrl;
 var $author$project$Ports$storeCharacter = _Platform_outgoingPort('storeCharacter', $elm$json$Json$Encode$string);
 var $author$project$Main$saveCharacter = function (character) {
 	return $author$project$Ports$storeCharacter(
@@ -7190,29 +7498,176 @@ var $elm$file$File$Download$string = F3(
 			$elm$core$Basics$never,
 			A3(_File_download, name, mime, content));
 	});
+var $author$project$Main$toNavKey = function (model) {
+	switch (model.$) {
+		case 'PickClass':
+			var navKey = model.a;
+			return navKey;
+		case 'PickAssignment':
+			var navKey = model.a;
+			return navKey;
+		case 'Character':
+			var navKey = model.a;
+			return navKey;
+		case 'DecodeErr':
+			var navKey = model.a;
+			return navKey;
+		default:
+			var navKey = model.a;
+			return navKey;
+	}
+};
 var $elm$file$File$toString = _File_toString;
+var $author$project$Route$toString = function (maybeRoute) {
+	return A2(
+		$elm$core$Maybe$withDefault,
+		'',
+		A2(
+			$elm$core$Maybe$map,
+			function (r) {
+				if (r.$ === 'Root') {
+					return '';
+				} else {
+					if (r.a.$ === 'Just') {
+						var frag = r.a.a;
+						return 'abilities#' + frag;
+					} else {
+						var _v1 = r.a;
+						return 'abilities';
+					}
+				}
+			},
+			maybeRoute));
+};
 var $author$project$Abilities$Failed = function (a) {
 	return {$: 'Failed', a: a};
 };
 var $author$project$Abilities$Loaded = function (a) {
 	return {$: 'Loaded', a: a};
 };
-var $author$project$Abilities$update = F2(
-	function (result, abilities) {
-		if (result.$ === 'Ok') {
-			var advances = result.a;
-			return _Utils_update(
-				abilities,
-				{
-					advances: $author$project$Abilities$Loaded(advances)
-				});
+var $elm$core$Basics$always = F2(
+	function (a, _v0) {
+		return a;
+	});
+var $author$project$Abilities$GotAdvances = F2(
+	function (a, b) {
+		return {$: 'GotAdvances', a: a, b: b};
+	});
+var $author$project$Abilities$Advances = F3(
+	function (low, medium, high) {
+		return {high: high, low: low, medium: medium};
+	});
+var $elm$json$Json$Decode$map3 = _Json_map3;
+var $author$project$Abilities$decoder = A4(
+	$elm$json$Json$Decode$map3,
+	$author$project$Abilities$Advances,
+	A2(
+		$elm$json$Json$Decode$field,
+		'low',
+		$elm$json$Json$Decode$list($author$project$Ability$decoder)),
+	A2(
+		$elm$json$Json$Decode$field,
+		'medium',
+		$elm$json$Json$Decode$list($author$project$Ability$decoder)),
+	A2(
+		$elm$json$Json$Decode$field,
+		'high',
+		$elm$json$Json$Decode$list($author$project$Ability$decoder)));
+var $author$project$Abilities$fetchFromList = function (metadata) {
+	return $elm$core$Platform$Cmd$batch(
+		A2(
+			$elm$core$List$map,
+			function (_v0) {
+				var name = _v0.a;
+				var loc = _v0.b;
+				return $elm$http$Http$get(
+					{
+						expect: A2(
+							$elm$http$Http$expectJson,
+							$author$project$Abilities$GotAdvances(name),
+							$author$project$Abilities$decoder),
+						url: _Utils_ap($author$project$Abilities$location, loc)
+					});
+			},
+			$elm$core$Dict$toList(metadata)));
+};
+var $elm$core$Dict$map = F2(
+	function (func, dict) {
+		if (dict.$ === 'RBEmpty_elm_builtin') {
+			return $elm$core$Dict$RBEmpty_elm_builtin;
 		} else {
-			var err = result.a;
-			return _Utils_update(
-				abilities,
-				{
-					advances: $author$project$Abilities$Failed(err)
-				});
+			var color = dict.a;
+			var key = dict.b;
+			var value = dict.c;
+			var left = dict.d;
+			var right = dict.e;
+			return A5(
+				$elm$core$Dict$RBNode_elm_builtin,
+				color,
+				key,
+				A2(func, key, value),
+				A2($elm$core$Dict$map, func, left),
+				A2($elm$core$Dict$map, func, right));
+		}
+	});
+var $author$project$Abilities$statusFromResult = function (result) {
+	if (result.$ === 'Ok') {
+		var ok = result.a;
+		return $author$project$Abilities$Loaded(ok);
+	} else {
+		var err = result.a;
+		return $author$project$Abilities$Failed(err);
+	}
+};
+var $author$project$Abilities$update = F2(
+	function (msg, abilities) {
+		switch (msg.$) {
+			case 'GotMetadata':
+				if (msg.a.$ === 'Ok') {
+					var metadata = msg.a.a;
+					return _Utils_Tuple2(
+						_Utils_update(
+							abilities,
+							{
+								metadata: $author$project$Abilities$Loaded(metadata),
+								tabs: A2(
+									$elm$core$Dict$map,
+									$elm$core$Basics$always(
+										$elm$core$Basics$always($author$project$Abilities$Loading)),
+									metadata)
+							}),
+						$author$project$Abilities$fetchFromList(metadata));
+				} else {
+					var err = msg.a.a;
+					return _Utils_Tuple2(
+						_Utils_update(
+							abilities,
+							{
+								metadata: $author$project$Abilities$Failed(err)
+							}),
+						$elm$core$Platform$Cmd$none);
+				}
+			case 'GotAdvances':
+				var name = msg.a;
+				var advances = msg.b;
+				return _Utils_Tuple2(
+					_Utils_update(
+						abilities,
+						{
+							tabs: A3(
+								$elm$core$Dict$insert,
+								name,
+								$author$project$Abilities$statusFromResult(advances),
+								abilities.tabs)
+						}),
+					$elm$core$Platform$Cmd$none);
+			default:
+				var selected = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						abilities,
+						{selected: selected}),
+					$elm$core$Platform$Cmd$none);
 		}
 	});
 var $author$project$Character$update = F2(
@@ -7273,63 +7728,62 @@ var $author$project$Main$update = F2(
 			switch (_v0.b.$) {
 				case 'PickedClass':
 					if (_v0.a.$ === 'PickClass') {
-						var _v1 = _v0.a;
+						var navKey = _v0.a.a;
 						var _class = _v0.b.a;
 						return _Utils_Tuple2(
-							$author$project$Main$PickAssignment(_class),
+							A2($author$project$Main$PickAssignment, navKey, _class),
 							$elm$core$Platform$Cmd$none);
 					} else {
 						break _v0$9;
 					}
 				case 'PickedAssignment':
 					if (_v0.a.$ === 'PickAssignment') {
-						var _class = _v0.a.a;
+						var _v1 = _v0.a;
+						var navKey = _v1.a;
+						var _class = _v1.b;
 						var assignment = _v0.b.a;
 						var character = A2(
 							$author$project$Character$applyAssignment,
 							assignment,
 							A2($author$project$Character$applyClass, _class, $author$project$Character$blank));
 						return _Utils_Tuple2(
-							$author$project$Main$Character(character),
+							A2($author$project$Main$Character, navKey, character),
 							$author$project$Main$saveCharacter(character));
 					} else {
 						break _v0$9;
 					}
 				case 'UpdatedCharacter':
-					if (_v0.a.$ === 'Character') {
-						if (_v0.b.a.$ === 'Updated') {
-							var character = _v0.a.a;
-							var m = _v0.b.a.a;
-							var updatedCharacter = A2($author$project$Character$update, m, character);
-							return _Utils_Tuple2(
-								$author$project$Main$Character(updatedCharacter),
-								$author$project$Main$saveCharacter(updatedCharacter));
-						} else {
-							var character = _v0.a.a;
-							var _v2 = _v0.b.a;
-							return A2(
-								$elm$core$Tuple$mapFirst,
-								$author$project$Main$Abilities,
-								A2($author$project$Abilities$init, $author$project$Main$RequestedAbilities, character));
-						}
+					if ((_v0.a.$ === 'Character') && (_v0.b.a.$ === 'Updated')) {
+						var _v2 = _v0.a;
+						var navKey = _v2.a;
+						var character = _v2.b;
+						var m = _v0.b.a.a;
+						var updatedCharacter = A2($author$project$Character$update, m, character);
+						return _Utils_Tuple2(
+							A2($author$project$Main$Character, navKey, updatedCharacter),
+							$author$project$Main$saveCharacter(updatedCharacter));
 					} else {
 						break _v0$9;
 					}
-				case 'RequestedAbilities':
+				case 'AbilitiesMsg':
 					if (_v0.a.$ === 'Abilities') {
-						var abilities = _v0.a.a;
-						var response = _v0.b.a;
-						return _Utils_Tuple2(
-							$author$project$Main$Abilities(
-								A2($author$project$Abilities$update, response, abilities)),
-							$elm$core$Platform$Cmd$none);
+						var _v3 = _v0.a;
+						var navKey = _v3.a;
+						var abilities = _v3.b;
+						var subMsg = _v0.b.a;
+						return A3(
+							$elm$core$Tuple$mapBoth,
+							$author$project$Main$Abilities(navKey),
+							$elm$core$Platform$Cmd$map($author$project$Main$AbilitiesMsg),
+							A2($author$project$Abilities$update, subMsg, abilities));
 					} else {
 						break _v0$9;
 					}
 				case 'ClickedSave':
 					if (_v0.a.$ === 'Character') {
-						var character = _v0.a.a;
-						var _v3 = _v0.b;
+						var _v4 = _v0.a;
+						var character = _v4.b;
+						var _v5 = _v0.b;
 						return _Utils_Tuple2(
 							model,
 							A3(
@@ -7344,7 +7798,7 @@ var $author$project$Main$update = F2(
 						break _v0$9;
 					}
 				case 'ClickedOpenFile':
-					var _v4 = _v0.b;
+					var _v6 = _v0.b;
 					return _Utils_Tuple2(
 						model,
 						A2(
@@ -7364,16 +7818,63 @@ var $author$project$Main$update = F2(
 					var content = _v0.b.a;
 					return _Utils_Tuple2(
 						function () {
-							var _v5 = A2($elm$json$Json$Decode$decodeString, $author$project$Character$decoder, content);
-							if (_v5.$ === 'Err') {
-								var err = _v5.a;
-								return $author$project$Main$DecodeErr(err);
+							var _v7 = A2($elm$json$Json$Decode$decodeString, $author$project$Character$decoder, content);
+							if (_v7.$ === 'Err') {
+								var err = _v7.a;
+								return A2(
+									$author$project$Main$DecodeErr,
+									$author$project$Main$toNavKey(model),
+									err);
 							} else {
-								var character = _v5.a;
-								return $author$project$Main$Character(character);
+								var character = _v7.a;
+								return A2(
+									$author$project$Main$Character,
+									$author$project$Main$toNavKey(model),
+									character);
 							}
 						}(),
 						$elm$core$Platform$Cmd$none);
+				case 'LinkClicked':
+					if (_v0.a.$ === 'Character') {
+						var _v8 = _v0.a;
+						var navKey = _v8.a;
+						var character = _v8.b;
+						var urlRequest = _v0.b.a;
+						if (urlRequest.$ === 'Internal') {
+							var url = urlRequest.a;
+							var route = A2(
+								$elm$core$Debug$log,
+								'parsed url: ',
+								$author$project$Route$parse(url));
+							if ((route.$ === 'Just') && (route.a.$ === 'Abilities')) {
+								var selected = route.a.a;
+								return A3(
+									$elm$core$Tuple$mapBoth,
+									$author$project$Main$Abilities(navKey),
+									function (cmd) {
+										return $elm$core$Platform$Cmd$batch(
+											_List_fromArray(
+												[
+													A2($elm$core$Platform$Cmd$map, $author$project$Main$AbilitiesMsg, cmd),
+													A2(
+													$elm$browser$Browser$Navigation$pushUrl,
+													$author$project$Main$toNavKey(model),
+													$author$project$Route$toString(route))
+												]));
+									},
+									A2($author$project$Abilities$init, selected, character));
+							} else {
+								return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+							}
+						} else {
+							var href = urlRequest.a;
+							return _Utils_Tuple2(
+								model,
+								$elm$browser$Browser$Navigation$load(href));
+						}
+					} else {
+						break _v0$9;
+					}
 				default:
 					break _v0$9;
 			}
@@ -7390,6 +7891,7 @@ var $author$project$Main$PickedClass = function (a) {
 var $author$project$Main$UpdatedCharacter = function (a) {
 	return {$: 'UpdatedCharacter', a: a};
 };
+var $elm$html$Html$a = _VirtualDom_node('a');
 var $author$project$Boon$dogsbody = {
 	boons: _List_fromArray(
 		[
@@ -7516,6 +8018,14 @@ var $author$project$Class$classes = _List_fromArray(
 	[$author$project$Class$doc, $author$project$Class$cloak]);
 var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm$html$Html$h1 = _VirtualDom_node('h1');
+var $elm$html$Html$Attributes$href = function (url) {
+	return A2(
+		$elm$html$Html$Attributes$stringProperty,
+		'href',
+		_VirtualDom_noJavaScriptUri(url));
+};
+var $elm$virtual_dom$VirtualDom$map = _VirtualDom_map;
+var $elm$html$Html$map = $elm$virtual_dom$VirtualDom$map;
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 'Normal', a: a};
 };
@@ -7536,8 +8046,39 @@ var $elm$html$Html$Events$onClick = function (msg) {
 var $elm$html$Html$p = _VirtualDom_node('p');
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
-var $elm$html$Html$h2 = _VirtualDom_node('h2');
+var $author$project$Abilities$ClickedTab = function (a) {
+	return {$: 'ClickedTab', a: a};
+};
+var $elm$core$List$filter = F2(
+	function (isGood, list) {
+		return A3(
+			$elm$core$List$foldr,
+			F2(
+				function (x, xs) {
+					return isGood(x) ? A2($elm$core$List$cons, x, xs) : xs;
+				}),
+			_List_Nil,
+			list);
+	});
+var $elm$core$Tuple$second = function (_v0) {
+	var y = _v0.b;
+	return y;
+};
+var $elm$html$Html$Attributes$classList = function (classes) {
+	return $elm$html$Html$Attributes$class(
+		A2(
+			$elm$core$String$join,
+			' ',
+			A2(
+				$elm$core$List$map,
+				$elm$core$Tuple$first,
+				A2($elm$core$List$filter, $elm$core$Tuple$second, classes))));
+};
+var $elm$html$Html$li = _VirtualDom_node('li');
+var $elm$html$Html$nav = _VirtualDom_node('nav');
 var $elm$html$Html$ul = _VirtualDom_node('ul');
+var $elm$html$Html$h2 = _VirtualDom_node('h2');
+var $elm$core$Basics$not = _Basics_not;
 var $elm$html$Html$details = _VirtualDom_node('details');
 var $elm$html$Html$h3 = _VirtualDom_node('h3');
 var $elm$html$Html$i = _VirtualDom_node('i');
@@ -7548,7 +8089,6 @@ var $elm$core$List$isEmpty = function (xs) {
 		return false;
 	}
 };
-var $elm$core$Basics$not = _Basics_not;
 var $elm$html$Html$summary = _VirtualDom_node('summary');
 var $author$project$Boon$toString = function (boon) {
 	switch (boon.$) {
@@ -7562,14 +8102,14 @@ var $author$project$Boon$toString = function (boon) {
 			return 'Gain the ' + (A2(
 				$elm$core$String$join,
 				', ',
-				A2($elm$core$List$map, $author$project$Boon$Domain$toString, domains)) + (' skill' + (isMultiple ? 's' : ('' + '.'))));
+				A2($elm$core$List$map, $author$project$Boon$Domain$toString, domains)) + (' skill' + ((isMultiple ? 's' : '') + '.')));
 		case 'GainSkills':
 			var skills = boon.a;
 			var isMultiple = $elm$core$List$length(skills) > 1;
 			return 'Gain the ' + (A2(
 				$elm$core$String$join,
 				', ',
-				A2($elm$core$List$map, $author$project$Boon$Skill$toString, skills)) + (' domain' + (isMultiple ? 's' : ('' + '.'))));
+				A2($elm$core$List$map, $author$project$Boon$Skill$toString, skills)) + (' domain' + ((isMultiple ? 's' : '') + '.')));
 		case 'GainEquipment':
 			var equipment = boon.a;
 			return 'Gain ' + (A2($elm$core$String$join, ', ', equipment) + '.');
@@ -7637,87 +8177,168 @@ var $author$project$Ability$view = function (ability) {
 							]))))
 			]));
 };
-var $author$project$Abilities$view = function (_v0) {
-	var advances = _v0.advances;
-	var title = _v0.title;
+var $author$project$Abilities$viewAdvances = F3(
+	function (name, advances, isSelected) {
+		return A2(
+			$elm$html$Html$div,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$classList(
+					_List_fromArray(
+						[
+							_Utils_Tuple2('hidden', !isSelected)
+						]))
+				]),
+			function () {
+				switch (advances.$) {
+					case 'Loading':
+						return _List_fromArray(
+							[
+								A2(
+								$elm$html$Html$h1,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text('Loading ' + name)
+									]))
+							]);
+					case 'Failed':
+						return _List_fromArray(
+							[
+								A2(
+								$elm$html$Html$h1,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text('Error :(')
+									]))
+							]);
+					default:
+						var low = advances.a.low;
+						var medium = advances.a.medium;
+						var high = advances.a.high;
+						return _List_fromArray(
+							[
+								A2(
+								$elm$html$Html$h1,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text(name)
+									])),
+								A2(
+								$elm$html$Html$h2,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text('Low')
+									])),
+								A2(
+								$elm$html$Html$ul,
+								_List_Nil,
+								A2($elm$core$List$map, $author$project$Ability$view, low)),
+								A2(
+								$elm$html$Html$h2,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text('Medium')
+									])),
+								A2(
+								$elm$html$Html$ul,
+								_List_Nil,
+								A2($elm$core$List$map, $author$project$Ability$view, medium)),
+								A2(
+								$elm$html$Html$h2,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text('High')
+									])),
+								A2(
+								$elm$html$Html$ul,
+								_List_Nil,
+								A2($elm$core$List$map, $author$project$Ability$view, high))
+							]);
+				}
+			}());
+	});
+var $author$project$Abilities$view = function (abilities) {
+	var tabs = abilities.tabs;
+	var selected = abilities.selected;
+	var primary = abilities.primary;
+	var primaryFirst = A2(
+		$elm$core$Maybe$withDefault,
+		$elm$core$Dict$toList(tabs),
+		A2(
+			$elm$core$Maybe$map,
+			function (advances) {
+				return A2(
+					$elm$core$List$cons,
+					_Utils_Tuple2(primary, advances),
+					$elm$core$Dict$toList(
+						A2($elm$core$Dict$remove, primary, tabs)));
+			},
+			A2($elm$core$Dict$get, primary, tabs)));
 	return A2(
 		$elm$html$Html$div,
 		_List_Nil,
-		function () {
-			switch (advances.$) {
-				case 'Loading':
-					return _List_fromArray(
-						[
-							A2(
-							$elm$html$Html$h1,
-							_List_Nil,
-							_List_fromArray(
-								[
-									$elm$html$Html$text(title)
-								]))
-						]);
-				case 'Failed':
-					return _List_fromArray(
-						[
-							A2(
-							$elm$html$Html$h1,
-							_List_Nil,
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Error :(')
-								]))
-						]);
-				default:
-					var low = advances.a.low;
-					var medium = advances.a.medium;
-					var high = advances.a.high;
-					return _List_fromArray(
-						[
-							A2(
-							$elm$html$Html$h1,
-							_List_Nil,
-							_List_fromArray(
-								[
-									$elm$html$Html$text(title)
-								])),
-							A2(
-							$elm$html$Html$h2,
-							_List_Nil,
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Low')
-								])),
-							A2(
-							$elm$html$Html$ul,
-							_List_Nil,
-							A2($elm$core$List$map, $author$project$Ability$view, low)),
-							A2(
-							$elm$html$Html$h2,
-							_List_Nil,
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Medium')
-								])),
-							A2(
-							$elm$html$Html$ul,
-							_List_Nil,
-							A2($elm$core$List$map, $author$project$Ability$view, medium)),
-							A2(
-							$elm$html$Html$h2,
-							_List_Nil,
-							_List_fromArray(
-								[
-									$elm$html$Html$text('High')
-								])),
-							A2(
-							$elm$html$Html$ul,
-							_List_Nil,
-							A2($elm$core$List$map, $author$project$Ability$view, high))
-						]);
-			}
-		}());
+		A2(
+			$elm$core$List$cons,
+			A2(
+				$elm$html$Html$nav,
+				_List_Nil,
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$ul,
+						_List_Nil,
+						A2(
+							$elm$core$List$map,
+							function (_v0) {
+								var name = _v0.a;
+								return A2(
+									$elm$html$Html$li,
+									_List_fromArray(
+										[
+											$elm$html$Html$Attributes$classList(
+											_List_fromArray(
+												[
+													_Utils_Tuple2(
+													'selected',
+													_Utils_eq(name, selected))
+												]))
+										]),
+									_List_fromArray(
+										[
+											A2(
+											$elm$html$Html$button,
+											_List_fromArray(
+												[
+													$elm$html$Html$Events$onClick(
+													$author$project$Abilities$ClickedTab(name))
+												]),
+											_List_fromArray(
+												[
+													$elm$html$Html$text(name)
+												]))
+										]));
+							},
+							primaryFirst))
+					])),
+			A2(
+				$elm$core$List$map,
+				function (_v1) {
+					var name = _v1.a;
+					var advances = _v1.b;
+					return A3(
+						$author$project$Abilities$viewAdvances,
+						name,
+						advances,
+						_Utils_eq(name, selected));
+				},
+				primaryFirst)));
 };
-var $author$project$Character$ClickedViewAbilities = {$: 'ClickedViewAbilities'};
 var $author$project$Character$Updated = function (a) {
 	return {$: 'Updated', a: a};
 };
@@ -7750,7 +8371,6 @@ var $author$project$Character$UpdatedSkills = function (a) {
 };
 var $elm$html$Html$input = _VirtualDom_node('input');
 var $elm$html$Html$label = _VirtualDom_node('label');
-var $elm$html$Html$li = _VirtualDom_node('li');
 var $elm$html$Html$main_ = _VirtualDom_node('main');
 var $elm$html$Html$Events$alwaysStop = function (x) {
 	return _Utils_Tuple2(x, true);
@@ -7787,17 +8407,6 @@ var $elm$html$Html$section = _VirtualDom_node('section');
 var $elm$html$Html$textarea = _VirtualDom_node('textarea');
 var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
 var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
-var $elm$core$List$filter = F2(
-	function (isGood, list) {
-		return A3(
-			$elm$core$List$foldr,
-			F2(
-				function (x, xs) {
-					return isGood(x) ? A2($elm$core$List$cons, x, xs) : xs;
-				}),
-			_List_Nil,
-			list);
-	});
 var $elm$core$List$head = function (list) {
 	if (list.b) {
 		var x = list.a;
@@ -7806,10 +8415,6 @@ var $elm$core$List$head = function (list) {
 	} else {
 		return $elm$core$Maybe$Nothing;
 	}
-};
-var $elm$core$Tuple$second = function (_v0) {
-	var y = _v0.b;
-	return y;
 };
 var $author$project$TypedDict$get = F2(
 	function (key, _v0) {
@@ -8174,15 +8779,24 @@ var $author$project$Character$view = F2(
 											$elm$html$Html$text('Abilities')
 										])),
 									A2(
-									$elm$html$Html$button,
+									$elm$html$Html$a,
 									_List_fromArray(
 										[
-											$elm$html$Html$Events$onClick(
-											toMsg($author$project$Character$ClickedViewAbilities))
+											$elm$html$Html$Attributes$href('abilities#' + character._class)
 										]),
 									_List_fromArray(
 										[
 											$elm$html$Html$text('view')
+										])),
+									A2(
+									$elm$html$Html$a,
+									_List_fromArray(
+										[
+											$elm$html$Html$Attributes$href('abilities#Cloak')
+										]),
+									_List_fromArray(
+										[
+											$elm$html$Html$text('view cloaks')
 										])),
 									A2(
 									$elm$html$Html$ul,
@@ -8358,7 +8972,7 @@ var $author$project$Character$view = F2(
 var $author$project$Main$view = function (model) {
 	switch (model.$) {
 		case 'DecodeErr':
-			var err = model.a;
+			var err = model.b;
 			return {
 				body: _List_fromArray(
 					[
@@ -8455,22 +9069,42 @@ var $author$project$Main$view = function (model) {
 				title: 'Pick an assignment'
 			};
 		case 'Character':
-			var character = model.a;
+			var character = model.b;
 			var characterView = A2($author$project$Character$view, $author$project$Main$UpdatedCharacter, character);
-			return {body: characterView.body, title: characterView.title};
+			return {
+				body: _Utils_ap(
+					characterView.body,
+					_List_fromArray(
+						[
+							A2(
+							$elm$html$Html$a,
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$href('abilities#Doc')
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Doc abilities')
+								]))
+						])),
+				title: characterView.title
+			};
 		default:
-			var abilities = model.a;
+			var abilities = model.b;
 			return {
 				body: _List_fromArray(
 					[
-						$author$project$Abilities$view(abilities)
+						A2(
+						$elm$html$Html$map,
+						$author$project$Main$AbilitiesMsg,
+						$author$project$Abilities$view(abilities))
 					]),
-				title: abilities.title
+				title: abilities.selected
 			};
 	}
 };
-var $author$project$Main$main = $elm$browser$Browser$document(
-	{init: $author$project$Main$init, subscriptions: $author$project$Main$subscriptions, update: $author$project$Main$update, view: $author$project$Main$view});
+var $author$project$Main$main = $elm$browser$Browser$application(
+	{init: $author$project$Main$init, onUrlChange: $author$project$Main$UrlChanged, onUrlRequest: $author$project$Main$LinkClicked, subscriptions: $author$project$Main$subscriptions, update: $author$project$Main$update, view: $author$project$Main$view});
 _Platform_export({'Main':{'init':$author$project$Main$main(
 	$elm$json$Json$Decode$oneOf(
 		_List_fromArray(

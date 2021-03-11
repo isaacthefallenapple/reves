@@ -17,6 +17,7 @@ import Http
 import Json.Decode as Decode
 import Json.Encode as Encode
 import Ports
+import Route exposing (Route)
 import Task
 import Url
 
@@ -26,11 +27,30 @@ import Url
 
 
 type Model
-    = PickClass
-    | PickAssignment Class.Class
-    | Character Character.Stats
-    | DecodeErr Decode.Error
-    | Abilities Abilities
+    = PickClass Nav.Key
+    | PickAssignment Nav.Key Class.Class
+    | Character Nav.Key Character.Stats
+    | DecodeErr Nav.Key Decode.Error
+    | Abilities Nav.Key Abilities
+
+
+toNavKey : Model -> Nav.Key
+toNavKey model =
+    case model of
+        PickClass navKey ->
+            navKey
+
+        PickAssignment navKey _ ->
+            navKey
+
+        Character navKey _ ->
+            navKey
+
+        DecodeErr navKey _ ->
+            navKey
+
+        Abilities navKey _ ->
+            navKey
 
 
 
@@ -48,6 +68,7 @@ type Msg
     | ClickedSave
     | LinkClicked Browser.UrlRequest
     | UrlChanged Url.Url
+    | AbilitiesMsg Abilities.Msg
 
 
 
@@ -66,7 +87,7 @@ saveCharacter character =
 view : Model -> Browser.Document Msg
 view model =
     case model of
-        DecodeErr err ->
+        DecodeErr _ err ->
             { title = "Error"
             , body =
                 [ h1
@@ -85,7 +106,7 @@ view model =
                 ]
             }
 
-        PickClass ->
+        PickClass _ ->
             { title = "Pick a class"
             , body =
                 [ div
@@ -101,7 +122,7 @@ view model =
                 ]
             }
 
-        PickAssignment _ ->
+        PickAssignment _ _ ->
             { title = "Pick an assignment"
             , body =
                 [ div
@@ -117,19 +138,19 @@ view model =
                 ]
             }
 
-        Character character ->
+        Character _ character ->
             let
                 characterView =
                     Character.view UpdatedCharacter character
             in
             { title = characterView.title
             , body =
-                characterView.body
+                characterView.body ++ [ a [ href "abilities#Doc" ] [ text "Doc abilities" ] ]
             }
 
-        Abilities abilities ->
-            { title = abilities.title
-            , body = [ Abilities.view abilities ]
+        Abilities _ abilities ->
+            { title = abilities.selected
+            , body = [ Html.map AbilitiesMsg (Abilities.view abilities) ]
             }
 
 
@@ -140,34 +161,31 @@ view model =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case ( model, msg ) of
-        ( PickClass, PickedClass class ) ->
-            ( PickAssignment class, Cmd.none )
+        ( PickClass navKey, PickedClass class ) ->
+            ( PickAssignment navKey class, Cmd.none )
 
-        ( PickAssignment class, PickedAssignment assignment ) ->
+        ( PickAssignment navKey class, PickedAssignment assignment ) ->
             let
                 character =
                     Character.blank
                         |> Character.applyClass class
                         |> Character.applyAssignment assignment
             in
-            ( Character character
+            ( Character navKey character
             , saveCharacter character
             )
 
-        ( Character character, UpdatedCharacter (Updated m) ) ->
+        ( Character navKey character, UpdatedCharacter (Updated m) ) ->
             let
                 updatedCharacter =
                     Character.update m character
             in
-            ( Character updatedCharacter, saveCharacter updatedCharacter )
+            ( Character navKey updatedCharacter, saveCharacter updatedCharacter )
 
-        ( Character character, UpdatedCharacter ClickedViewAbilities ) ->
-            Tuple.mapFirst Abilities (Abilities.init RequestedAbilities character)
+        ( Abilities navKey abilities, AbilitiesMsg subMsg ) ->
+            Tuple.mapBoth (Abilities navKey) (Cmd.map AbilitiesMsg) (Abilities.update subMsg abilities)
 
-        ( Abilities abilities, RequestedAbilities response ) ->
-            ( Abilities (Abilities.update response abilities), Cmd.none )
-
-        ( Character character, ClickedSave ) ->
+        ( Character _ character, ClickedSave ) ->
             ( model
             , Download.string character.name
                 "application/json"
@@ -183,12 +201,29 @@ update msg model =
         ( _, ReadFile content ) ->
             ( case Decode.decodeString Character.decoder content of
                 Err err ->
-                    DecodeErr err
+                    DecodeErr (toNavKey model) err
 
                 Ok character ->
-                    Character character
+                    Character (toNavKey model) character
             , Cmd.none
             )
+
+        ( Character navKey character, LinkClicked urlRequest ) ->
+            case urlRequest of
+                Browser.Internal url ->
+                    let
+                        route =
+                            Debug.log "parsed url: " (Route.parse url)
+                    in
+                    case route of
+                        Just (Route.Abilities selected) ->
+                            Tuple.mapBoth (Abilities navKey) (\cmd -> Cmd.batch [ Cmd.map AbilitiesMsg cmd, Nav.pushUrl (toNavKey model) (Route.toString route) ]) (Abilities.init selected character)
+
+                        _ ->
+                            ( model, Cmd.none )
+
+                Browser.External href ->
+                    ( model, Nav.load href )
 
         ( _, _ ) ->
             ( model, Cmd.none )
@@ -198,14 +233,14 @@ update msg model =
 -- INIT
 
 
-init : Maybe String -> ( Model, Cmd Msg )
-init flags =
+init : Maybe String -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
+init flags _ navKey =
     ( case flags of
         Nothing ->
-            PickClass
+            PickClass navKey
 
         Just json ->
-            Character (Character.decodeLocalCharacter json)
+            Character navKey (Character.decodeLocalCharacter json)
     , Cmd.none
     )
 
@@ -225,9 +260,11 @@ subscriptions _ =
 
 main : Program (Maybe String) Model Msg
 main =
-    Browser.document
+    Browser.application
         { init = init
         , view = view
         , update = update
         , subscriptions = subscriptions
+        , onUrlChange = UrlChanged
+        , onUrlRequest = LinkClicked
         }

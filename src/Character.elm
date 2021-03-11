@@ -263,8 +263,8 @@ view toMsg character =
                 [ h2
                     []
                     [ text "Abilities" ]
-                , button
-                    [ onClick (toMsg ClickedViewAbilities) ]
+                , a
+                    [ href ("abilities#" ++ character.class) ]
                     [ text "view" ]
                 , ul
                     []
