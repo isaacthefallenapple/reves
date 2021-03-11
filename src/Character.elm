@@ -1,4 +1,4 @@
-module Character exposing (Msg(..), Stats, applyAssignment, applyBoons, applyClass, blank, decodeLocalCharacter, decoder, encode, update, view)
+module Character exposing (Msg(..), Stats, addAbilities, applyAssignment, applyBoons, applyClass, blank, decodeLocalCharacter, decoder, encode, update, view)
 
 -- import Ability exposing (Ability)
 
@@ -89,6 +89,11 @@ applyBoons boons character =
     List.foldl applyBoon character boons
 
 
+addAbilities : List Ability -> Stats -> Stats
+addAbilities abilities character =
+    { character | abilities = character.abilities ++ abilities }
+
+
 
 -- ENCODE
 
@@ -142,11 +147,6 @@ decodeLocalCharacter storedState =
 
 
 type Msg
-    = Updated CharacterUpdateMsg
-    | ClickedViewAbilities
-
-
-type CharacterUpdateMsg
     = UpdatedName String
     | UpdatedSkills Skills
     | UpdatedDomains Domains
@@ -162,7 +162,7 @@ type CharacterUpdateMsg
 -- UPDATE
 
 
-update : CharacterUpdateMsg -> Stats -> Stats
+update : Msg -> Stats -> Stats
 update msg character =
     case msg of
         UpdatedName name ->
@@ -198,8 +198,8 @@ update msg character =
 -- VIEW
 
 
-view : (Msg -> msg) -> Stats -> Browser.Document msg
-view toMsg character =
+view : Stats -> Browser.Document Msg
+view character =
     { title = character.name
     , body =
         [ main_
@@ -211,7 +211,7 @@ view toMsg character =
                     [ h2
                         []
                         [ text "Name" ]
-                    , input [ type_ "text", value character.name, onInput (UpdatedName >> Updated >> toMsg) ]
+                    , input [ type_ "text", value character.name, onInput UpdatedName ]
                         []
                     ]
                 ]
@@ -239,7 +239,7 @@ view toMsg character =
                 ]
             , section
                 [ class "resistances" ]
-                [ Resistances.view (UpdatedResistances >> Updated >> toMsg) character.resistances
+                [ Resistances.view UpdatedResistances character.resistances
                 ]
             , div
                 [ class "skills-and-domains" ]
@@ -248,14 +248,14 @@ view toMsg character =
                     [ h2
                         []
                         [ text "Skills" ]
-                    , viewBoolDict (UpdatedSkills >> Updated >> toMsg) Skills.toString character.skills
+                    , viewBoolDict UpdatedSkills Skills.toString character.skills
                     ]
                 , section
                     [ class "domains" ]
                     [ h2
                         []
                         [ text "Domains" ]
-                    , viewBoolDict (UpdatedDomains >> Updated >> toMsg) Domains.toString character.domains
+                    , viewBoolDict UpdatedDomains Domains.toString character.domains
                     ]
                 ]
             , section
@@ -282,7 +282,7 @@ view toMsg character =
                     []
                     [ text "Fallout" ]
                 , textarea
-                    [ onInput (UpdatedFallout >> Updated >> toMsg) ]
+                    [ onInput UpdatedFallout ]
                     [ text character.fallout ]
                 ]
             , section
@@ -291,7 +291,7 @@ view toMsg character =
                     []
                     [ text "Equipment" ]
                 , textarea
-                    [ onInput (UpdatedEquipment >> Updated >> toMsg) ]
+                    [ onInput UpdatedEquipment ]
                     [ text character.equipment ]
                 ]
             , section
@@ -300,7 +300,7 @@ view toMsg character =
                     []
                     [ text "Refresh" ]
                 , textarea
-                    [ onInput (UpdatedRefresh >> Updated >> toMsg) ]
+                    [ onInput UpdatedRefresh ]
                     [ text character.refresh ]
                 ]
             , section
@@ -309,7 +309,7 @@ view toMsg character =
                     []
                     [ text "Bonds" ]
                 , textarea
-                    [ onInput (UpdatedBonds >> Updated >> toMsg) ]
+                    [ onInput UpdatedBonds ]
                     [ text character.bonds ]
                 ]
             , section
@@ -318,7 +318,7 @@ view toMsg character =
                     []
                     [ text "Knacks" ]
                 , textarea
-                    [ onInput (UpdatedKnacks >> Updated >> toMsg) ]
+                    [ onInput UpdatedKnacks ]
                     [ text character.knacks ]
                 ]
             ]

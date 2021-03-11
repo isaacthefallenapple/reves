@@ -1,0 +1,26 @@
+{
+    "low": [
+        {
+            "name": "Combat Medic",
+            "flavor": "You can work in even the most stressful situations.",
+            "boons": [],
+            "text": "When you roll to help someone while you are in danger, do so with mastery."
+        }
+    ],
+    "medium": [
+        {
+            "name": "Back Alley Surgery",
+            "flavor": "You use the tools at hand to fix a serious injury.",
+            "boons": [],
+            "text": "Once per session, remove an ongoing minor or moderate Body fallot result, or downgrade one severe Body fallout result to moderate."
+        }
+    ],
+    "high": [
+        {
+            "name": "Rejuvenation",
+            "flavor": "You managed to get your hands on an authentic Yaru regeneration pod.",
+            "boons": [],
+            "text": "You immerse an ally in the regenerating liquid and seal the pod. Within, their body is healed, freed from scars and injuries, and their mind can rest for a while. After a week, they can emerge again from the pod — any long-term effects of Body and Resolve fallout are removed. Additionally, the first time they undergo this procedure, they gain +1 Body."
+        }
+    ]
+}

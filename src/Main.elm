@@ -60,7 +60,7 @@ toNavKey model =
 type Msg
     = PickedClass Class.Class
     | PickedAssignment Boon.Assignment
-    | UpdatedCharacter Character.Msg
+    | CharacterMsg Character.Msg
     | ClickedOpenFile
     | FileLoaded File
     | ReadFile String
@@ -141,11 +141,11 @@ view model =
         Character _ character ->
             let
                 characterView =
-                    Character.view UpdatedCharacter character
+                    Character.view character
             in
             { title = characterView.title
             , body =
-                characterView.body ++ [ a [ href "abilities#Doc" ] [ text "Doc abilities" ] ]
+                List.map (Html.map CharacterMsg) characterView.body ++ [ a [ href "abilities#Doc" ] [ text "Doc abilities" ] ]
             }
 
         Abilities _ abilities ->
@@ -175,10 +175,10 @@ update msg model =
             , saveCharacter character
             )
 
-        ( Character navKey character, UpdatedCharacter (Updated m) ) ->
+        ( Character navKey character, CharacterMsg subMsg ) ->
             let
                 updatedCharacter =
-                    Character.update m character
+                    Character.update subMsg character
             in
             ( Character navKey updatedCharacter, saveCharacter updatedCharacter )
 

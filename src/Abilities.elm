@@ -41,6 +41,7 @@ type alias Abilities =
     , selected : String
     , metadata : Status Metadata
     , tabs : Dict String (Status Advances)
+    , chosen : List Ability
     }
 
 
@@ -68,6 +69,8 @@ type Msg
     = ClickedTab String
     | GotMetadata (Result Http.Error Metadata)
     | GotAdvances String (Result Http.Error Advances)
+    | ChoseAbility Ability
+    | ApplyChosen
 
 
 
@@ -81,6 +84,7 @@ init maybeSelected character =
       , selected = Maybe.withDefault character.class maybeSelected
       , metadata = Loading
       , tabs = Dict.empty
+      , chosen = []
       }
     , Cmd.batch
         [ Http.get
@@ -100,6 +104,9 @@ init maybeSelected character =
 update : Msg -> Abilities -> ( Abilities, Cmd Msg )
 update msg abilities =
     case msg of
+        ChoseAbility ability ->
+            ( { abilities | chosen = ability :: abilities.chosen }, Cmd.none )
+
         GotMetadata (Ok metadata) ->
             ( { abilities
                 | metadata = Loaded metadata
@@ -120,6 +127,9 @@ update msg abilities =
 
         ClickedTab selected ->
             ( { abilities | selected = selected }, Cmd.none )
+
+        ApplyChosen ->
+            ( { abilities | character = Character.addAbilities abilities.chosen abilities.character }, Cmd.none )
 
 
 fetchFromList : Metadata -> Cmd Msg
@@ -227,6 +237,20 @@ viewAdvances name advances isSelected =
                     []
                     (List.map Ability.view high)
                 ]
+        )
+
+
+viewAdvanceList : List Ability -> Html Msg
+viewAdvanceList abilities =
+    ul
+        []
+        (List.map
+            (\ability ->
+                li
+                    [ onClick (ChoseAbility ability) ]
+                    [ Ability.view ability ]
+            )
+            abilities
         )
 
 
