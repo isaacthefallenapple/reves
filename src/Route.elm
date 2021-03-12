@@ -1,7 +1,7 @@
 module Route exposing (..)
 
 import Url
-import Url.Parser exposing ((</>), Parser, fragment, map, oneOf, s)
+import Url.Parser as Parser exposing ((</>), Parser, fragment, map, oneOf, s)
 
 
 type Route
@@ -9,32 +9,30 @@ type Route
     | Abilities (Maybe String)
 
 
-route : Parser (Route -> a) a
-route =
+parser : Parser (Route -> a) a
+parser =
     oneOf
-        [ map Root (s "")
+        [ map Root Parser.top
         , map Abilities (s "abilities" </> fragment identity)
         ]
 
 
-parse : Url.Url -> Maybe Route
-parse =
-    Url.Parser.parse route
+parse : Url.Url -> Route
+parse url =
+    Parser.parse parser url
+        |> Maybe.withDefault Root
 
 
-toString : Maybe Route -> String
-toString maybeRoute =
-    maybeRoute
-        |> Maybe.map
-            (\r ->
-                case r of
-                    Root ->
-                        ""
+toString : Route -> String
+toString route =
+    "/"
+        ++ (case route of
+                Root ->
+                    ""
 
-                    Abilities (Just frag) ->
-                        "abilities#" ++ frag
+                Abilities (Just frag) ->
+                    "abilities#" ++ frag
 
-                    Abilities Nothing ->
-                        "abilities"
-            )
-        |> Maybe.withDefault ""
+                Abilities Nothing ->
+                    "abilities"
+           )

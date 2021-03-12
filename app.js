@@ -5996,10 +5996,9 @@ var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
 var $author$project$Main$subscriptions = function (_v0) {
 	return $elm$core$Platform$Sub$none;
 };
-var $author$project$Main$Abilities = F2(
-	function (a, b) {
-		return {$: 'Abilities', a: a, b: b};
-	});
+var $author$project$Main$Abilities = function (a) {
+	return {$: 'Abilities', a: a};
+};
 var $author$project$Main$AbilitiesMsg = function (a) {
 	return {$: 'AbilitiesMsg', a: a};
 };
@@ -7198,12 +7197,14 @@ var $elm$json$Json$Decode$dict = function (decoder) {
 var $author$project$Abilities$metadataDecoder = $elm$json$Json$Decode$dict($elm$json$Json$Decode$string);
 var $author$project$Abilities$location = '/data/abilities/';
 var $author$project$Abilities$metadataLocation = $author$project$Abilities$location + 'metadata.json';
-var $author$project$Abilities$init = F2(
-	function (maybeSelected, character) {
+var $author$project$Abilities$init = F3(
+	function (navKey, maybeSelected, character) {
 		return _Utils_Tuple2(
 			{
 				character: character,
+				chosen: _List_Nil,
 				metadata: $author$project$Abilities$Loading,
+				navKey: navKey,
 				primary: character._class,
 				selected: A2($elm$core$Maybe$withDefault, character._class, maybeSelected),
 				tabs: $elm$core$Dict$empty
@@ -7221,6 +7222,7 @@ var $author$project$Abilities$init = F2(
 var $elm$browser$Browser$Navigation$load = _Browser_load;
 var $elm$core$Debug$log = _Debug_log;
 var $elm$core$Platform$Cmd$map = _Platform_map;
+var $author$project$Route$Root = {$: 'Root'};
 var $elm$url$Url$Parser$State = F5(
 	function (visited, unvisited, params, frag, value) {
 		return {frag: frag, params: params, unvisited: unvisited, value: value, visited: visited};
@@ -7343,7 +7345,6 @@ var $elm$url$Url$Parser$parse = F2(
 var $author$project$Route$Abilities = function (a) {
 	return {$: 'Abilities', a: a};
 };
-var $author$project$Route$Root = {$: 'Root'};
 var $elm$url$Url$Parser$Parser = function (a) {
 	return {$: 'Parser', a: a};
 };
@@ -7466,13 +7467,15 @@ var $elm$url$Url$Parser$slash = F2(
 					parseBefore(state));
 			});
 	});
-var $author$project$Route$route = $elm$url$Url$Parser$oneOf(
+var $elm$url$Url$Parser$top = $elm$url$Url$Parser$Parser(
+	function (state) {
+		return _List_fromArray(
+			[state]);
+	});
+var $author$project$Route$parser = $elm$url$Url$Parser$oneOf(
 	_List_fromArray(
 		[
-			A2(
-			$elm$url$Url$Parser$map,
-			$author$project$Route$Root,
-			$elm$url$Url$Parser$s('')),
+			A2($elm$url$Url$Parser$map, $author$project$Route$Root, $elm$url$Url$Parser$top),
 			A2(
 			$elm$url$Url$Parser$map,
 			$author$project$Route$Abilities,
@@ -7481,7 +7484,12 @@ var $author$project$Route$route = $elm$url$Url$Parser$oneOf(
 				$elm$url$Url$Parser$s('abilities'),
 				$elm$url$Url$Parser$fragment($elm$core$Basics$identity)))
 		]));
-var $author$project$Route$parse = $elm$url$Url$Parser$parse($author$project$Route$route);
+var $author$project$Route$parse = function (url) {
+	return A2(
+		$elm$core$Maybe$withDefault,
+		$author$project$Route$Root,
+		A2($elm$url$Url$Parser$parse, $author$project$Route$parser, url));
+};
 var $elm$browser$Browser$Navigation$pushUrl = _Browser_pushUrl;
 var $author$project$Ports$storeCharacter = _Platform_outgoingPort('storeCharacter', $elm$json$Json$Encode$string);
 var $author$project$Main$saveCharacter = function (character) {
@@ -7498,6 +7506,9 @@ var $elm$file$File$Download$string = F3(
 			$elm$core$Basics$never,
 			A3(_File_download, name, mime, content));
 	});
+var $author$project$Abilities$toNavKey = function ($) {
+	return $.navKey;
+};
 var $author$project$Main$toNavKey = function (model) {
 	switch (model.$) {
 		case 'PickClass':
@@ -7513,31 +7524,25 @@ var $author$project$Main$toNavKey = function (model) {
 			var navKey = model.a;
 			return navKey;
 		default:
-			var navKey = model.a;
-			return navKey;
+			var abilities = model.a;
+			return $author$project$Abilities$toNavKey(abilities);
 	}
 };
 var $elm$file$File$toString = _File_toString;
-var $author$project$Route$toString = function (maybeRoute) {
-	return A2(
-		$elm$core$Maybe$withDefault,
-		'',
-		A2(
-			$elm$core$Maybe$map,
-			function (r) {
-				if (r.$ === 'Root') {
-					return '';
-				} else {
-					if (r.a.$ === 'Just') {
-						var frag = r.a.a;
-						return 'abilities#' + frag;
-					} else {
-						var _v1 = r.a;
-						return 'abilities';
-					}
-				}
-			},
-			maybeRoute));
+var $author$project$Route$toString = function (route) {
+	return '/' + function () {
+		if (route.$ === 'Root') {
+			return '';
+		} else {
+			if (route.a.$ === 'Just') {
+				var frag = route.a.a;
+				return 'abilities#' + frag;
+			} else {
+				var _v1 = route.a;
+				return 'abilities';
+			}
+		}
+	}();
 };
 var $author$project$Abilities$Failed = function (a) {
 	return {$: 'Failed', a: a};
@@ -7545,6 +7550,14 @@ var $author$project$Abilities$Failed = function (a) {
 var $author$project$Abilities$Loaded = function (a) {
 	return {$: 'Loaded', a: a};
 };
+var $author$project$Character$addAbilities = F2(
+	function (abilities, character) {
+		return _Utils_update(
+			character,
+			{
+				abilities: _Utils_ap(character.abilities, abilities)
+			});
+	});
 var $elm$core$Basics$always = F2(
 	function (a, _v0) {
 		return a;
@@ -7622,6 +7635,15 @@ var $author$project$Abilities$statusFromResult = function (result) {
 var $author$project$Abilities$update = F2(
 	function (msg, abilities) {
 		switch (msg.$) {
+			case 'ChoseAbility':
+				var ability = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						abilities,
+						{
+							chosen: A2($elm$core$List$cons, ability, abilities.chosen)
+						}),
+					$elm$core$Platform$Cmd$none);
 			case 'GotMetadata':
 				if (msg.a.$ === 'Ok') {
 					var metadata = msg.a.a;
@@ -7661,12 +7683,25 @@ var $author$project$Abilities$update = F2(
 								abilities.tabs)
 						}),
 					$elm$core$Platform$Cmd$none);
-			default:
+			case 'ClickedTab':
 				var selected = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						abilities,
 						{selected: selected}),
+					A2(
+						$elm$browser$Browser$Navigation$pushUrl,
+						abilities.navKey,
+						$author$project$Route$toString(
+							$author$project$Route$Abilities(
+								$elm$core$Maybe$Just(selected)))));
+			default:
+				return _Utils_Tuple2(
+					_Utils_update(
+						abilities,
+						{
+							character: A2($author$project$Character$addAbilities, abilities.chosen, abilities.character)
+						}),
 					$elm$core$Platform$Cmd$none);
 		}
 	});
@@ -7723,7 +7758,7 @@ var $author$project$Character$update = F2(
 var $author$project$Main$update = F2(
 	function (msg, model) {
 		var _v0 = _Utils_Tuple2(model, msg);
-		_v0$9:
+		_v0$10:
 		while (true) {
 			switch (_v0.b.$) {
 				case 'PickedClass':
@@ -7734,7 +7769,7 @@ var $author$project$Main$update = F2(
 							A2($author$project$Main$PickAssignment, navKey, _class),
 							$elm$core$Platform$Cmd$none);
 					} else {
-						break _v0$9;
+						break _v0$10;
 					}
 				case 'PickedAssignment':
 					if (_v0.a.$ === 'PickAssignment') {
@@ -7750,40 +7785,38 @@ var $author$project$Main$update = F2(
 							A2($author$project$Main$Character, navKey, character),
 							$author$project$Main$saveCharacter(character));
 					} else {
-						break _v0$9;
+						break _v0$10;
 					}
-				case 'UpdatedCharacter':
-					if ((_v0.a.$ === 'Character') && (_v0.b.a.$ === 'Updated')) {
+				case 'CharacterMsg':
+					if (_v0.a.$ === 'Character') {
 						var _v2 = _v0.a;
 						var navKey = _v2.a;
 						var character = _v2.b;
-						var m = _v0.b.a.a;
-						var updatedCharacter = A2($author$project$Character$update, m, character);
+						var subMsg = _v0.b.a;
+						var updatedCharacter = A2($author$project$Character$update, subMsg, character);
 						return _Utils_Tuple2(
 							A2($author$project$Main$Character, navKey, updatedCharacter),
 							$author$project$Main$saveCharacter(updatedCharacter));
 					} else {
-						break _v0$9;
+						break _v0$10;
 					}
 				case 'AbilitiesMsg':
 					if (_v0.a.$ === 'Abilities') {
-						var _v3 = _v0.a;
-						var navKey = _v3.a;
-						var abilities = _v3.b;
+						var abilities = _v0.a.a;
 						var subMsg = _v0.b.a;
 						return A3(
 							$elm$core$Tuple$mapBoth,
-							$author$project$Main$Abilities(navKey),
+							$author$project$Main$Abilities,
 							$elm$core$Platform$Cmd$map($author$project$Main$AbilitiesMsg),
 							A2($author$project$Abilities$update, subMsg, abilities));
 					} else {
-						break _v0$9;
+						break _v0$10;
 					}
 				case 'ClickedSave':
 					if (_v0.a.$ === 'Character') {
-						var _v4 = _v0.a;
-						var character = _v4.b;
-						var _v5 = _v0.b;
+						var _v3 = _v0.a;
+						var character = _v3.b;
+						var _v4 = _v0.b;
 						return _Utils_Tuple2(
 							model,
 							A3(
@@ -7795,10 +7828,10 @@ var $author$project$Main$update = F2(
 									2,
 									$author$project$Character$encode(character))));
 					} else {
-						break _v0$9;
+						break _v0$10;
 					}
 				case 'ClickedOpenFile':
-					var _v6 = _v0.b;
+					var _v5 = _v0.b;
 					return _Utils_Tuple2(
 						model,
 						A2(
@@ -7818,15 +7851,15 @@ var $author$project$Main$update = F2(
 					var content = _v0.b.a;
 					return _Utils_Tuple2(
 						function () {
-							var _v7 = A2($elm$json$Json$Decode$decodeString, $author$project$Character$decoder, content);
-							if (_v7.$ === 'Err') {
-								var err = _v7.a;
+							var _v6 = A2($elm$json$Json$Decode$decodeString, $author$project$Character$decoder, content);
+							if (_v6.$ === 'Err') {
+								var err = _v6.a;
 								return A2(
 									$author$project$Main$DecodeErr,
 									$author$project$Main$toNavKey(model),
 									err);
 							} else {
-								var character = _v7.a;
+								var character = _v6.a;
 								return A2(
 									$author$project$Main$Character,
 									$author$project$Main$toNavKey(model),
@@ -7835,61 +7868,92 @@ var $author$project$Main$update = F2(
 						}(),
 						$elm$core$Platform$Cmd$none);
 				case 'LinkClicked':
-					if (_v0.a.$ === 'Character') {
-						var _v8 = _v0.a;
-						var navKey = _v8.a;
-						var character = _v8.b;
-						var urlRequest = _v0.b.a;
-						if (urlRequest.$ === 'Internal') {
-							var url = urlRequest.a;
-							var route = A2(
-								$elm$core$Debug$log,
-								'parsed url: ',
-								$author$project$Route$parse(url));
-							if ((route.$ === 'Just') && (route.a.$ === 'Abilities')) {
-								var selected = route.a.a;
-								return A3(
-									$elm$core$Tuple$mapBoth,
-									$author$project$Main$Abilities(navKey),
-									function (cmd) {
-										return $elm$core$Platform$Cmd$batch(
+					switch (_v0.a.$) {
+						case 'Character':
+							var _v7 = _v0.a;
+							var navKey = _v7.a;
+							var character = _v7.b;
+							var urlRequest = _v0.b.a;
+							if (urlRequest.$ === 'Internal') {
+								var url = urlRequest.a;
+								var route = A2(
+									$elm$core$Debug$log,
+									'parsed url: ',
+									$author$project$Route$parse(url));
+								if (route.$ === 'Abilities') {
+									var selected = route.a;
+									return A3(
+										$elm$core$Tuple$mapBoth,
+										$author$project$Main$Abilities,
+										function (cmd) {
+											return $elm$core$Platform$Cmd$batch(
+												_List_fromArray(
+													[
+														A2($elm$core$Platform$Cmd$map, $author$project$Main$AbilitiesMsg, cmd),
+														A2(
+														$elm$browser$Browser$Navigation$pushUrl,
+														$author$project$Main$toNavKey(model),
+														$author$project$Route$toString(route))
+													]));
+										},
+										A3($author$project$Abilities$init, navKey, selected, character));
+								} else {
+									return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+								}
+							} else {
+								var href = urlRequest.a;
+								return _Utils_Tuple2(
+									model,
+									$elm$browser$Browser$Navigation$load(href));
+							}
+						case 'Abilities':
+							var abilities = _v0.a.a;
+							var urlRequest = _v0.b.a;
+							if (urlRequest.$ === 'Internal') {
+								var url = urlRequest.a;
+								var route = A2(
+									$elm$core$Debug$log,
+									'parsed url: ',
+									$author$project$Route$parse(url));
+								var navKey = $author$project$Abilities$toNavKey(abilities);
+								if (route.$ === 'Root') {
+									return _Utils_Tuple2(
+										A2($author$project$Main$Character, navKey, abilities.character),
+										$elm$core$Platform$Cmd$batch(
 											_List_fromArray(
 												[
-													A2($elm$core$Platform$Cmd$map, $author$project$Main$AbilitiesMsg, cmd),
 													A2(
 													$elm$browser$Browser$Navigation$pushUrl,
-													$author$project$Main$toNavKey(model),
+													navKey,
 													$author$project$Route$toString(route))
-												]));
-									},
-									A2($author$project$Abilities$init, selected, character));
+												])));
+								} else {
+									return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+								}
 							} else {
-								return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+								var href = urlRequest.a;
+								return _Utils_Tuple2(
+									model,
+									$elm$browser$Browser$Navigation$load(href));
 							}
-						} else {
-							var href = urlRequest.a;
-							return _Utils_Tuple2(
-								model,
-								$elm$browser$Browser$Navigation$load(href));
-						}
-					} else {
-						break _v0$9;
+						default:
+							break _v0$10;
 					}
 				default:
-					break _v0$9;
+					break _v0$10;
 			}
 		}
 		return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 	});
+var $author$project$Main$CharacterMsg = function (a) {
+	return {$: 'CharacterMsg', a: a};
+};
 var $author$project$Main$ClickedOpenFile = {$: 'ClickedOpenFile'};
 var $author$project$Main$PickedAssignment = function (a) {
 	return {$: 'PickedAssignment', a: a};
 };
 var $author$project$Main$PickedClass = function (a) {
 	return {$: 'PickedClass', a: a};
-};
-var $author$project$Main$UpdatedCharacter = function (a) {
-	return {$: 'UpdatedCharacter', a: a};
 };
 var $elm$html$Html$a = _VirtualDom_node('a');
 var $author$project$Boon$dogsbody = {
@@ -8091,32 +8155,34 @@ var $elm$core$List$isEmpty = function (xs) {
 };
 var $elm$html$Html$summary = _VirtualDom_node('summary');
 var $author$project$Boon$toString = function (boon) {
-	switch (boon.$) {
-		case 'GainResistance':
-			var resistance = boon.a;
-			var bonus = boon.b;
-			return $author$project$Boon$Resistance$toString(resistance) + ('+' + $elm$core$String$fromInt(bonus));
-		case 'GainDomains':
-			var domains = boon.a;
-			var isMultiple = $elm$core$List$length(domains) > 1;
-			return 'Gain the ' + (A2(
-				$elm$core$String$join,
-				', ',
-				A2($elm$core$List$map, $author$project$Boon$Domain$toString, domains)) + (' skill' + ((isMultiple ? 's' : '') + '.')));
-		case 'GainSkills':
-			var skills = boon.a;
-			var isMultiple = $elm$core$List$length(skills) > 1;
-			return 'Gain the ' + (A2(
-				$elm$core$String$join,
-				', ',
-				A2($elm$core$List$map, $author$project$Boon$Skill$toString, skills)) + (' domain' + ((isMultiple ? 's' : '') + '.')));
-		case 'GainEquipment':
-			var equipment = boon.a;
-			return 'Gain ' + (A2($elm$core$String$join, ', ', equipment) + '.');
-		default:
-			var refresh = boon.a;
-			return 'Gain ' + (A2($elm$core$String$join, ', ', refresh) + ' as a refresh.');
-	}
+	return function () {
+		switch (boon.$) {
+			case 'GainResistance':
+				var resistance = boon.a;
+				var bonus = boon.b;
+				return $author$project$Boon$Resistance$toString(resistance) + ('+' + $elm$core$String$fromInt(bonus));
+			case 'GainDomains':
+				var domains = boon.a;
+				var isMultiple = $elm$core$List$length(domains) > 1;
+				return 'Gain the ' + (A2(
+					$elm$core$String$join,
+					', ',
+					A2($elm$core$List$map, $author$project$Boon$Domain$toString, domains)) + (' domain' + (isMultiple ? 's' : '')));
+			case 'GainSkills':
+				var skills = boon.a;
+				var isMultiple = $elm$core$List$length(skills) > 1;
+				return 'Gain the ' + (A2(
+					$elm$core$String$join,
+					', ',
+					A2($elm$core$List$map, $author$project$Boon$Skill$toString, skills)) + (' skill' + (isMultiple ? 's' : '')));
+			case 'GainEquipment':
+				var equipment = boon.a;
+				return 'Gain ' + A2($elm$core$String$join, ', ', equipment);
+			default:
+				var refresh = boon.a;
+				return 'Gain ' + (A2($elm$core$String$join, ', ', refresh) + ' as a refresh');
+		}
+	}() + '.';
 };
 var $author$project$Ability$view = function (ability) {
 	return A2(
@@ -8291,6 +8357,16 @@ var $author$project$Abilities$view = function (abilities) {
 				_List_fromArray(
 					[
 						A2(
+						$elm$html$Html$a,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$href('/')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Back')
+							])),
+						A2(
 						$elm$html$Html$ul,
 						_List_Nil,
 						A2(
@@ -8338,9 +8414,6 @@ var $author$project$Abilities$view = function (abilities) {
 						_Utils_eq(name, selected));
 				},
 				primaryFirst)));
-};
-var $author$project$Character$Updated = function (a) {
-	return {$: 'Updated', a: a};
 };
 var $author$project$Character$UpdatedBonds = function (a) {
 	return {$: 'UpdatedBonds', a: a};
@@ -8585,390 +8658,335 @@ var $author$project$Character$viewBoolDict = F3(
 			_List_Nil,
 			A2($elm$core$List$map, viewItem, list));
 	});
-var $author$project$Character$view = F2(
-	function (toMsg, character) {
-		return {
-			body: _List_fromArray(
-				[
-					A2(
-					$elm$html$Html$main_,
-					_List_Nil,
-					_List_fromArray(
-						[
-							A2(
-							$elm$html$Html$section,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$class('name')
-								]),
-							_List_fromArray(
-								[
-									A2(
-									$elm$html$Html$label,
-									_List_Nil,
-									_List_fromArray(
-										[
-											A2(
-											$elm$html$Html$h2,
+var $author$project$Character$view = function (character) {
+	return {
+		body: _List_fromArray(
+			[
+				A2(
+				$elm$html$Html$main_,
+				_List_Nil,
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$section,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('name')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$label,
+								_List_Nil,
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$h2,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('Name')
+											])),
+										A2(
+										$elm$html$Html$input,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$type_('text'),
+												$elm$html$Html$Attributes$value(character.name),
+												$elm$html$Html$Events$onInput($author$project$Character$UpdatedName)
+											]),
+										_List_Nil)
+									]))
+							])),
+						A2(
+						$elm$html$Html$section,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('class')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$label,
+								_List_Nil,
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$h2,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('Class')
+											])),
+										A2(
+										$elm$html$Html$input,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$type_('text'),
+												$elm$html$Html$Attributes$value(character._class)
+											]),
+										_List_Nil)
+									]))
+							])),
+						A2(
+						$elm$html$Html$section,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('assignment')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$label,
+								_List_Nil,
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$h2,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('Assignment')
+											])),
+										A2(
+										$elm$html$Html$input,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$type_('text'),
+												$elm$html$Html$Attributes$value(character.assignment)
+											]),
+										_List_Nil)
+									]))
+							])),
+						A2(
+						$elm$html$Html$section,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('resistances')
+							]),
+						_List_fromArray(
+							[
+								A2($author$project$Boon$Resistance$view, $author$project$Character$UpdatedResistances, character.resistances)
+							])),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('skills-and-domains')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$section,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('skills')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$h2,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('Skills')
+											])),
+										A3($author$project$Character$viewBoolDict, $author$project$Character$UpdatedSkills, $author$project$Boon$Skill$toString, character.skills)
+									])),
+								A2(
+								$elm$html$Html$section,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('domains')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$h2,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('Domains')
+											])),
+										A3($author$project$Character$viewBoolDict, $author$project$Character$UpdatedDomains, $author$project$Boon$Domain$toString, character.domains)
+									]))
+							])),
+						A2(
+						$elm$html$Html$section,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('abilities')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$h2,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text('Abilities')
+									])),
+								A2(
+								$elm$html$Html$a,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$href('abilities#' + character._class)
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('view')
+									])),
+								A2(
+								$elm$html$Html$ul,
+								_List_Nil,
+								A2(
+									$elm$core$List$map,
+									function (ability) {
+										return A2(
+											$elm$html$Html$li,
 											_List_Nil,
 											_List_fromArray(
 												[
-													$elm$html$Html$text('Name')
-												])),
-											A2(
-											$elm$html$Html$input,
-											_List_fromArray(
-												[
-													$elm$html$Html$Attributes$type_('text'),
-													$elm$html$Html$Attributes$value(character.name),
-													$elm$html$Html$Events$onInput(
-													A2(
-														$elm$core$Basics$composeR,
-														$author$project$Character$UpdatedName,
-														A2($elm$core$Basics$composeR, $author$project$Character$Updated, toMsg)))
-												]),
-											_List_Nil)
-										]))
-								])),
-							A2(
-							$elm$html$Html$section,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$class('class')
-								]),
-							_List_fromArray(
-								[
-									A2(
-									$elm$html$Html$label,
-									_List_Nil,
-									_List_fromArray(
-										[
-											A2(
-											$elm$html$Html$h2,
-											_List_Nil,
-											_List_fromArray(
-												[
-													$elm$html$Html$text('Class')
-												])),
-											A2(
-											$elm$html$Html$input,
-											_List_fromArray(
-												[
-													$elm$html$Html$Attributes$type_('text'),
-													$elm$html$Html$Attributes$value(character._class)
-												]),
-											_List_Nil)
-										]))
-								])),
-							A2(
-							$elm$html$Html$section,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$class('assignment')
-								]),
-							_List_fromArray(
-								[
-									A2(
-									$elm$html$Html$label,
-									_List_Nil,
-									_List_fromArray(
-										[
-											A2(
-											$elm$html$Html$h2,
-											_List_Nil,
-											_List_fromArray(
-												[
-													$elm$html$Html$text('Assignment')
-												])),
-											A2(
-											$elm$html$Html$input,
-											_List_fromArray(
-												[
-													$elm$html$Html$Attributes$type_('text'),
-													$elm$html$Html$Attributes$value(character.assignment)
-												]),
-											_List_Nil)
-										]))
-								])),
-							A2(
-							$elm$html$Html$section,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$class('resistances')
-								]),
-							_List_fromArray(
-								[
-									A2(
-									$author$project$Boon$Resistance$view,
-									A2(
-										$elm$core$Basics$composeR,
-										$author$project$Character$UpdatedResistances,
-										A2($elm$core$Basics$composeR, $author$project$Character$Updated, toMsg)),
-									character.resistances)
-								])),
-							A2(
-							$elm$html$Html$div,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$class('skills-and-domains')
-								]),
-							_List_fromArray(
-								[
-									A2(
-									$elm$html$Html$section,
-									_List_fromArray(
-										[
-											$elm$html$Html$Attributes$class('skills')
-										]),
-									_List_fromArray(
-										[
-											A2(
-											$elm$html$Html$h2,
-											_List_Nil,
-											_List_fromArray(
-												[
-													$elm$html$Html$text('Skills')
-												])),
-											A3(
-											$author$project$Character$viewBoolDict,
-											A2(
-												$elm$core$Basics$composeR,
-												$author$project$Character$UpdatedSkills,
-												A2($elm$core$Basics$composeR, $author$project$Character$Updated, toMsg)),
-											$author$project$Boon$Skill$toString,
-											character.skills)
-										])),
-									A2(
-									$elm$html$Html$section,
-									_List_fromArray(
-										[
-											$elm$html$Html$Attributes$class('domains')
-										]),
-									_List_fromArray(
-										[
-											A2(
-											$elm$html$Html$h2,
-											_List_Nil,
-											_List_fromArray(
-												[
-													$elm$html$Html$text('Domains')
-												])),
-											A3(
-											$author$project$Character$viewBoolDict,
-											A2(
-												$elm$core$Basics$composeR,
-												$author$project$Character$UpdatedDomains,
-												A2($elm$core$Basics$composeR, $author$project$Character$Updated, toMsg)),
-											$author$project$Boon$Domain$toString,
-											character.domains)
-										]))
-								])),
-							A2(
-							$elm$html$Html$section,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$class('abilities')
-								]),
-							_List_fromArray(
-								[
-									A2(
-									$elm$html$Html$h2,
-									_List_Nil,
-									_List_fromArray(
-										[
-											$elm$html$Html$text('Abilities')
-										])),
-									A2(
-									$elm$html$Html$a,
-									_List_fromArray(
-										[
-											$elm$html$Html$Attributes$href('abilities#' + character._class)
-										]),
-									_List_fromArray(
-										[
-											$elm$html$Html$text('view')
-										])),
-									A2(
-									$elm$html$Html$a,
-									_List_fromArray(
-										[
-											$elm$html$Html$Attributes$href('abilities#Cloak')
-										]),
-									_List_fromArray(
-										[
-											$elm$html$Html$text('view cloaks')
-										])),
-									A2(
-									$elm$html$Html$ul,
-									_List_Nil,
-									A2(
-										$elm$core$List$map,
-										function (ability) {
-											return A2(
-												$elm$html$Html$li,
-												_List_Nil,
-												_List_fromArray(
-													[
-														$author$project$Ability$view(ability)
-													]));
-										},
-										character.abilities))
-								])),
-							A2(
-							$elm$html$Html$section,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$class('fallout')
-								]),
-							_List_fromArray(
-								[
-									A2(
-									$elm$html$Html$h2,
-									_List_Nil,
-									_List_fromArray(
-										[
-											$elm$html$Html$text('Fallout')
-										])),
-									A2(
-									$elm$html$Html$textarea,
-									_List_fromArray(
-										[
-											$elm$html$Html$Events$onInput(
-											A2(
-												$elm$core$Basics$composeR,
-												$author$project$Character$UpdatedFallout,
-												A2($elm$core$Basics$composeR, $author$project$Character$Updated, toMsg)))
-										]),
-									_List_fromArray(
-										[
-											$elm$html$Html$text(character.fallout)
-										]))
-								])),
-							A2(
-							$elm$html$Html$section,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$class('equipment')
-								]),
-							_List_fromArray(
-								[
-									A2(
-									$elm$html$Html$h2,
-									_List_Nil,
-									_List_fromArray(
-										[
-											$elm$html$Html$text('Equipment')
-										])),
-									A2(
-									$elm$html$Html$textarea,
-									_List_fromArray(
-										[
-											$elm$html$Html$Events$onInput(
-											A2(
-												$elm$core$Basics$composeR,
-												$author$project$Character$UpdatedEquipment,
-												A2($elm$core$Basics$composeR, $author$project$Character$Updated, toMsg)))
-										]),
-									_List_fromArray(
-										[
-											$elm$html$Html$text(character.equipment)
-										]))
-								])),
-							A2(
-							$elm$html$Html$section,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$class('refresh')
-								]),
-							_List_fromArray(
-								[
-									A2(
-									$elm$html$Html$h2,
-									_List_Nil,
-									_List_fromArray(
-										[
-											$elm$html$Html$text('Refresh')
-										])),
-									A2(
-									$elm$html$Html$textarea,
-									_List_fromArray(
-										[
-											$elm$html$Html$Events$onInput(
-											A2(
-												$elm$core$Basics$composeR,
-												$author$project$Character$UpdatedRefresh,
-												A2($elm$core$Basics$composeR, $author$project$Character$Updated, toMsg)))
-										]),
-									_List_fromArray(
-										[
-											$elm$html$Html$text(character.refresh)
-										]))
-								])),
-							A2(
-							$elm$html$Html$section,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$class('bonds')
-								]),
-							_List_fromArray(
-								[
-									A2(
-									$elm$html$Html$h2,
-									_List_Nil,
-									_List_fromArray(
-										[
-											$elm$html$Html$text('Bonds')
-										])),
-									A2(
-									$elm$html$Html$textarea,
-									_List_fromArray(
-										[
-											$elm$html$Html$Events$onInput(
-											A2(
-												$elm$core$Basics$composeR,
-												$author$project$Character$UpdatedBonds,
-												A2($elm$core$Basics$composeR, $author$project$Character$Updated, toMsg)))
-										]),
-									_List_fromArray(
-										[
-											$elm$html$Html$text(character.bonds)
-										]))
-								])),
-							A2(
-							$elm$html$Html$section,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$class('knacks')
-								]),
-							_List_fromArray(
-								[
-									A2(
-									$elm$html$Html$h2,
-									_List_Nil,
-									_List_fromArray(
-										[
-											$elm$html$Html$text('Knacks')
-										])),
-									A2(
-									$elm$html$Html$textarea,
-									_List_fromArray(
-										[
-											$elm$html$Html$Events$onInput(
-											A2(
-												$elm$core$Basics$composeR,
-												$author$project$Character$UpdatedKnacks,
-												A2($elm$core$Basics$composeR, $author$project$Character$Updated, toMsg)))
-										]),
-									_List_fromArray(
-										[
-											$elm$html$Html$text(character.knacks)
-										]))
-								]))
-						]))
-				]),
-			title: character.name
-		};
-	});
+													$author$project$Ability$view(ability)
+												]));
+									},
+									character.abilities))
+							])),
+						A2(
+						$elm$html$Html$section,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('fallout')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$h2,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text('Fallout')
+									])),
+								A2(
+								$elm$html$Html$textarea,
+								_List_fromArray(
+									[
+										$elm$html$Html$Events$onInput($author$project$Character$UpdatedFallout)
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text(character.fallout)
+									]))
+							])),
+						A2(
+						$elm$html$Html$section,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('equipment')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$h2,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text('Equipment')
+									])),
+								A2(
+								$elm$html$Html$textarea,
+								_List_fromArray(
+									[
+										$elm$html$Html$Events$onInput($author$project$Character$UpdatedEquipment)
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text(character.equipment)
+									]))
+							])),
+						A2(
+						$elm$html$Html$section,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('refresh')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$h2,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text('Refresh')
+									])),
+								A2(
+								$elm$html$Html$textarea,
+								_List_fromArray(
+									[
+										$elm$html$Html$Events$onInput($author$project$Character$UpdatedRefresh)
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text(character.refresh)
+									]))
+							])),
+						A2(
+						$elm$html$Html$section,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('bonds')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$h2,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text('Bonds')
+									])),
+								A2(
+								$elm$html$Html$textarea,
+								_List_fromArray(
+									[
+										$elm$html$Html$Events$onInput($author$project$Character$UpdatedBonds)
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text(character.bonds)
+									]))
+							])),
+						A2(
+						$elm$html$Html$section,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('knacks')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$h2,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text('Knacks')
+									])),
+								A2(
+								$elm$html$Html$textarea,
+								_List_fromArray(
+									[
+										$elm$html$Html$Events$onInput($author$project$Character$UpdatedKnacks)
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text(character.knacks)
+									]))
+							]))
+					]))
+			]),
+		title: character.name
+	};
+};
 var $author$project$Main$view = function (model) {
 	switch (model.$) {
 		case 'DecodeErr':
@@ -9070,10 +9088,13 @@ var $author$project$Main$view = function (model) {
 			};
 		case 'Character':
 			var character = model.b;
-			var characterView = A2($author$project$Character$view, $author$project$Main$UpdatedCharacter, character);
+			var characterView = $author$project$Character$view(character);
 			return {
 				body: _Utils_ap(
-					characterView.body,
+					A2(
+						$elm$core$List$map,
+						$elm$html$Html$map($author$project$Main$CharacterMsg),
+						characterView.body),
 					_List_fromArray(
 						[
 							A2(
@@ -9090,7 +9111,7 @@ var $author$project$Main$view = function (model) {
 				title: characterView.title
 			};
 		default:
-			var abilities = model.b;
+			var abilities = model.a;
 			return {
 				body: _List_fromArray(
 					[

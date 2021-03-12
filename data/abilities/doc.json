@@ -1,10 +1,53 @@
 {
     "low": [
         {
+            "name": "Triage",
+            "flavor": "You can sense who most needs your help.",
+            "boons": [
+                {
+                    "resistance": "Reputation",
+                    "bonus": 1
+                }
+            ],
+            "text": "Once per situation, ask the GM which NPC is most in need of help, and they'll tell you."
+        },
+        {
             "name": "Combat Medic",
             "flavor": "You can work in even the most stressful situations.",
             "boons": [],
             "text": "When you roll to help someone while you are in danger, do so with mastery."
+        },
+        {
+            "name": "Transfusion",
+            "flavor": "You attempt to heal someone at your own expense.",
+            "boons": [],
+            "text": "Roll Patch+Science. On a success, remove D6 Body stress on another character, or D3 stress from Body on yourself."
+        },
+        {
+            "name": "Anatomical Knowledge",
+            "flavor": "You know exactly where it hurts most.",
+            "boons": [],
+            "text": "Your attacks gain the (Piercing, Scarring) tags."
+        },
+        {
+            "name": "Just a Scratch",
+            "flavor": "You word your diagnosis as kindly as possible.",
+            "boons": [
+                {
+                    "skill": ["Deceive"]
+                }
+            ],
+            "text": "Your attacks gain the (Piercing, Scarring) tags."
+        },
+        {
+            "name": "Med School Graduate",
+            "flavor": "You have mastered the art of cramming for an exam.",
+            "boons": [
+                {
+                    "skill": ["Investigate"]
+                }
+            ],
+            "text": "You can spend an hour learning as much about a subject as possible. Roll Investigate+Science to do so. On a success, choose a Domain. You are treated as possessing that Domain (or a Knack in the Domain if you already possess it) for the rest of the session or until you use this ability again, whichever comes first. If you do use this ability twice in the same session, it may not be for the same Domain both times."
         }
     ],
     "medium": [
@@ -13,6 +56,28 @@
             "flavor": "You use the tools at hand to fix a serious injury.",
             "boons": [],
             "text": "Once per session, remove an ongoing minor or moderate Body fallot result, or downgrade one severe Body fallout result to moderate."
+        },
+        {
+            "name": "I've Seen Worse",
+            "flavor": "By recalling the gruesome injuries you've seen, you can convince someone that their own ailment isn't so bad.",
+            "boons": [],
+            "text": "When a nearby ally marks stress to Body, you may mark D3 stress to Resolve. If you do, the ally instantly removes D6 Body stress before the GM rolls for fallout."
+        },
+        {
+            "name": "Trust Me, I'm a Doctor",
+            "flavor": "Doctors are well liked and their presence is generally not questioned.",
+            "boons": [
+                {
+                    "skill": ["Deceive"]
+                }
+            ],
+            "text": "While you're wearing your medic garb, if you try to convince someone that you belong somewhere you don't, roll with mastery."
+        },
+        {
+            "name": "Grit Your Teeth",
+            "flavor": "Doctors don't get sick, especially not you.",
+            "boons": [],
+            "text": "While you're wearing your medic garb, if you try to convince someone that you belong somewhere you don't, roll with mastery."
         }
     ],
     "high": [

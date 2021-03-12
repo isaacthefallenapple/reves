@@ -1,6 +1,7 @@
 module Abilities exposing (..)
 
 import Ability exposing (Ability)
+import Browser.Navigation as Nav
 import Character
 import Dict exposing (Dict)
 import Html exposing (..)
@@ -8,6 +9,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Http
 import Json.Decode as Decode exposing (Decoder)
+import Route
 
 
 location : String
@@ -36,13 +38,19 @@ type alias Metadata =
 
 
 type alias Abilities =
-    { character : Character.Stats
+    { navKey : Nav.Key
+    , character : Character.Stats
     , primary : String
     , selected : String
     , metadata : Status Metadata
     , tabs : Dict String (Status Advances)
     , chosen : List Ability
     }
+
+
+toNavKey : Abilities -> Nav.Key
+toNavKey =
+    .navKey
 
 
 type Status a
@@ -77,9 +85,10 @@ type Msg
 -- INIT
 
 
-init : Maybe String -> Character.Stats -> ( Abilities, Cmd Msg )
-init maybeSelected character =
-    ( { character = character
+init : Nav.Key -> Maybe String -> Character.Stats -> ( Abilities, Cmd Msg )
+init navKey maybeSelected character =
+    ( { navKey = navKey
+      , character = character
       , primary = character.class
       , selected = Maybe.withDefault character.class maybeSelected
       , metadata = Loading
@@ -126,7 +135,9 @@ update msg abilities =
             )
 
         ClickedTab selected ->
-            ( { abilities | selected = selected }, Cmd.none )
+            ( { abilities | selected = selected }
+            , Nav.pushUrl abilities.navKey (Route.toString (Route.Abilities (Just selected)))
+            )
 
         ApplyChosen ->
             ( { abilities | character = Character.addAbilities abilities.chosen abilities.character }, Cmd.none )
@@ -175,7 +186,10 @@ view abilities =
         []
         (nav
             []
-            [ ul
+            [ a
+                [ href "/" ]
+                [ text "Back" ]
+            , ul
                 []
                 (List.map
                     (\( name, _ ) ->

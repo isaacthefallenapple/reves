@@ -24,7 +24,7 @@ type Boon
 
 toString : Boon -> String
 toString boon =
-    case boon of
+    (case boon of
         GainResistance resistance bonus ->
             Resistance.toString resistance ++ "+" ++ String.fromInt bonus
 
@@ -35,14 +35,13 @@ toString boon =
             in
             "Gain the "
                 ++ String.join ", " (List.map Domain.toString domains)
-                ++ " skill"
+                ++ " domain"
                 ++ (if isMultiple then
                         "s"
 
                     else
                         ""
                    )
-                ++ "."
 
         GainSkills skills ->
             let
@@ -51,20 +50,21 @@ toString boon =
             in
             "Gain the "
                 ++ String.join ", " (List.map Skill.toString skills)
-                ++ " domain"
+                ++ " skill"
                 ++ (if isMultiple then
                         "s"
 
                     else
                         ""
                    )
-                ++ "."
 
         GainEquipment equipment ->
-            "Gain " ++ String.join ", " equipment ++ "."
+            "Gain " ++ String.join ", " equipment
 
         GainRefresh refresh ->
-            "Gain " ++ String.join ", " refresh ++ " as a refresh."
+            "Gain " ++ String.join ", " refresh ++ " as a refresh"
+    )
+        ++ "."
 
 
 

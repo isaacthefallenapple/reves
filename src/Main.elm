@@ -31,7 +31,7 @@ type Model
     | PickAssignment Nav.Key Class.Class
     | Character Nav.Key Character.Stats
     | DecodeErr Nav.Key Decode.Error
-    | Abilities Nav.Key Abilities
+    | Abilities Abilities
 
 
 toNavKey : Model -> Nav.Key
@@ -49,8 +49,8 @@ toNavKey model =
         DecodeErr navKey _ ->
             navKey
 
-        Abilities navKey _ ->
-            navKey
+        Abilities abilities ->
+            Abilities.toNavKey abilities
 
 
 
@@ -148,7 +148,7 @@ view model =
                 List.map (Html.map CharacterMsg) characterView.body ++ [ a [ href "abilities#Doc" ] [ text "Doc abilities" ] ]
             }
 
-        Abilities _ abilities ->
+        Abilities abilities ->
             { title = abilities.selected
             , body = [ Html.map AbilitiesMsg (Abilities.view abilities) ]
             }
@@ -182,8 +182,8 @@ update msg model =
             in
             ( Character navKey updatedCharacter, saveCharacter updatedCharacter )
 
-        ( Abilities navKey abilities, AbilitiesMsg subMsg ) ->
-            Tuple.mapBoth (Abilities navKey) (Cmd.map AbilitiesMsg) (Abilities.update subMsg abilities)
+        ( Abilities abilities, AbilitiesMsg subMsg ) ->
+            Tuple.mapBoth Abilities (Cmd.map AbilitiesMsg) (Abilities.update subMsg abilities)
 
         ( Character _ character, ClickedSave ) ->
             ( model
@@ -216,8 +216,40 @@ update msg model =
                             Debug.log "parsed url: " (Route.parse url)
                     in
                     case route of
-                        Just (Route.Abilities selected) ->
-                            Tuple.mapBoth (Abilities navKey) (\cmd -> Cmd.batch [ Cmd.map AbilitiesMsg cmd, Nav.pushUrl (toNavKey model) (Route.toString route) ]) (Abilities.init selected character)
+                        Route.Abilities selected ->
+                            Tuple.mapBoth
+                                Abilities
+                                (\cmd ->
+                                    Cmd.batch
+                                        [ Cmd.map AbilitiesMsg cmd
+                                        , Nav.pushUrl (toNavKey model) (Route.toString route)
+                                        ]
+                                )
+                                (Abilities.init navKey selected character)
+
+                        _ ->
+                            ( model, Cmd.none )
+
+                Browser.External href ->
+                    ( model, Nav.load href )
+
+        ( Abilities abilities, LinkClicked urlRequest ) ->
+            case urlRequest of
+                Browser.Internal url ->
+                    let
+                        route =
+                            Debug.log "parsed url: " (Route.parse url)
+
+                        navKey =
+                            Abilities.toNavKey abilities
+                    in
+                    case route of
+                        Route.Root ->
+                            ( Character navKey abilities.character
+                            , Cmd.batch
+                                [ Nav.pushUrl navKey (Route.toString route)
+                                ]
+                            )
 
                         _ ->
                             ( model, Cmd.none )
