@@ -1,26 +1,88 @@
 {
     "low": [
         {
-            "name": "Combat Medic",
-            "flavor": "You can work in even the most stressful situations.",
+            "name": "The Secret of the Crowd",
+            "flavor": "You can hide in plain sight, so long as there are others around.",
             "boons": [],
-            "text": "When you roll to help someone while you are in danger, do so with mastery."
+            "text": "When you wear your mask and stand in a crowd, you will blend into the background unless you do something out of the ordinary to attract attention."
+        },
+        {
+            "name": "The Secret of the Second Skin",
+            "flavor": "You are adept at dodging a bullet, so to speak.",
+            "boons": [],
+            "text": "Once per situation, when you are attacked by an enemy and the GM would roll to inflict stress, you take 1 stress instead."
+        },
+        {
+            "name": "The Secret of Loose Tongues",
+            "flavor": "It was your job to make people say things they weren’t supposed to.",
+            "boons": [
+                {
+                    "skill": ["Compel"]
+                }
+            ],
+            "text": "When someone takes a drink from your bottle, they will feel compelled to tell you about a crime they were involved in, or adjacent to."
+        },
+        {
+            "name": "Always Outnumbered, Never Outrun",
+            "flavor": "You are exceptional at getting the hell away from your problems.",
+            "boons": [
+                {
+                    "skill": ["Scramble"]
+                }
+            ],
+            "text": "When you flee a superior force, you do so with mastery."
+        },
+        {
+            "name": "Assassin",
+            "flavor": "When you get close to your target, their death is swift.",
+            "boons": [],
+            "text": "When you inflict stress in melee combat, re-roll the stress die if it shows 1. If it shows the maximum number (i.e. 6 on a D6, 8 on a D8, etc.) roll it again and add both together."
         }
     ],
     "medium": [
         {
-            "name": "Back Alley Surgery",
-            "flavor": "You use the tools at hand to fix a serious injury.",
+            "name": "Scapegoat",
+            "flavor": "Your ability to shift blame is legendary.",
+            "boons": [
+                {
+                    "resistance": "Shadow",
+                    "bonus": 1
+                }
+            ],
+            "text": "Once per session, when an NPC accuses you of wrongdoing, you can automatically convince them that you’re entirely innocent and someone else (choose who) is responsible."
+        },
+        {
+            "name": "Untouchable",
+            "flavor": "You take any measure to survive, and thus the revolution will survive.",
             "boons": [],
-            "text": "Once per session, remove an ongoing minor or moderate Body fallot result, or downgrade one severe Body fallout result to moderate."
+            "text": "Once per scene, if you suffer Body fallout, mark D3 stress to Mind and transfer the fallout to a non-enemy NPC who’s in the scene instead. Whether they willingly sacrificed themselves or you managed to get behind them in time is up to you."
+        },
+        {
+            "name": "Dirty Fighting",
+            "flavor": "You have a wide variety of dirty tricks up your sleep.",
+            "boons": [],
+            "text": "Once per situation, when you inflict damage on an enemy, you reduce their difficulty to 0 until they get away from you and catch their breath."
+        },
+        {
+            "name": "Skeleton Key",
+            "flavor": "No lock will impede your progress.",
+            "boons": [
+                {
+                    "skill": ["Steal"]
+                }
+            ],
+            "text": "When you try to open a door, that door is unlocked and unbarred. It works on windows and trapdoors, but not on safes or display cases — it only allows access to portals big enough for a grown Yaru to fit through."
+        },
+        {
+            "name": "Student of the Blade",
+            "flavor": null,
+            "boons": [
+                {
+                    "skill": ["Scrap"]
+                }
+            ],
+            "text": "Your blade’s damage die increases by 1 step and it gains the Defensive tag."
         }
     ],
-    "high": [
-        {
-            "name": "Rejuvenation",
-            "flavor": "You managed to get your hands on an authentic Yaru regeneration pod.",
-            "boons": [],
-            "text": "You immerse an ally in the regenerating liquid and seal the pod. Within, their body is healed, freed from scars and injuries, and their mind can rest for a while. After a week, they can emerge again from the pod — any long-term effects of Body and Resolve fallout are removed. Additionally, the first time they undergo this procedure, they gain +1 Body."
-        }
-    ]
+    "high": []
 }

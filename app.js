@@ -7202,7 +7202,7 @@ var $author$project$Abilities$init = F3(
 		return _Utils_Tuple2(
 			{
 				character: character,
-				chosen: _List_Nil,
+				chosen: $elm$core$Dict$empty,
 				metadata: $author$project$Abilities$Loading,
 				navKey: navKey,
 				primary: character._class,
@@ -7492,7 +7492,7 @@ var $author$project$Route$parse = function (url) {
 };
 var $elm$browser$Browser$Navigation$pushUrl = _Browser_pushUrl;
 var $author$project$Ports$storeCharacter = _Platform_outgoingPort('storeCharacter', $elm$json$Json$Encode$string);
-var $author$project$Main$saveCharacter = function (character) {
+var $author$project$Character$save = function (character) {
 	return $author$project$Ports$storeCharacter(
 		A2(
 			$elm$json$Json$Encode$encode,
@@ -7552,11 +7552,17 @@ var $author$project$Abilities$Loaded = function (a) {
 };
 var $author$project$Character$addAbilities = F2(
 	function (abilities, character) {
-		return _Utils_update(
-			character,
-			{
-				abilities: _Utils_ap(character.abilities, abilities)
-			});
+		return A3(
+			$elm$core$List$foldl,
+			function (ability) {
+				return $author$project$Character$applyBoons(ability.boons);
+			},
+			_Utils_update(
+				character,
+				{
+					abilities: _Utils_ap(character.abilities, abilities)
+				}),
+			abilities);
 	});
 var $elm$core$Basics$always = F2(
 	function (a, _v0) {
@@ -7632,16 +7638,27 @@ var $author$project$Abilities$statusFromResult = function (result) {
 		return $author$project$Abilities$Failed(err);
 	}
 };
+var $elm$core$Dict$values = function (dict) {
+	return A3(
+		$elm$core$Dict$foldr,
+		F3(
+			function (key, value, valueList) {
+				return A2($elm$core$List$cons, value, valueList);
+			}),
+		_List_Nil,
+		dict);
+};
 var $author$project$Abilities$update = F2(
 	function (msg, abilities) {
 		switch (msg.$) {
 			case 'ChoseAbility':
 				var ability = msg.a;
+				var _v1 = A2($elm$core$Debug$log, 'Chose ability', _Utils_Tuple0);
 				return _Utils_Tuple2(
 					_Utils_update(
 						abilities,
 						{
-							chosen: A2($elm$core$List$cons, ability, abilities.chosen)
+							chosen: A3($elm$core$Dict$insert, ability.name, ability, abilities.chosen)
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 'GotMetadata':
@@ -7696,13 +7713,15 @@ var $author$project$Abilities$update = F2(
 							$author$project$Route$Abilities(
 								$elm$core$Maybe$Just(selected)))));
 			default:
+				var updatedCharacter = A2(
+					$author$project$Character$addAbilities,
+					$elm$core$Dict$values(abilities.chosen),
+					abilities.character);
 				return _Utils_Tuple2(
 					_Utils_update(
 						abilities,
-						{
-							character: A2($author$project$Character$addAbilities, abilities.chosen, abilities.character)
-						}),
-					$elm$core$Platform$Cmd$none);
+						{character: updatedCharacter}),
+					$author$project$Character$save(updatedCharacter));
 		}
 	});
 var $author$project$Character$update = F2(
@@ -7783,7 +7802,7 @@ var $author$project$Main$update = F2(
 							A2($author$project$Character$applyClass, _class, $author$project$Character$blank));
 						return _Utils_Tuple2(
 							A2($author$project$Main$Character, navKey, character),
-							$author$project$Main$saveCharacter(character));
+							$author$project$Character$save(character));
 					} else {
 						break _v0$10;
 					}
@@ -7796,7 +7815,7 @@ var $author$project$Main$update = F2(
 						var updatedCharacter = A2($author$project$Character$update, subMsg, character);
 						return _Utils_Tuple2(
 							A2($author$project$Main$Character, navKey, updatedCharacter),
-							$author$project$Main$saveCharacter(updatedCharacter));
+							$author$project$Character$save(updatedCharacter));
 					} else {
 						break _v0$10;
 					}
@@ -8141,9 +8160,12 @@ var $elm$html$Html$Attributes$classList = function (classes) {
 var $elm$html$Html$li = _VirtualDom_node('li');
 var $elm$html$Html$nav = _VirtualDom_node('nav');
 var $elm$html$Html$ul = _VirtualDom_node('ul');
+var $author$project$Abilities$ApplyChosen = {$: 'ApplyChosen'};
 var $elm$html$Html$h2 = _VirtualDom_node('h2');
 var $elm$core$Basics$not = _Basics_not;
-var $elm$html$Html$details = _VirtualDom_node('details');
+var $author$project$Abilities$ChoseAbility = function (a) {
+	return {$: 'ChoseAbility', a: a};
+};
 var $elm$html$Html$h3 = _VirtualDom_node('h3');
 var $elm$html$Html$i = _VirtualDom_node('i');
 var $elm$core$List$isEmpty = function (xs) {
@@ -8153,7 +8175,6 @@ var $elm$core$List$isEmpty = function (xs) {
 		return false;
 	}
 };
-var $elm$html$Html$summary = _VirtualDom_node('summary');
 var $author$project$Boon$toString = function (boon) {
 	return function () {
 		switch (boon.$) {
@@ -8186,25 +8207,16 @@ var $author$project$Boon$toString = function (boon) {
 };
 var $author$project$Ability$view = function (ability) {
 	return A2(
-		$elm$html$Html$details,
-		_List_fromArray(
-			[
-				$elm$html$Html$Attributes$class('ability')
-			]),
+		$elm$html$Html$div,
+		_List_Nil,
 		_List_fromArray(
 			[
 				A2(
-				$elm$html$Html$summary,
+				$elm$html$Html$h3,
 				_List_Nil,
 				_List_fromArray(
 					[
-						A2(
-						$elm$html$Html$h3,
-						_List_Nil,
-						_List_fromArray(
-							[
-								$elm$html$Html$text(ability.name)
-							]))
+						$elm$html$Html$text(ability.name)
 					])),
 				A2(
 				$elm$html$Html$p,
@@ -8242,6 +8254,27 @@ var $author$project$Ability$view = function (ability) {
 								$elm$html$Html$text(ability.text)
 							]))))
 			]));
+};
+var $author$project$Abilities$viewAdvanceList = function (abilities) {
+	return A2(
+		$elm$html$Html$ul,
+		_List_Nil,
+		A2(
+			$elm$core$List$map,
+			function (ability) {
+				return A2(
+					$elm$html$Html$li,
+					_List_fromArray(
+						[
+							$elm$html$Html$Events$onClick(
+							$author$project$Abilities$ChoseAbility(ability))
+						]),
+					_List_fromArray(
+						[
+							$author$project$Ability$view(ability)
+						]));
+			},
+			abilities));
 };
 var $author$project$Abilities$viewAdvances = F3(
 	function (name, advances, isSelected) {
@@ -8299,10 +8332,7 @@ var $author$project$Abilities$viewAdvances = F3(
 									[
 										$elm$html$Html$text('Low')
 									])),
-								A2(
-								$elm$html$Html$ul,
-								_List_Nil,
-								A2($elm$core$List$map, $author$project$Ability$view, low)),
+								$author$project$Abilities$viewAdvanceList(low),
 								A2(
 								$elm$html$Html$h2,
 								_List_Nil,
@@ -8310,10 +8340,7 @@ var $author$project$Abilities$viewAdvances = F3(
 									[
 										$elm$html$Html$text('Medium')
 									])),
-								A2(
-								$elm$html$Html$ul,
-								_List_Nil,
-								A2($elm$core$List$map, $author$project$Ability$view, medium)),
+								$author$project$Abilities$viewAdvanceList(medium),
 								A2(
 								$elm$html$Html$h2,
 								_List_Nil,
@@ -8321,10 +8348,17 @@ var $author$project$Abilities$viewAdvances = F3(
 									[
 										$elm$html$Html$text('High')
 									])),
+								$author$project$Abilities$viewAdvanceList(high),
 								A2(
-								$elm$html$Html$ul,
-								_List_Nil,
-								A2($elm$core$List$map, $author$project$Ability$view, high))
+								$elm$html$Html$button,
+								_List_fromArray(
+									[
+										$elm$html$Html$Events$onClick($author$project$Abilities$ApplyChosen)
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('Apply')
+									]))
 							]);
 				}
 			}());
@@ -8658,6 +8692,67 @@ var $author$project$Character$viewBoolDict = F3(
 			_List_Nil,
 			A2($elm$core$List$map, viewItem, list));
 	});
+var $elm$html$Html$details = _VirtualDom_node('details');
+var $elm$html$Html$summary = _VirtualDom_node('summary');
+var $author$project$Ability$viewCompact = function (ability) {
+	return A2(
+		$elm$html$Html$details,
+		_List_fromArray(
+			[
+				$elm$html$Html$Attributes$class('ability')
+			]),
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$summary,
+				_List_Nil,
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$h3,
+						_List_Nil,
+						_List_fromArray(
+							[
+								$elm$html$Html$text(ability.name)
+							]))
+					])),
+				A2(
+				$elm$html$Html$p,
+				_List_Nil,
+				_Utils_ap(
+					A2(
+						$elm$core$Maybe$withDefault,
+						_List_Nil,
+						A2(
+							$elm$core$Maybe$map,
+							function (flavor) {
+								return _List_fromArray(
+									[
+										A2(
+										$elm$html$Html$i,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text(flavor + ' ')
+											]))
+									]);
+							},
+							ability.flavor)),
+					_Utils_ap(
+						(!$elm$core$List$isEmpty(ability.boons)) ? _List_fromArray(
+							[
+								$elm$html$Html$text(
+								A2(
+									$elm$core$String$join,
+									'. ',
+									A2($elm$core$List$map, $author$project$Boon$toString, ability.boons)) + ' ')
+							]) : _List_Nil,
+						_List_fromArray(
+							[
+								$elm$html$Html$text(ability.text)
+							]))))
+			]));
+};
 var $author$project$Character$view = function (character) {
 	return {
 		body: _List_fromArray(
@@ -8847,7 +8942,7 @@ var $author$project$Character$view = function (character) {
 											_List_Nil,
 											_List_fromArray(
 												[
-													$author$project$Ability$view(ability)
+													$author$project$Ability$viewCompact(ability)
 												]));
 									},
 									character.abilities))

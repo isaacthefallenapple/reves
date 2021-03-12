@@ -1,4 +1,4 @@
-module Ability exposing (Ability, decoder, encode, view)
+module Ability exposing (Ability, decoder, encode, view, viewCompact)
 
 import Boon exposing (Boon)
 import Html exposing (..)
@@ -20,13 +20,36 @@ type alias Ability =
 -- VIEW
 
 
-view : Ability -> Html msg
-view ability =
+viewCompact : Ability -> Html msg
+viewCompact ability =
     details
         [ class "ability" ]
         [ summary
             []
             [ h3 [] [ text ability.name ] ]
+        , p
+            []
+            ((ability.flavor
+                |> Maybe.map (\flavor -> [ i [] [ text (flavor ++ " ") ] ])
+                |> Maybe.withDefault []
+             )
+                ++ (if not (List.isEmpty ability.boons) then
+                        [ text (String.join ". " (List.map Boon.toString ability.boons) ++ " ") ]
+
+                    else
+                        []
+                   )
+                ++ [ text ability.text
+                   ]
+            )
+        ]
+
+
+view : Ability -> Html msg
+view ability =
+    div
+        []
+        [ h3 [] [ text ability.name ]
         , p
             []
             ((ability.flavor

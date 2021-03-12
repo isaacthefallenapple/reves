@@ -1,0 +1,82 @@
+{
+    "low": [
+        {
+            "name": "Thorned Tongue",
+            "flavor": "Untruths, in your presence, burn like cinders.",
+            "boons": [],
+            "text": "Roll Compel+Weirdness. On a success, you can punish people for lying to you: for the next situation, if someone lies to you (not through omission, but actively presents a falsehood) they mark D3 stress as searing pain shoots through their body and stabs behind their eyes. This is enough to put most people off ever lying to you, if they know who you are."
+        },
+        {
+            "name": "Memory Blank",
+            "flavor": "You pluck unwanted events from the mind of those around you.",
+            "boons": [
+                {
+                    "resistance": "Resolve",
+                    "bonus": 1
+                }
+            ],
+            "text": "Focus on a target and roll Compel+Weirdness. If you succeed, they forget a specific, short, recent event. They will overwrite it with events of their own invention that join up the gaps in their memory."
+        },
+        {
+            "name": "Midas' Touch",
+            "flavor": "You twist the Way and mark someone for destruction.",
+            "boons": [],
+            "text": "Mark D6 stress to Resolve to do this to a target within sight. Until the end of the situation, you and all allies gain the Brutal tag when you roll to inflict stress against them."
+        },
+        {
+            "name": "Corrosion",
+            "flavor": "You rust and decay items.",
+            "boons": [],
+            "text": "Mark D3 stress to Resolve and commune with the Way over a non-unique item, or part of an item (such as the lock in a door). Over the next few minutes, that item degrades into nothingness."
+        },
+        {
+            "name": "Way of Fire",
+            "flavor": null,
+            "boons": [],
+            "text": "Mark 1 stress to Resolve to immediately start a fire somewhere nearby."
+        },
+        {
+            "name": "Cover of Darkness",
+            "flavor": null,
+            "boons": [
+                {
+                    "skill": ["Skulk"]
+                }
+            ],
+            "text": "Mark D3 stress to Resolve. You extinguish all sources of light in the immediate area around you."
+        }
+    ],
+    "medium": [
+        {
+            "name": "Surrender to Fate",
+            "flavor": "When all else fails, you beseech the Way to even the odds.",
+            "boons": [],
+            "text": "When you make any action that requires a dice roll, mark 1 stress to Resolve to toss a coin instead of rolling your standard dice pool. Heads, you get what you wanted, take no stress and you look good doing it. Tails, and you suffer a critical failure and double stress."
+        },
+        {
+            "name": "Everyone's Got a Secret",
+            "flavor": "No-one's telling the whole truth.",
+            "boons": [],
+            "text": "Once per session, when you spend a few minutes interacting with an NPC, ask the GM what their secret is (if they don't have one, make one up). You don't have hard evidence proving your hunch, but you know in your heart that it's true."
+        },
+        {
+            "name": "Concrete Skin",
+            "flavor": "You summon a shield of concrete and asphalt.",
+            "boons": [],
+            "text": "Mark D3 stress to Resolve. Surrounding walls and pavement will surround you, protecting you from harm; gain Armour 4 until the situation ends. While you ‘wear' this armour, you roll with mastery on Scramble checks as the ground itself carries you forward. However, for obvious reasons, you may not hide or attempt to blend in with a crowd."
+        },
+        {
+            "name": "Decay",
+            "flavor": "Your touch is destruction.",
+            "boons": [],
+            "text": "Mark D6 stress to Resolve. Decaying energy emanates from your hands for a few moments that will melt through pretty much anything. It can also be used as a (D8, Devastating) weapon against someone you've grabbed first."
+        },
+        {
+            "name": "Blessing",
+            "flavor": "Weapons moulder and crumble when brought against you and your allies.",
+            "boons": [],
+            "text": "Mark D3 stress to Resolve, and mark 1 stress to Resolve on each other participant in the ritual. You place your hand over the heart of each participant and ask the Way to bless them in their endeavours; if they are attacked with weapons during the next situation, those weapons inflict stress as though they were one die size smaller as they rust, malfunction and come apart in their attackers' hands."
+        }
+    ],
+    "high": []
+}

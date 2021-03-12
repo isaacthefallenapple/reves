@@ -73,14 +73,6 @@ type Msg
 
 
 -- ENCODE
-
-
-saveCharacter : Character.Stats -> Cmd msg
-saveCharacter character =
-    Encode.encode 2 (Character.encode character) |> Ports.storeCharacter
-
-
-
 -- VIEW
 
 
@@ -172,7 +164,7 @@ update msg model =
                         |> Character.applyAssignment assignment
             in
             ( Character navKey character
-            , saveCharacter character
+            , Character.save character
             )
 
         ( Character navKey character, CharacterMsg subMsg ) ->
@@ -180,7 +172,7 @@ update msg model =
                 updatedCharacter =
                     Character.update subMsg character
             in
-            ( Character navKey updatedCharacter, saveCharacter updatedCharacter )
+            ( Character navKey updatedCharacter, Character.save updatedCharacter )
 
         ( Abilities abilities, AbilitiesMsg subMsg ) ->
             Tuple.mapBoth Abilities (Cmd.map AbilitiesMsg) (Abilities.update subMsg abilities)

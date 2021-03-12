@@ -1,4 +1,4 @@
-module Character exposing (Msg(..), Stats, addAbilities, applyAssignment, applyBoons, applyClass, blank, decodeLocalCharacter, decoder, encode, update, view)
+module Character exposing (Msg(..), Stats, addAbilities, applyAssignment, applyBoons, applyClass, blank, decodeLocalCharacter, decoder, encode, save, update, view)
 
 -- import Ability exposing (Ability)
 
@@ -15,6 +15,7 @@ import Html.Events exposing (..)
 import Json.Decode as Decode
 import Json.Decode.Pipeline as Pipeline
 import Json.Encode as Encode
+import Ports
 import TypedDict exposing (TypedDict)
 
 
@@ -49,6 +50,11 @@ blank =
     , fallout = ""
     , resistances = Resistances.new
     }
+
+
+save : Stats -> Cmd msg
+save character =
+    Encode.encode 2 (encode character) |> Ports.storeCharacter
 
 
 applyClass : Class -> Stats -> Stats
@@ -91,7 +97,9 @@ applyBoons boons character =
 
 addAbilities : List Ability -> Stats -> Stats
 addAbilities abilities character =
-    { character | abilities = character.abilities ++ abilities }
+    List.foldl (\ability -> applyBoons ability.boons)
+        { character | abilities = character.abilities ++ abilities }
+        abilities
 
 
 
@@ -271,7 +279,7 @@ view character =
                     (List.map
                         (\ability ->
                             li []
-                                [ Ability.view ability ]
+                                [ Ability.viewCompact ability ]
                         )
                         character.abilities
                     )

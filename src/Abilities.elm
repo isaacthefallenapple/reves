@@ -44,7 +44,7 @@ type alias Abilities =
     , selected : String
     , metadata : Status Metadata
     , tabs : Dict String (Status Advances)
-    , chosen : List Ability
+    , chosen : Dict String Ability
     }
 
 
@@ -93,7 +93,7 @@ init navKey maybeSelected character =
       , selected = Maybe.withDefault character.class maybeSelected
       , metadata = Loading
       , tabs = Dict.empty
-      , chosen = []
+      , chosen = Dict.empty
       }
     , Cmd.batch
         [ Http.get
@@ -114,7 +114,11 @@ update : Msg -> Abilities -> ( Abilities, Cmd Msg )
 update msg abilities =
     case msg of
         ChoseAbility ability ->
-            ( { abilities | chosen = ability :: abilities.chosen }, Cmd.none )
+            let
+                _ =
+                    Debug.log "Chose ability" ()
+            in
+            ( { abilities | chosen = Dict.insert ability.name ability abilities.chosen }, Cmd.none )
 
         GotMetadata (Ok metadata) ->
             ( { abilities
@@ -140,7 +144,11 @@ update msg abilities =
             )
 
         ApplyChosen ->
-            ( { abilities | character = Character.addAbilities abilities.chosen abilities.character }, Cmd.none )
+            let
+                updatedCharacter =
+                    Character.addAbilities (Dict.values abilities.chosen) abilities.character
+            in
+            ( { abilities | character = updatedCharacter }, Character.save updatedCharacter )
 
 
 fetchFromList : Metadata -> Cmd Msg
@@ -235,21 +243,18 @@ viewAdvances name advances isSelected =
                 , h2
                     []
                     [ text "Low" ]
-                , ul
-                    []
-                    (List.map Ability.view low)
+                , viewAdvanceList low
                 , h2
                     []
                     [ text "Medium" ]
-                , ul
-                    []
-                    (List.map Ability.view medium)
+                , viewAdvanceList medium
                 , h2
                     []
                     [ text "High" ]
-                , ul
-                    []
-                    (List.map Ability.view high)
+                , viewAdvanceList high
+                , button
+                    [ onClick ApplyChosen ]
+                    [ text "Apply" ]
                 ]
         )
 
