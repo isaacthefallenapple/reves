@@ -8071,7 +8071,6 @@ var $author$project$Main$PickedAssignment = function (a) {
 var $author$project$Main$PickedClass = function (a) {
 	return {$: 'PickedClass', a: a};
 };
-var $elm$html$Html$a = _VirtualDom_node('a');
 var $author$project$Boon$dogsbody = {
 	boons: _List_fromArray(
 		[
@@ -8198,12 +8197,6 @@ var $author$project$Class$classes = _List_fromArray(
 	[$author$project$Class$doc, $author$project$Class$cloak]);
 var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm$html$Html$h1 = _VirtualDom_node('h1');
-var $elm$html$Html$Attributes$href = function (url) {
-	return A2(
-		$elm$html$Html$Attributes$stringProperty,
-		'href',
-		_VirtualDom_noJavaScriptUri(url));
-};
 var $elm$virtual_dom$VirtualDom$map = _VirtualDom_map;
 var $elm$html$Html$map = $elm$virtual_dom$VirtualDom$map;
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
@@ -8229,6 +8222,7 @@ var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $author$project$Abilities$ClickedTab = function (a) {
 	return {$: 'ClickedTab', a: a};
 };
+var $elm$html$Html$a = _VirtualDom_node('a');
 var $elm$core$Tuple$second = function (_v0) {
 	var y = _v0.b;
 	return y;
@@ -8242,6 +8236,12 @@ var $elm$html$Html$Attributes$classList = function (classes) {
 				$elm$core$List$map,
 				$elm$core$Tuple$first,
 				A2($elm$core$List$filter, $elm$core$Tuple$second, classes))));
+};
+var $elm$html$Html$Attributes$href = function (url) {
+	return A2(
+		$elm$html$Html$Attributes$stringProperty,
+		'href',
+		_VirtualDom_noJavaScriptUri(url));
 };
 var $elm$html$Html$li = _VirtualDom_node('li');
 var $elm$html$Html$nav = _VirtualDom_node('nav');
@@ -8404,13 +8404,6 @@ var $author$project$Abilities$viewAdvances = F3(
 						return _List_fromArray(
 							[
 								A2(
-								$elm$html$Html$h1,
-								_List_Nil,
-								_List_fromArray(
-									[
-										$elm$html$Html$text(name)
-									])),
-								A2(
 								$elm$html$Html$h2,
 								_List_Nil,
 								_List_fromArray(
@@ -8487,7 +8480,10 @@ var $author$project$Abilities$view = function (abilities) {
 							])),
 						A2(
 						$elm$html$Html$ul,
-						_List_Nil,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('tab-bar')
+							]),
 						A2(
 							$elm$core$List$map,
 							function (_v0) {
@@ -8501,7 +8497,8 @@ var $author$project$Abilities$view = function (abilities) {
 												[
 													_Utils_Tuple2(
 													'selected',
-													_Utils_eq(name, selected))
+													_Utils_eq(name, selected)),
+													_Utils_Tuple2('tab', true)
 												]))
 										]),
 									_List_fromArray(
@@ -8777,6 +8774,7 @@ var $author$project$Character$viewBoolDict = F3(
 			_List_Nil,
 			A2($elm$core$List$map, viewItem, list));
 	});
+var $elm$html$Html$br = _VirtualDom_node('br');
 var $elm$html$Html$details = _VirtualDom_node('details');
 var $elm$html$Html$summary = _VirtualDom_node('summary');
 var $author$project$Ability$viewCompact = function (ability) {
@@ -8791,20 +8789,15 @@ var $author$project$Ability$viewCompact = function (ability) {
 				A2(
 				$elm$html$Html$summary,
 				_List_Nil,
-				_List_fromArray(
-					[
-						A2(
+				A2(
+					$elm$core$List$cons,
+					A2(
 						$elm$html$Html$h3,
 						_List_Nil,
 						_List_fromArray(
 							[
 								$elm$html$Html$text(ability.name)
-							]))
-					])),
-				A2(
-				$elm$html$Html$p,
-				_List_Nil,
-				_Utils_ap(
+							])),
 					A2(
 						$elm$core$Maybe$withDefault,
 						_List_Nil,
@@ -8813,6 +8806,7 @@ var $author$project$Ability$viewCompact = function (ability) {
 							function (flavor) {
 								return _List_fromArray(
 									[
+										A2($elm$html$Html$br, _List_Nil, _List_Nil),
 										A2(
 										$elm$html$Html$i,
 										_List_Nil,
@@ -8822,20 +8816,23 @@ var $author$project$Ability$viewCompact = function (ability) {
 											]))
 									]);
 							},
-							ability.flavor)),
-					_Utils_ap(
-						(!$elm$core$List$isEmpty(ability.boons)) ? _List_fromArray(
-							[
-								$elm$html$Html$text(
-								A2(
-									$elm$core$String$join,
-									'. ',
-									A2($elm$core$List$map, $author$project$Boon$toString, ability.boons)) + ' ')
-							]) : _List_Nil,
-						_List_fromArray(
-							[
-								$elm$html$Html$text(ability.text)
-							]))))
+							ability.flavor)))),
+				A2(
+				$elm$html$Html$p,
+				_List_Nil,
+				_Utils_ap(
+					(!$elm$core$List$isEmpty(ability.boons)) ? _List_fromArray(
+						[
+							$elm$html$Html$text(
+							A2(
+								$elm$core$String$join,
+								'. ',
+								A2($elm$core$List$map, $author$project$Boon$toString, ability.boons)) + ' ')
+						]) : _List_Nil,
+					_List_fromArray(
+						[
+							$elm$html$Html$text(ability.text)
+						])))
 			]));
 };
 var $author$project$Character$view = function (character) {
@@ -9000,21 +8997,30 @@ var $author$project$Character$view = function (character) {
 						_List_fromArray(
 							[
 								A2(
-								$elm$html$Html$h2,
-								_List_Nil,
+								$elm$html$Html$div,
 								_List_fromArray(
 									[
-										$elm$html$Html$text('Abilities')
-									])),
-								A2(
-								$elm$html$Html$a,
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$href('abilities#' + character._class)
+										$elm$html$Html$Attributes$class('abilities-header')
 									]),
 								_List_fromArray(
 									[
-										$elm$html$Html$text('view')
+										A2(
+										$elm$html$Html$h2,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('Abilities')
+											])),
+										A2(
+										$elm$html$Html$a,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$href('abilities#' + character._class)
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('add more')
+											]))
 									])),
 								A2(
 								$elm$html$Html$ul,
@@ -9270,24 +9276,10 @@ var $author$project$Main$view = function (model) {
 			var character = model.b;
 			var characterView = $author$project$Character$view(character);
 			return {
-				body: _Utils_ap(
-					A2(
-						$elm$core$List$map,
-						$elm$html$Html$map($author$project$Main$CharacterMsg),
-						characterView.body),
-					_List_fromArray(
-						[
-							A2(
-							$elm$html$Html$a,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$href('abilities#Doc')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Doc abilities')
-								]))
-						])),
+				body: A2(
+					$elm$core$List$map,
+					$elm$html$Html$map($author$project$Main$CharacterMsg),
+					characterView.body),
 				title: characterView.title
 			};
 		default:

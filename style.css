@@ -33,6 +33,12 @@ h6 {
     margin: 0;
 }
 
+h3 {
+    font-family: "Source Code Pro", monospace;
+    font-size: 1.2rem;
+    display: inline;
+}
+
 body {
     margin: 0;
     padding: 2em 4em;
@@ -111,6 +117,46 @@ input[type="text"] {
 
 .abilities {
     grid-area: abils;
+}
+
+.abilities ul {
+    max-height: 25vh;
+    overflow: auto;
+}
+
+.abilities ul * + * {
+    margin-top: 0.8rem;
+}
+
+.abilities-header {
+    display: flex;
+    align-items: baseline;
+}
+.abilities-header a {
+    padding-left: 0.5rem;
+    /* margin-left: auto; */
+}
+
+.tab-bar {
+    box-sizing: unset;
+    display: flex;
+    /* gap: 1rem; */
+    border-bottom: 2px solid black;
+    /* padding: 0.5rem; */
+}
+
+.tab button {
+    all: unset;
+    font-family: "Staatliches";
+    padding-inline: 0.8em;
+    padding-block: 0.4em;
+    font-size: 2.5rem;
+}
+
+.tab.selected {
+    border: 2px solid black;
+    border-bottom: none;
+    /* background-color: rgba(0, 0, 0, 0.4); */
 }
 
 .bonds {

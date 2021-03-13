@@ -137,7 +137,7 @@ view model =
             in
             { title = characterView.title
             , body =
-                List.map (Html.map CharacterMsg) characterView.body ++ [ a [ href "abilities#Doc" ] [ text "Doc abilities" ] ]
+                List.map (Html.map CharacterMsg) characterView.body
             }
 
         Abilities abilities ->

@@ -216,11 +216,11 @@ view abilities =
                 [ href "/" ]
                 [ text "Back" ]
             , ul
-                []
+                [ class "tab-bar" ]
                 (List.map
                     (\( name, _ ) ->
                         li
-                            [ classList [ ( "selected", name == selected ) ] ]
+                            [ classList [ ( "selected", name == selected ), ( "tab", True ) ] ]
                             [ button
                                 [ onClick (ClickedTab name) ]
                                 [ text name ]
@@ -255,10 +255,7 @@ viewAdvances name advances isSelected =
                 ]
 
             Loaded { low, medium, high } ->
-                [ h1
-                    []
-                    [ text name ]
-                , h2
+                [ h2
                     []
                     [ text "Low" ]
                 , viewAdvanceList low

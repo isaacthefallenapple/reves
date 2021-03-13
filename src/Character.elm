@@ -276,12 +276,15 @@ view character =
                 ]
             , section
                 [ class "abilities" ]
-                [ h2
-                    []
-                    [ text "Abilities" ]
-                , a
-                    [ href ("abilities#" ++ character.class) ]
-                    [ text "view" ]
+                [ div
+                    [ class "abilities-header" ]
+                    [ h2
+                        []
+                        [ text "Abilities" ]
+                    , a
+                        [ href ("abilities#" ++ character.class) ]
+                        [ text "add more" ]
+                    ]
                 , ul
                     []
                     (List.map

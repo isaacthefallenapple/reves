@@ -26,19 +26,20 @@ viewCompact ability =
         [ class "ability" ]
         [ summary
             []
-            [ h3 [] [ text ability.name ] ]
+            (h3 [] [ text ability.name ]
+                :: (ability.flavor
+                        |> Maybe.map (\flavor -> [ br [] [], i [] [ text (flavor ++ " ") ] ])
+                        |> Maybe.withDefault []
+                   )
+            )
         , p
             []
-            ((ability.flavor
-                |> Maybe.map (\flavor -> [ i [] [ text (flavor ++ " ") ] ])
-                |> Maybe.withDefault []
-             )
-                ++ (if not (List.isEmpty ability.boons) then
-                        [ text (String.join ". " (List.map Boon.toString ability.boons) ++ " ") ]
+            ((if not (List.isEmpty ability.boons) then
+                [ text (String.join ". " (List.map Boon.toString ability.boons) ++ " ") ]
 
-                    else
-                        []
-                   )
+              else
+                []
+             )
                 ++ [ text ability.text
                    ]
             )
