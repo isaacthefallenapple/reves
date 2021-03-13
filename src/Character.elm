@@ -9,6 +9,7 @@ import Boon.Resistance as Resistances exposing (Resistances)
 import Boon.Skill as Skills exposing (Skills)
 import Browser
 import Class exposing (Class)
+import Dict exposing (Dict)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
@@ -28,7 +29,7 @@ type alias Stats =
     , knacks : String
     , equipment : String
     , refresh : String
-    , abilities : List Ability
+    , abilities : Dict String Ability
     , bonds : String
     , fallout : String
     , resistances : Resistances
@@ -45,7 +46,7 @@ blank =
     , knacks = ""
     , equipment = ""
     , refresh = ""
-    , abilities = []
+    , abilities = Dict.empty
     , bonds = ""
     , fallout = ""
     , resistances = Resistances.new
@@ -59,11 +60,12 @@ save character =
 
 applyClass : Class -> Stats -> Stats
 applyClass { name, boons, coreAbilities } character =
-    applyBoons boons
-        { character
-            | class = name
-            , abilities = character.abilities ++ coreAbilities
-        }
+    addAbilities coreAbilities
+        (applyBoons boons
+            { character
+                | class = name
+            }
+        )
 
 
 applyAssignment : Boon.Assignment -> Stats -> Stats
@@ -98,7 +100,13 @@ applyBoons boons character =
 addAbilities : List Ability -> Stats -> Stats
 addAbilities abilities character =
     List.foldl (\ability -> applyBoons ability.boons)
-        { character | abilities = character.abilities ++ abilities }
+        { character
+            | abilities =
+                List.foldl
+                    (\ability -> Dict.insert ability.name ability)
+                    character.abilities
+                    abilities
+        }
         abilities
 
 
@@ -114,7 +122,7 @@ encode character =
         , ( "assignment", Encode.string character.assignment )
         , ( "knacks", Encode.string character.knacks )
         , ( "equipment", Encode.string character.equipment )
-        , ( "abilities", Encode.list Ability.encode character.abilities )
+        , ( "abilities", Encode.dict identity Ability.encode character.abilities )
         , ( "fallout", Encode.string character.fallout )
         , ( "refresh", Encode.string character.refresh )
         , ( "bonds", Encode.string character.bonds )
@@ -139,7 +147,7 @@ decoder =
         |> Pipeline.optional "knacks" Decode.string ""
         |> Pipeline.optional "equipment" Decode.string ""
         |> Pipeline.optional "refresh" Decode.string ""
-        |> Pipeline.optional "abilities" (Decode.list Ability.decoder) []
+        |> Pipeline.optional "abilities" (Decode.dict Ability.decoder) Dict.empty
         |> Pipeline.optional "bonds" Decode.string ""
         |> Pipeline.optional "fallout" Decode.string ""
         |> Pipeline.optional "resistances" Resistances.decoder Resistances.new
@@ -281,7 +289,7 @@ view character =
                             li []
                                 [ Ability.viewCompact ability ]
                         )
-                        character.abilities
+                        (Dict.values character.abilities)
                     )
                 ]
             , section

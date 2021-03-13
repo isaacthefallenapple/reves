@@ -33,6 +33,19 @@ type alias Advances =
     }
 
 
+dedup : Dict String a -> Advances -> Advances
+dedup abilities advances =
+    let
+        innerDedup =
+            List.filter (\ability -> not (Dict.member ability.name abilities))
+    in
+    { advances
+        | low = innerDedup advances.low
+        , medium = innerDedup advances.medium
+        , high = innerDedup advances.high
+    }
+
+
 type alias Metadata =
     Dict String String
 
@@ -133,7 +146,12 @@ update msg abilities =
 
         GotAdvances name advances ->
             ( { abilities
-                | tabs = Dict.insert name (statusFromResult advances) abilities.tabs
+                | tabs =
+                    Dict.insert name
+                        (statusFromResult
+                            (Result.map (dedup abilities.character.abilities) advances)
+                        )
+                        abilities.tabs
               }
             , Cmd.none
             )

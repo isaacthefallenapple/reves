@@ -5527,6 +5527,8 @@ var $author$project$Main$Character = F2(
 var $author$project$Main$PickClass = function (a) {
 	return {$: 'PickClass', a: a};
 };
+var $elm$core$Dict$RBEmpty_elm_builtin = {$: 'RBEmpty_elm_builtin'};
+var $elm$core$Dict$empty = $elm$core$Dict$RBEmpty_elm_builtin;
 var $author$project$Boon$Domain$Criminal = {$: 'Criminal'};
 var $author$project$Boon$Domain$Hegemony = {$: 'Hegemony'};
 var $author$project$Boon$Domain$HighSociety = {$: 'HighSociety'};
@@ -5576,7 +5578,7 @@ var $author$project$Boon$Skill$new = A2(
 	false,
 	_List_fromArray(
 		[$author$project$Boon$Skill$Compel, $author$project$Boon$Skill$Deceive, $author$project$Boon$Skill$Hack, $author$project$Boon$Skill$Patch, $author$project$Boon$Skill$Scramble, $author$project$Boon$Skill$Scrap, $author$project$Boon$Skill$Skulk, $author$project$Boon$Skill$Investigate, $author$project$Boon$Skill$Steal, $author$project$Boon$Skill$Resist]));
-var $author$project$Character$blank = {abilities: _List_Nil, assignment: '', bonds: '', _class: '', domains: $author$project$Boon$Domain$new, equipment: '', fallout: '', knacks: '', name: '', refresh: '', resistances: $author$project$Boon$Resistance$new, skills: $author$project$Boon$Skill$new};
+var $author$project$Character$blank = {abilities: $elm$core$Dict$empty, assignment: '', bonds: '', _class: '', domains: $author$project$Boon$Domain$new, equipment: '', fallout: '', knacks: '', name: '', refresh: '', resistances: $author$project$Boon$Resistance$new, skills: $author$project$Boon$Skill$new};
 var $elm$json$Json$Decode$decodeString = _Json_runOnString;
 var $author$project$Character$Stats = function (name) {
 	return function (_class) {
@@ -5851,6 +5853,133 @@ var $author$project$Boon$Skill$decoder = A2(
 		$author$project$Boon$Skill$fromString,
 		$elm$core$Maybe$withDefault($author$project$Boon$Skill$Compel)),
 	$elm$json$Json$Decode$bool);
+var $elm$core$Dict$Black = {$: 'Black'};
+var $elm$core$Dict$RBNode_elm_builtin = F5(
+	function (a, b, c, d, e) {
+		return {$: 'RBNode_elm_builtin', a: a, b: b, c: c, d: d, e: e};
+	});
+var $elm$core$Dict$Red = {$: 'Red'};
+var $elm$core$Dict$balance = F5(
+	function (color, key, value, left, right) {
+		if ((right.$ === 'RBNode_elm_builtin') && (right.a.$ === 'Red')) {
+			var _v1 = right.a;
+			var rK = right.b;
+			var rV = right.c;
+			var rLeft = right.d;
+			var rRight = right.e;
+			if ((left.$ === 'RBNode_elm_builtin') && (left.a.$ === 'Red')) {
+				var _v3 = left.a;
+				var lK = left.b;
+				var lV = left.c;
+				var lLeft = left.d;
+				var lRight = left.e;
+				return A5(
+					$elm$core$Dict$RBNode_elm_builtin,
+					$elm$core$Dict$Red,
+					key,
+					value,
+					A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Black, lK, lV, lLeft, lRight),
+					A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Black, rK, rV, rLeft, rRight));
+			} else {
+				return A5(
+					$elm$core$Dict$RBNode_elm_builtin,
+					color,
+					rK,
+					rV,
+					A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Red, key, value, left, rLeft),
+					rRight);
+			}
+		} else {
+			if ((((left.$ === 'RBNode_elm_builtin') && (left.a.$ === 'Red')) && (left.d.$ === 'RBNode_elm_builtin')) && (left.d.a.$ === 'Red')) {
+				var _v5 = left.a;
+				var lK = left.b;
+				var lV = left.c;
+				var _v6 = left.d;
+				var _v7 = _v6.a;
+				var llK = _v6.b;
+				var llV = _v6.c;
+				var llLeft = _v6.d;
+				var llRight = _v6.e;
+				var lRight = left.e;
+				return A5(
+					$elm$core$Dict$RBNode_elm_builtin,
+					$elm$core$Dict$Red,
+					lK,
+					lV,
+					A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Black, llK, llV, llLeft, llRight),
+					A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Black, key, value, lRight, right));
+			} else {
+				return A5($elm$core$Dict$RBNode_elm_builtin, color, key, value, left, right);
+			}
+		}
+	});
+var $elm$core$Basics$compare = _Utils_compare;
+var $elm$core$Dict$insertHelp = F3(
+	function (key, value, dict) {
+		if (dict.$ === 'RBEmpty_elm_builtin') {
+			return A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Red, key, value, $elm$core$Dict$RBEmpty_elm_builtin, $elm$core$Dict$RBEmpty_elm_builtin);
+		} else {
+			var nColor = dict.a;
+			var nKey = dict.b;
+			var nValue = dict.c;
+			var nLeft = dict.d;
+			var nRight = dict.e;
+			var _v1 = A2($elm$core$Basics$compare, key, nKey);
+			switch (_v1.$) {
+				case 'LT':
+					return A5(
+						$elm$core$Dict$balance,
+						nColor,
+						nKey,
+						nValue,
+						A3($elm$core$Dict$insertHelp, key, value, nLeft),
+						nRight);
+				case 'EQ':
+					return A5($elm$core$Dict$RBNode_elm_builtin, nColor, nKey, value, nLeft, nRight);
+				default:
+					return A5(
+						$elm$core$Dict$balance,
+						nColor,
+						nKey,
+						nValue,
+						nLeft,
+						A3($elm$core$Dict$insertHelp, key, value, nRight));
+			}
+		}
+	});
+var $elm$core$Dict$insert = F3(
+	function (key, value, dict) {
+		var _v0 = A3($elm$core$Dict$insertHelp, key, value, dict);
+		if ((_v0.$ === 'RBNode_elm_builtin') && (_v0.a.$ === 'Red')) {
+			var _v1 = _v0.a;
+			var k = _v0.b;
+			var v = _v0.c;
+			var l = _v0.d;
+			var r = _v0.e;
+			return A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Black, k, v, l, r);
+		} else {
+			var x = _v0;
+			return x;
+		}
+	});
+var $elm$core$Dict$fromList = function (assocs) {
+	return A3(
+		$elm$core$List$foldl,
+		F2(
+			function (_v0, dict) {
+				var key = _v0.a;
+				var value = _v0.b;
+				return A3($elm$core$Dict$insert, key, value, dict);
+			}),
+		$elm$core$Dict$empty,
+		assocs);
+};
+var $elm$json$Json$Decode$dict = function (decoder) {
+	return A2(
+		$elm$json$Json$Decode$map,
+		$elm$core$Dict$fromList,
+		$elm$json$Json$Decode$keyValuePairs(decoder));
+};
 var $NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$custom = $elm$json$Json$Decode$map2($elm$core$Basics$apR);
 var $elm$json$Json$Decode$decodeValue = _Json_run;
 var $elm$json$Json$Decode$value = _Json_decodeValue;
@@ -5915,8 +6044,8 @@ var $author$project$Character$decoder = A4(
 			A4(
 				$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
 				'abilities',
-				$elm$json$Json$Decode$list($author$project$Ability$decoder),
-				_List_Nil,
+				$elm$json$Json$Decode$dict($author$project$Ability$decoder),
+				$elm$core$Dict$empty,
 				A4(
 					$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
 					'refresh',
@@ -6139,20 +6268,81 @@ var $author$project$Character$applyAssignment = F2(
 				character,
 				{assignment: name}));
 	});
+var $author$project$Character$addAbilities = F2(
+	function (abilities, character) {
+		return A3(
+			$elm$core$List$foldl,
+			function (ability) {
+				return $author$project$Character$applyBoons(ability.boons);
+			},
+			_Utils_update(
+				character,
+				{
+					abilities: A3(
+						$elm$core$List$foldl,
+						function (ability) {
+							return A2($elm$core$Dict$insert, ability.name, ability);
+						},
+						character.abilities,
+						abilities)
+				}),
+			abilities);
+	});
 var $author$project$Character$applyClass = F2(
 	function (_v0, character) {
 		var name = _v0.name;
 		var boons = _v0.boons;
 		var coreAbilities = _v0.coreAbilities;
 		return A2(
-			$author$project$Character$applyBoons,
-			boons,
-			_Utils_update(
-				character,
-				{
-					abilities: _Utils_ap(character.abilities, coreAbilities),
-					_class: name
-				}));
+			$author$project$Character$addAbilities,
+			coreAbilities,
+			A2(
+				$author$project$Character$applyBoons,
+				boons,
+				_Utils_update(
+					character,
+					{_class: name})));
+	});
+var $elm$core$Dict$foldl = F3(
+	function (func, acc, dict) {
+		foldl:
+		while (true) {
+			if (dict.$ === 'RBEmpty_elm_builtin') {
+				return acc;
+			} else {
+				var key = dict.b;
+				var value = dict.c;
+				var left = dict.d;
+				var right = dict.e;
+				var $temp$func = func,
+					$temp$acc = A3(
+					func,
+					key,
+					value,
+					A3($elm$core$Dict$foldl, func, acc, left)),
+					$temp$dict = right;
+				func = $temp$func;
+				acc = $temp$acc;
+				dict = $temp$dict;
+				continue foldl;
+			}
+		}
+	});
+var $elm$json$Json$Encode$dict = F3(
+	function (toKey, toValue, dictionary) {
+		return _Json_wrap(
+			A3(
+				$elm$core$Dict$foldl,
+				F3(
+					function (key, value, obj) {
+						return A3(
+							_Json_addField,
+							toKey(key),
+							toValue(value),
+							obj);
+					}),
+				_Json_emptyObject(_Utils_Tuple0),
+				dictionary));
 	});
 var $elm$json$Json$Encode$string = _Json_wrap;
 var $author$project$Boon$Domain$toString = function (domain) {
@@ -6359,7 +6549,7 @@ var $author$project$Character$encode = function (character) {
 				$elm$json$Json$Encode$string(character.equipment)),
 				_Utils_Tuple2(
 				'abilities',
-				A2($elm$json$Json$Encode$list, $author$project$Ability$encode, character.abilities)),
+				A3($elm$json$Json$Encode$dict, $elm$core$Basics$identity, $author$project$Ability$encode, character.abilities)),
 				_Utils_Tuple2(
 				'fallout',
 				$elm$json$Json$Encode$string(character.fallout)),
@@ -6395,8 +6585,6 @@ var $author$project$Abilities$GotMetadata = function (a) {
 	return {$: 'GotMetadata', a: a};
 };
 var $author$project$Abilities$Loading = {$: 'Loading'};
-var $elm$core$Dict$RBEmpty_elm_builtin = {$: 'RBEmpty_elm_builtin'};
-var $elm$core$Dict$empty = $elm$core$Dict$RBEmpty_elm_builtin;
 var $elm$http$Http$BadStatus_ = F2(
 	function (a, b) {
 		return {$: 'BadStatus_', a: a, b: b};
@@ -6424,7 +6612,6 @@ var $elm$core$Maybe$isJust = function (maybe) {
 	}
 };
 var $elm$core$Platform$sendToSelf = _Platform_sendToSelf;
-var $elm$core$Basics$compare = _Utils_compare;
 var $elm$core$Dict$get = F2(
 	function (targetKey, dict) {
 		get:
@@ -6454,114 +6641,6 @@ var $elm$core$Dict$get = F2(
 						continue get;
 				}
 			}
-		}
-	});
-var $elm$core$Dict$Black = {$: 'Black'};
-var $elm$core$Dict$RBNode_elm_builtin = F5(
-	function (a, b, c, d, e) {
-		return {$: 'RBNode_elm_builtin', a: a, b: b, c: c, d: d, e: e};
-	});
-var $elm$core$Dict$Red = {$: 'Red'};
-var $elm$core$Dict$balance = F5(
-	function (color, key, value, left, right) {
-		if ((right.$ === 'RBNode_elm_builtin') && (right.a.$ === 'Red')) {
-			var _v1 = right.a;
-			var rK = right.b;
-			var rV = right.c;
-			var rLeft = right.d;
-			var rRight = right.e;
-			if ((left.$ === 'RBNode_elm_builtin') && (left.a.$ === 'Red')) {
-				var _v3 = left.a;
-				var lK = left.b;
-				var lV = left.c;
-				var lLeft = left.d;
-				var lRight = left.e;
-				return A5(
-					$elm$core$Dict$RBNode_elm_builtin,
-					$elm$core$Dict$Red,
-					key,
-					value,
-					A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Black, lK, lV, lLeft, lRight),
-					A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Black, rK, rV, rLeft, rRight));
-			} else {
-				return A5(
-					$elm$core$Dict$RBNode_elm_builtin,
-					color,
-					rK,
-					rV,
-					A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Red, key, value, left, rLeft),
-					rRight);
-			}
-		} else {
-			if ((((left.$ === 'RBNode_elm_builtin') && (left.a.$ === 'Red')) && (left.d.$ === 'RBNode_elm_builtin')) && (left.d.a.$ === 'Red')) {
-				var _v5 = left.a;
-				var lK = left.b;
-				var lV = left.c;
-				var _v6 = left.d;
-				var _v7 = _v6.a;
-				var llK = _v6.b;
-				var llV = _v6.c;
-				var llLeft = _v6.d;
-				var llRight = _v6.e;
-				var lRight = left.e;
-				return A5(
-					$elm$core$Dict$RBNode_elm_builtin,
-					$elm$core$Dict$Red,
-					lK,
-					lV,
-					A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Black, llK, llV, llLeft, llRight),
-					A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Black, key, value, lRight, right));
-			} else {
-				return A5($elm$core$Dict$RBNode_elm_builtin, color, key, value, left, right);
-			}
-		}
-	});
-var $elm$core$Dict$insertHelp = F3(
-	function (key, value, dict) {
-		if (dict.$ === 'RBEmpty_elm_builtin') {
-			return A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Red, key, value, $elm$core$Dict$RBEmpty_elm_builtin, $elm$core$Dict$RBEmpty_elm_builtin);
-		} else {
-			var nColor = dict.a;
-			var nKey = dict.b;
-			var nValue = dict.c;
-			var nLeft = dict.d;
-			var nRight = dict.e;
-			var _v1 = A2($elm$core$Basics$compare, key, nKey);
-			switch (_v1.$) {
-				case 'LT':
-					return A5(
-						$elm$core$Dict$balance,
-						nColor,
-						nKey,
-						nValue,
-						A3($elm$core$Dict$insertHelp, key, value, nLeft),
-						nRight);
-				case 'EQ':
-					return A5($elm$core$Dict$RBNode_elm_builtin, nColor, nKey, value, nLeft, nRight);
-				default:
-					return A5(
-						$elm$core$Dict$balance,
-						nColor,
-						nKey,
-						nValue,
-						nLeft,
-						A3($elm$core$Dict$insertHelp, key, value, nRight));
-			}
-		}
-	});
-var $elm$core$Dict$insert = F3(
-	function (key, value, dict) {
-		var _v0 = A3($elm$core$Dict$insertHelp, key, value, dict);
-		if ((_v0.$ === 'RBNode_elm_builtin') && (_v0.a.$ === 'Red')) {
-			var _v1 = _v0.a;
-			var k = _v0.b;
-			var v = _v0.c;
-			var l = _v0.d;
-			var r = _v0.e;
-			return A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Black, k, v, l, r);
-		} else {
-			var x = _v0;
-			return x;
 		}
 	});
 var $elm$core$Dict$getMin = function (dict) {
@@ -7176,24 +7255,6 @@ var $elm$http$Http$get = function (r) {
 	return $elm$http$Http$request(
 		{body: $elm$http$Http$emptyBody, expect: r.expect, headers: _List_Nil, method: 'GET', timeout: $elm$core$Maybe$Nothing, tracker: $elm$core$Maybe$Nothing, url: r.url});
 };
-var $elm$core$Dict$fromList = function (assocs) {
-	return A3(
-		$elm$core$List$foldl,
-		F2(
-			function (_v0, dict) {
-				var key = _v0.a;
-				var value = _v0.b;
-				return A3($elm$core$Dict$insert, key, value, dict);
-			}),
-		$elm$core$Dict$empty,
-		assocs);
-};
-var $elm$json$Json$Decode$dict = function (decoder) {
-	return A2(
-		$elm$json$Json$Decode$map,
-		$elm$core$Dict$fromList,
-		$elm$json$Json$Decode$keyValuePairs(decoder));
-};
 var $author$project$Abilities$metadataDecoder = $elm$json$Json$Decode$dict($elm$json$Json$Decode$string);
 var $author$project$Abilities$location = '/data/abilities/';
 var $author$project$Abilities$metadataLocation = $author$project$Abilities$location + 'metadata.json';
@@ -7550,23 +7611,44 @@ var $author$project$Abilities$Failed = function (a) {
 var $author$project$Abilities$Loaded = function (a) {
 	return {$: 'Loaded', a: a};
 };
-var $author$project$Character$addAbilities = F2(
-	function (abilities, character) {
-		return A3(
-			$elm$core$List$foldl,
-			function (ability) {
-				return $author$project$Character$applyBoons(ability.boons);
-			},
-			_Utils_update(
-				character,
-				{
-					abilities: _Utils_ap(character.abilities, abilities)
-				}),
-			abilities);
-	});
 var $elm$core$Basics$always = F2(
 	function (a, _v0) {
 		return a;
+	});
+var $elm$core$List$filter = F2(
+	function (isGood, list) {
+		return A3(
+			$elm$core$List$foldr,
+			F2(
+				function (x, xs) {
+					return isGood(x) ? A2($elm$core$List$cons, x, xs) : xs;
+				}),
+			_List_Nil,
+			list);
+	});
+var $elm$core$Dict$member = F2(
+	function (key, dict) {
+		var _v0 = A2($elm$core$Dict$get, key, dict);
+		if (_v0.$ === 'Just') {
+			return true;
+		} else {
+			return false;
+		}
+	});
+var $elm$core$Basics$not = _Basics_not;
+var $author$project$Abilities$dedup = F2(
+	function (abilities, advances) {
+		var innerDedup = $elm$core$List$filter(
+			function (ability) {
+				return !A2($elm$core$Dict$member, ability.name, abilities);
+			});
+		return _Utils_update(
+			advances,
+			{
+				high: innerDedup(advances.high),
+				low: innerDedup(advances.low),
+				medium: innerDedup(advances.medium)
+			});
 	});
 var $author$project$Abilities$GotAdvances = F2(
 	function (a, b) {
@@ -7627,6 +7709,17 @@ var $elm$core$Dict$map = F2(
 				A2(func, key, value),
 				A2($elm$core$Dict$map, func, left),
 				A2($elm$core$Dict$map, func, right));
+		}
+	});
+var $elm$core$Result$map = F2(
+	function (func, ra) {
+		if (ra.$ === 'Ok') {
+			var a = ra.a;
+			return $elm$core$Result$Ok(
+				func(a));
+		} else {
+			var e = ra.a;
+			return $elm$core$Result$Err(e);
 		}
 	});
 var $author$project$Abilities$statusFromResult = function (result) {
@@ -7696,7 +7789,11 @@ var $author$project$Abilities$update = F2(
 							tabs: A3(
 								$elm$core$Dict$insert,
 								name,
-								$author$project$Abilities$statusFromResult(advances),
+								$author$project$Abilities$statusFromResult(
+									A2(
+										$elm$core$Result$map,
+										$author$project$Abilities$dedup(abilities.character.abilities),
+										advances)),
 								abilities.tabs)
 						}),
 					$elm$core$Platform$Cmd$none);
@@ -8132,17 +8229,6 @@ var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $author$project$Abilities$ClickedTab = function (a) {
 	return {$: 'ClickedTab', a: a};
 };
-var $elm$core$List$filter = F2(
-	function (isGood, list) {
-		return A3(
-			$elm$core$List$foldr,
-			F2(
-				function (x, xs) {
-					return isGood(x) ? A2($elm$core$List$cons, x, xs) : xs;
-				}),
-			_List_Nil,
-			list);
-	});
 var $elm$core$Tuple$second = function (_v0) {
 	var y = _v0.b;
 	return y;
@@ -8162,7 +8248,6 @@ var $elm$html$Html$nav = _VirtualDom_node('nav');
 var $elm$html$Html$ul = _VirtualDom_node('ul');
 var $author$project$Abilities$ApplyChosen = {$: 'ApplyChosen'};
 var $elm$html$Html$h2 = _VirtualDom_node('h2');
-var $elm$core$Basics$not = _Basics_not;
 var $author$project$Abilities$ChoseAbility = function (a) {
 	return {$: 'ChoseAbility', a: a};
 };
@@ -8945,7 +9030,7 @@ var $author$project$Character$view = function (character) {
 													$author$project$Ability$viewCompact(ability)
 												]));
 									},
-									character.abilities))
+									$elm$core$Dict$values(character.abilities)))
 							])),
 						A2(
 						$elm$html$Html$section,
