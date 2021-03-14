@@ -8183,6 +8183,39 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 			$elm$json$Json$Encode$string(string));
 	});
 var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
+var $author$project$Class$awoken = {
+	boons: _List_fromArray(
+		[
+			A2($author$project$Boon$GainResistance, $author$project$Boon$Resistance$Resolve, 2),
+			A2($author$project$Boon$GainResistance, $author$project$Boon$Resistance$Shadow, 1),
+			A2($author$project$Boon$GainResistance, $author$project$Boon$Resistance$Body, 1),
+			$author$project$Boon$GainRefresh(
+			_List_fromArray(
+				['Take something back from those who would oppress you.'])),
+			$author$project$Boon$GainSkills(
+			_List_fromArray(
+				[$author$project$Boon$Skill$Compel, $author$project$Boon$Skill$Resist])),
+			$author$project$Boon$GainDomains(
+			_List_fromArray(
+				[$author$project$Boon$Domain$Science, $author$project$Boon$Domain$Weirdness]))
+		]),
+	coreAbilities: _List_fromArray(
+		[
+			{
+			boons: _List_Nil,
+			flavor: $elm$core$Maybe$Just('You know what people want.'),
+			name: 'Heart\'s Desire',
+			text: 'Once per situation, pick an NPC that you can observe for a while. The GM will tell you what they want most of all right now.'
+		},
+			{
+			boons: _List_Nil,
+			flavor: $elm$core$Maybe$Just('The Way\'s light shines forth from you.'),
+			name: 'Moonlight',
+			text: 'Your rune glows as brightly as the full moon, casting a calm light into the darkness that cannot be extinguished unless you decide to snuff it, or you fall unconscious.'
+		}
+		]),
+	name: 'Awoken'
+};
 var $author$project$Class$cloak = {
 	boons: _List_fromArray(
 		[
@@ -8190,7 +8223,7 @@ var $author$project$Class$cloak = {
 			A2($author$project$Boon$GainResistance, $author$project$Boon$Resistance$Body, 1),
 			$author$project$Boon$GainRefresh(
 			_List_fromArray(
-				[''])),
+				['Show someone they should not have underestimated you'])),
 			$author$project$Boon$GainSkills(
 			_List_fromArray(
 				[$author$project$Boon$Skill$Skulk, $author$project$Boon$Skill$Scrap])),
@@ -8207,24 +8240,13 @@ var $author$project$Class$cloak = {
 			boons: _List_Nil,
 			flavor: $elm$core$Maybe$Just('Nothing can keep you out.'),
 			name: 'Surprise Infiltration',
-			text: 'Once per session, insert yourself into a situation where you are not currently present, so long as there’s some conceivable way you could get in there.'
+			text: 'Once per session, insert yourself into a situation where you are not currently present, so long as there\'s some conceivable way you could get in there.'
 		},
 			{
 			boons: _List_Nil,
 			flavor: $elm$core$Maybe$Just('You are a trained infiltrator, and others would do well to heed your words.'),
 			name: 'Tactician',
 			text: 'When you enter a dangerous situation, you can name up to three features or opportunities that your allies can take advantage of. The first time you or an ally uses an opportunity, they roll with mastery (for example: cover with a good view of the battlefield, an exit, a badly-guarded door, a stack of barrels, etc.).'
-		},
-			{
-			boons: _List_fromArray(
-				[
-					$author$project$Boon$GainSkills(
-					_List_fromArray(
-						[$author$project$Boon$Skill$Deceive]))
-				]),
-			flavor: $elm$core$Maybe$Just('You word your diagnosis as kindly as possible.'),
-			name: 'Just a Scratch',
-			text: 'When you or an ally suffer Body fallout, you may roll Deceive+Science. On a success, the effects of the fallout can be ignored until the end of the situation.'
 		}
 		]),
 	name: 'Cloak'
@@ -8265,7 +8287,7 @@ var $author$project$Class$doc = {
 	name: 'Doc'
 };
 var $author$project$Class$classes = _List_fromArray(
-	[$author$project$Class$doc, $author$project$Class$cloak]);
+	[$author$project$Class$doc, $author$project$Class$cloak, $author$project$Class$awoken]);
 var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm$html$Html$h1 = _VirtualDom_node('h1');
 var $elm$virtual_dom$VirtualDom$map = _VirtualDom_map;

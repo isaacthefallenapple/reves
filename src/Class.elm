@@ -18,6 +18,7 @@ classes : List Class
 classes =
     [ doc
     , cloak
+    , awoken
     ]
 
 
@@ -53,7 +54,7 @@ cloak =
     , boons =
         [ GainResistance Shadow 3
         , GainResistance Body 1
-        , GainRefresh [ "" ]
+        , GainRefresh [ "Show someone they should not have underestimated you" ]
         , GainSkills [ Skulk, Scrap ]
         , GainDomains [ Criminal, HighSociety ]
         , GainEquipment [ "Light body armour (Armour 2)", "Climbing gear and ropes" ]
@@ -62,17 +63,38 @@ cloak =
         [ { name = "Surprise Infiltration"
           , flavor = Just "Nothing can keep you out."
           , boons = []
-          , text = "Once per session, insert yourself into a situation where you are not currently present, so long as there’s some conceivable way you could get in there."
+          , text = "Once per session, insert yourself into a situation where you are not currently present, so long as there's some conceivable way you could get in there."
           }
         , { name = "Tactician"
           , flavor = Just "You are a trained infiltrator, and others would do well to heed your words."
           , boons = []
           , text = "When you enter a dangerous situation, you can name up to three features or opportunities that your allies can take advantage of. The first time you or an ally uses an opportunity, they roll with mastery (for example: cover with a good view of the battlefield, an exit, a badly-guarded door, a stack of barrels, etc.)."
           }
-        , { name = "Just a Scratch"
-          , flavor = Just "You word your diagnosis as kindly as possible."
-          , boons = [ GainSkills [ Deceive ] ]
-          , text = "When you or an ally suffer Body fallout, you may roll Deceive+Science. On a success, the effects of the fallout can be ignored until the end of the situation."
+        ]
+    }
+
+
+awoken : Class
+awoken =
+    { name = "Awoken"
+    , boons =
+        [ GainResistance Resolve 2
+        , GainResistance Shadow 1
+        , GainResistance Body 1
+        , GainRefresh [ "Take something back from those who would oppress you." ]
+        , GainSkills [ Compel, Resist ]
+        , GainDomains [ Science, Weirdness ]
+        ]
+    , coreAbilities =
+        [ { name = "Heart's Desire"
+          , flavor = Just "You know what people want."
+          , boons = []
+          , text = "Once per situation, pick an NPC that you can observe for a while. The GM will tell you what they want most of all right now."
+          }
+        , { name = "Moonlight"
+          , flavor = Just "The Way's light shines forth from you."
+          , boons = []
+          , text = "Your rune glows as brightly as the full moon, casting a calm light into the darkness that cannot be extinguished unless you decide to snuff it, or you fall unconscious."
           }
         ]
     }
