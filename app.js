@@ -8541,7 +8541,10 @@ var $author$project$Abilities$view = function (abilities) {
 			A2($elm$core$Dict$get, primary, tabs)));
 	return A2(
 		$elm$html$Html$div,
-		_List_Nil,
+		_List_fromArray(
+			[
+				$elm$html$Html$Attributes$class('wrapper')
+			]),
 		A2(
 			$elm$core$List$cons,
 			A2(
@@ -8923,7 +8926,10 @@ var $author$project$Character$view = function (character) {
 			[
 				A2(
 				$elm$html$Html$main_,
-				_List_Nil,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('wrapper gap-top-700')
+					]),
 				_List_fromArray(
 					[
 						A2(

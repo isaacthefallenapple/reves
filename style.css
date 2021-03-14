@@ -39,17 +39,15 @@ h3 {
     display: inline;
 }
 
-body {
-    margin: 0;
-    padding: 2em 4em;
-    gap: 2em 1em;
-    min-width: 50em;
-    max-width: 70em;
+.gap-top-700 {
+    margin-top: 1.5rem;
+}
 
-    height: 100vh;
-
-    display: flex;
-    flex-direction: column;
+.wrapper {
+    max-width: 70rem;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 0.8rem;
 }
 
 footer {

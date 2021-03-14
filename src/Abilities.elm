@@ -215,7 +215,7 @@ view abilities =
                 |> Maybe.withDefault (Dict.toList tabs)
     in
     div
-        []
+        [ class "wrapper" ]
         (nav
             []
             [ a

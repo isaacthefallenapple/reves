@@ -219,7 +219,7 @@ view character =
     { title = character.name
     , body =
         [ main_
-            []
+            [ class "wrapper gap-top-700" ]
             [ section
                 [ class "name" ]
                 [ label
