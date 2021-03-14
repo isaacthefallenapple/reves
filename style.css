@@ -159,6 +159,10 @@ input[type="text"] {
     /* background-color: rgba(0, 0, 0, 0.4); */
 }
 
+.chosen {
+    border-left: 2px solid black;
+}
+
 .bonds {
     grid-area: bonds;
 }

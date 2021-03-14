@@ -91,6 +91,7 @@ type Msg
     | GotMetadata (Result Http.Error Metadata)
     | GotAdvances String (Result Http.Error Advances)
     | ChoseAbility Ability
+    | UnchoseAbility String
     | ApplyChosen
 
 
@@ -131,7 +132,12 @@ update msg abilities =
                 _ =
                     Debug.log "Chose ability" ()
             in
-            ( { abilities | chosen = Dict.insert ability.name ability abilities.chosen }, Cmd.none )
+            ( { abilities | chosen = Dict.insert ability.name ability abilities.chosen }
+            , Cmd.none
+            )
+
+        UnchoseAbility name ->
+            ( { abilities | chosen = Dict.remove name abilities.chosen }, Cmd.none )
 
         GotMetadata (Ok metadata) ->
             ( { abilities
@@ -231,14 +237,14 @@ view abilities =
             ]
             :: List.map
                 (\( name, advances ) ->
-                    viewAdvances name advances (name == selected)
+                    viewAdvances name abilities.chosen advances (name == selected)
                 )
                 primaryFirst
         )
 
 
-viewAdvances : String -> Status Advances -> Bool -> Html Msg
-viewAdvances name advances isSelected =
+viewAdvances : String -> Dict String Ability -> Status Advances -> Bool -> Html Msg
+viewAdvances name selectedAbilities advances isSelected =
     div
         [ classList [ ( "hidden", not isSelected ) ] ]
         (case advances of
@@ -258,15 +264,15 @@ viewAdvances name advances isSelected =
                 [ h2
                     []
                     [ text "Low" ]
-                , viewAdvanceList low
+                , viewAdvanceList selectedAbilities low
                 , h2
                     []
                     [ text "Medium" ]
-                , viewAdvanceList medium
+                , viewAdvanceList selectedAbilities medium
                 , h2
                     []
                     [ text "High" ]
-                , viewAdvanceList high
+                , viewAdvanceList selectedAbilities high
                 , button
                     [ onClick ApplyChosen ]
                     [ text "Apply" ]
@@ -274,14 +280,26 @@ viewAdvances name advances isSelected =
         )
 
 
-viewAdvanceList : List Ability -> Html Msg
-viewAdvanceList abilities =
+viewAdvanceList : Dict String Ability -> List Ability -> Html Msg
+viewAdvanceList selectedAbilities abilities =
     ul
         []
         (List.map
             (\ability ->
+                let
+                    isChosen =
+                        Dict.member ability.name selectedAbilities
+                in
                 li
-                    [ onClick (ChoseAbility ability) ]
+                    [ classList [ ( "chosen", isChosen ) ]
+                    , onClick
+                        (if isChosen then
+                            UnchoseAbility ability.name
+
+                         else
+                            ChoseAbility ability
+                        )
+                    ]
                     [ Ability.view ability ]
             )
             abilities

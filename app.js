@@ -7754,6 +7754,15 @@ var $author$project$Abilities$update = F2(
 							chosen: A3($elm$core$Dict$insert, ability.name, ability, abilities.chosen)
 						}),
 					$elm$core$Platform$Cmd$none);
+			case 'UnchoseAbility':
+				var name = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						abilities,
+						{
+							chosen: A2($elm$core$Dict$remove, name, abilities.chosen)
+						}),
+					$elm$core$Platform$Cmd$none);
 			case 'GotMetadata':
 				if (msg.a.$ === 'Ok') {
 					var metadata = msg.a.a;
@@ -8111,6 +8120,16 @@ var $author$project$Boon$personalAssistant = {
 		]),
 	name: 'Personal Assistant'
 };
+var $author$project$Boon$pleasure = {
+	boons: _List_fromArray(
+		[
+			A2($author$project$Boon$GainResistance, $author$project$Boon$Resistance$Resources, 2),
+			$author$project$Boon$GainDomains(
+			_List_fromArray(
+				[$author$project$Boon$Domain$HighSociety]))
+		]),
+	name: 'Pleasure'
+};
 var $author$project$Boon$searchAndRescue = {
 	boons: _List_fromArray(
 		[
@@ -8154,7 +8173,7 @@ var $author$project$Boon$testSubject = {
 	name: 'Test Subject'
 };
 var $author$project$Boon$assignments = _List_fromArray(
-	[$author$project$Boon$labour, $author$project$Boon$personalAssistant, $author$project$Boon$dogsbody, $author$project$Boon$security, $author$project$Boon$spy, $author$project$Boon$testSubject, $author$project$Boon$searchAndRescue, $author$project$Boon$escapee]);
+	[$author$project$Boon$labour, $author$project$Boon$personalAssistant, $author$project$Boon$dogsbody, $author$project$Boon$security, $author$project$Boon$spy, $author$project$Boon$testSubject, $author$project$Boon$pleasure, $author$project$Boon$searchAndRescue, $author$project$Boon$escapee]);
 var $elm$html$Html$button = _VirtualDom_node('button');
 var $elm$html$Html$Attributes$stringProperty = F2(
 	function (key, string) {
@@ -8303,6 +8322,9 @@ var $elm$html$Html$h2 = _VirtualDom_node('h2');
 var $author$project$Abilities$ChoseAbility = function (a) {
 	return {$: 'ChoseAbility', a: a};
 };
+var $author$project$Abilities$UnchoseAbility = function (a) {
+	return {$: 'UnchoseAbility', a: a};
+};
 var $elm$html$Html$h3 = _VirtualDom_node('h3');
 var $elm$html$Html$i = _VirtualDom_node('i');
 var $elm$core$List$isEmpty = function (xs) {
@@ -8392,29 +8414,36 @@ var $author$project$Ability$view = function (ability) {
 							]))))
 			]));
 };
-var $author$project$Abilities$viewAdvanceList = function (abilities) {
-	return A2(
-		$elm$html$Html$ul,
-		_List_Nil,
-		A2(
-			$elm$core$List$map,
-			function (ability) {
-				return A2(
-					$elm$html$Html$li,
-					_List_fromArray(
-						[
-							$elm$html$Html$Events$onClick(
-							$author$project$Abilities$ChoseAbility(ability))
-						]),
-					_List_fromArray(
-						[
-							$author$project$Ability$view(ability)
-						]));
-			},
-			abilities));
-};
-var $author$project$Abilities$viewAdvances = F3(
-	function (name, advances, isSelected) {
+var $author$project$Abilities$viewAdvanceList = F2(
+	function (selectedAbilities, abilities) {
+		return A2(
+			$elm$html$Html$ul,
+			_List_Nil,
+			A2(
+				$elm$core$List$map,
+				function (ability) {
+					var isChosen = A2($elm$core$Dict$member, ability.name, selectedAbilities);
+					return A2(
+						$elm$html$Html$li,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$classList(
+								_List_fromArray(
+									[
+										_Utils_Tuple2('chosen', isChosen)
+									])),
+								$elm$html$Html$Events$onClick(
+								isChosen ? $author$project$Abilities$UnchoseAbility(ability.name) : $author$project$Abilities$ChoseAbility(ability))
+							]),
+						_List_fromArray(
+							[
+								$author$project$Ability$view(ability)
+							]));
+				},
+				abilities));
+	});
+var $author$project$Abilities$viewAdvances = F4(
+	function (name, selectedAbilities, advances, isSelected) {
 		return A2(
 			$elm$html$Html$div,
 			_List_fromArray(
@@ -8462,7 +8491,7 @@ var $author$project$Abilities$viewAdvances = F3(
 									[
 										$elm$html$Html$text('Low')
 									])),
-								$author$project$Abilities$viewAdvanceList(low),
+								A2($author$project$Abilities$viewAdvanceList, selectedAbilities, low),
 								A2(
 								$elm$html$Html$h2,
 								_List_Nil,
@@ -8470,7 +8499,7 @@ var $author$project$Abilities$viewAdvances = F3(
 									[
 										$elm$html$Html$text('Medium')
 									])),
-								$author$project$Abilities$viewAdvanceList(medium),
+								A2($author$project$Abilities$viewAdvanceList, selectedAbilities, medium),
 								A2(
 								$elm$html$Html$h2,
 								_List_Nil,
@@ -8478,7 +8507,7 @@ var $author$project$Abilities$viewAdvances = F3(
 									[
 										$elm$html$Html$text('High')
 									])),
-								$author$project$Abilities$viewAdvanceList(high),
+								A2($author$project$Abilities$viewAdvanceList, selectedAbilities, high),
 								A2(
 								$elm$html$Html$button,
 								_List_fromArray(
@@ -8575,9 +8604,10 @@ var $author$project$Abilities$view = function (abilities) {
 				function (_v1) {
 					var name = _v1.a;
 					var advances = _v1.b;
-					return A3(
+					return A4(
 						$author$project$Abilities$viewAdvances,
 						name,
+						abilities.chosen,
 						advances,
 						_Utils_eq(name, selected));
 				},
