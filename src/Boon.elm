@@ -79,7 +79,16 @@ type alias Assignment =
 
 assignments : List Assignment
 assignments =
-    [ labour, personalAssistant, dogsbody ]
+    [ labour
+    , personalAssistant
+    , dogsbody
+    , security
+    , spy
+    , testSubject
+    , pleasure
+    , searchAndRescue
+    , escapee
+    ]
 
 
 labour : Assignment
@@ -108,6 +117,66 @@ dogsbody =
     , boons =
         [ GainResistance Resolve 2
         , GainDomains [ LowSociety ]
+        ]
+    }
+
+
+security : Assignment
+security =
+    { name = "Security"
+    , boons =
+        [ GainResistance Body 2
+        , GainSkills [ Scrap ]
+        ]
+    }
+
+
+spy : Assignment
+spy =
+    { name = "Spy"
+    , boons =
+        [ GainResistance Shadow 2
+        , GainSkills [ Deceive ]
+        ]
+    }
+
+
+testSubject : Assignment
+testSubject =
+    { name = "Test Subject"
+    , boons =
+        [ GainSkills [ Resist ]
+        , GainDomains [ Science ]
+        ]
+    }
+
+
+pleasure : Assignment
+pleasure =
+    { name = "Pleasure"
+    , boons =
+        [ GainResistance Resources 2
+        , GainDomains [ HighSociety ]
+        ]
+    }
+
+
+searchAndRescue : Assignment
+searchAndRescue =
+    { name = "Search and Rescue"
+    , boons =
+        [ GainResistance Resolve 2
+        , GainSkills [ Resist ]
+        ]
+    }
+
+
+escapee : Assignment
+escapee =
+    { name = "Escapee"
+    , boons =
+        [ GainResistance Shadow 2
+        , GainSkills [ Skulk ]
         ]
     }
 

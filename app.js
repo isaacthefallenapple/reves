@@ -8081,6 +8081,16 @@ var $author$project$Boon$dogsbody = {
 		]),
 	name: 'Dogsbody'
 };
+var $author$project$Boon$escapee = {
+	boons: _List_fromArray(
+		[
+			A2($author$project$Boon$GainResistance, $author$project$Boon$Resistance$Shadow, 2),
+			$author$project$Boon$GainSkills(
+			_List_fromArray(
+				[$author$project$Boon$Skill$Skulk]))
+		]),
+	name: 'Escapee'
+};
 var $author$project$Boon$labour = {
 	boons: _List_fromArray(
 		[
@@ -8101,8 +8111,50 @@ var $author$project$Boon$personalAssistant = {
 		]),
 	name: 'Personal Assistant'
 };
+var $author$project$Boon$searchAndRescue = {
+	boons: _List_fromArray(
+		[
+			A2($author$project$Boon$GainResistance, $author$project$Boon$Resistance$Resolve, 2),
+			$author$project$Boon$GainSkills(
+			_List_fromArray(
+				[$author$project$Boon$Skill$Resist]))
+		]),
+	name: 'Search and Rescue'
+};
+var $author$project$Boon$security = {
+	boons: _List_fromArray(
+		[
+			A2($author$project$Boon$GainResistance, $author$project$Boon$Resistance$Body, 2),
+			$author$project$Boon$GainSkills(
+			_List_fromArray(
+				[$author$project$Boon$Skill$Scrap]))
+		]),
+	name: 'Security'
+};
+var $author$project$Boon$spy = {
+	boons: _List_fromArray(
+		[
+			A2($author$project$Boon$GainResistance, $author$project$Boon$Resistance$Shadow, 2),
+			$author$project$Boon$GainSkills(
+			_List_fromArray(
+				[$author$project$Boon$Skill$Deceive]))
+		]),
+	name: 'Spy'
+};
+var $author$project$Boon$testSubject = {
+	boons: _List_fromArray(
+		[
+			$author$project$Boon$GainSkills(
+			_List_fromArray(
+				[$author$project$Boon$Skill$Resist])),
+			$author$project$Boon$GainDomains(
+			_List_fromArray(
+				[$author$project$Boon$Domain$Science]))
+		]),
+	name: 'Test Subject'
+};
 var $author$project$Boon$assignments = _List_fromArray(
-	[$author$project$Boon$labour, $author$project$Boon$personalAssistant, $author$project$Boon$dogsbody]);
+	[$author$project$Boon$labour, $author$project$Boon$personalAssistant, $author$project$Boon$dogsbody, $author$project$Boon$security, $author$project$Boon$spy, $author$project$Boon$testSubject, $author$project$Boon$searchAndRescue, $author$project$Boon$escapee]);
 var $elm$html$Html$button = _VirtualDom_node('button');
 var $elm$html$Html$Attributes$stringProperty = F2(
 	function (key, string) {
