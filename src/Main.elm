@@ -235,6 +235,9 @@ update msg model =
             case urlRequest of
                 Browser.Internal url ->
                     let
+                        _ =
+                            Debug.log "url: " url
+
                         route =
                             Debug.log "parsed url: " (Route.parse url)
                     in
