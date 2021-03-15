@@ -219,7 +219,7 @@ view abilities =
         (nav
             []
             [ a
-                [ href "/" ]
+                [ href "/reves/" ]
                 [ text "Back" ]
             , ul
                 [ class "tab-bar" ]

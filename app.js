@@ -8622,7 +8622,7 @@ var $author$project$Abilities$view = function (abilities) {
 						$elm$html$Html$a,
 						_List_fromArray(
 							[
-								$elm$html$Html$Attributes$href('/')
+								$elm$html$Html$Attributes$href('/reves/')
 							]),
 						_List_fromArray(
 							[
