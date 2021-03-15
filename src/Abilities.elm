@@ -14,7 +14,7 @@ import Route
 
 location : String
 location =
-    "/data/abilities/"
+    "/reves/data/abilities/"
 
 
 metadataLocation : String

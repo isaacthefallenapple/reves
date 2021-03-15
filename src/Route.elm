@@ -28,11 +28,11 @@ toString route =
     "/"
         ++ (case route of
                 Root ->
-                    ""
+                    "reves/"
 
                 Abilities (Just frag) ->
-                    "abilities#" ++ frag
+                    "reves/abilities#" ++ frag
 
                 Abilities Nothing ->
-                    "abilities"
+                    "reves/abilities"
            )

@@ -7274,7 +7274,7 @@ var $elm$http$Http$get = function (r) {
 		{body: $elm$http$Http$emptyBody, expect: r.expect, headers: _List_Nil, method: 'GET', timeout: $elm$core$Maybe$Nothing, tracker: $elm$core$Maybe$Nothing, url: r.url});
 };
 var $author$project$Abilities$metadataDecoder = $elm$json$Json$Decode$dict($elm$json$Json$Decode$string);
-var $author$project$Abilities$location = '/data/abilities/';
+var $author$project$Abilities$location = '/reves/data/abilities/';
 var $author$project$Abilities$metadataLocation = $author$project$Abilities$location + 'metadata.json';
 var $author$project$Abilities$init = F3(
 	function (navKey, maybeSelected, character) {
@@ -7617,14 +7617,14 @@ var $elm$file$File$toString = _File_toString;
 var $author$project$Route$toString = function (route) {
 	return '/' + function () {
 		if (route.$ === 'Root') {
-			return '';
+			return 'reves/';
 		} else {
 			if (route.a.$ === 'Just') {
 				var frag = route.a.a;
-				return 'abilities#' + frag;
+				return 'reves/abilities#' + frag;
 			} else {
 				var _v1 = route.a;
-				return 'abilities';
+				return 'reves/abilities';
 			}
 		}
 	}();
