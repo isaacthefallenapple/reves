@@ -224,14 +224,12 @@ update msg model =
             ( model, Task.perform ReadFile (File.toString file) )
 
         ( _, ReadFile content ) ->
-            ( case Decode.decodeString Character.decoder content of
+            case Decode.decodeString Character.decoder content of
                 Err err ->
-                    DecodeErr (toNavKey model) err
+                    ( DecodeErr (toNavKey model) err, Cmd.none )
 
                 Ok character ->
-                    Character (toNavKey model) character
-            , Cmd.none
-            )
+                    ( Character (toNavKey model) character, Character.save character )
 
         ( Character navKey character, LinkClicked urlRequest ) ->
             case urlRequest of

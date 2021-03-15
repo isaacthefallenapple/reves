@@ -8010,24 +8010,24 @@ var $author$project$Main$update = F2(
 							$elm$file$File$toString(file)));
 				case 'ReadFile':
 					var content = _v0.b.a;
-					return _Utils_Tuple2(
-						function () {
-							var _v7 = A2($elm$json$Json$Decode$decodeString, $author$project$Character$decoder, content);
-							if (_v7.$ === 'Err') {
-								var err = _v7.a;
-								return A2(
-									$author$project$Main$DecodeErr,
-									$author$project$Main$toNavKey(model),
-									err);
-							} else {
-								var character = _v7.a;
-								return A2(
-									$author$project$Main$Character,
-									$author$project$Main$toNavKey(model),
-									character);
-							}
-						}(),
-						$elm$core$Platform$Cmd$none);
+					var _v7 = A2($elm$json$Json$Decode$decodeString, $author$project$Character$decoder, content);
+					if (_v7.$ === 'Err') {
+						var err = _v7.a;
+						return _Utils_Tuple2(
+							A2(
+								$author$project$Main$DecodeErr,
+								$author$project$Main$toNavKey(model),
+								err),
+							$elm$core$Platform$Cmd$none);
+					} else {
+						var character = _v7.a;
+						return _Utils_Tuple2(
+							A2(
+								$author$project$Main$Character,
+								$author$project$Main$toNavKey(model),
+								character),
+							$author$project$Character$save(character));
+					}
 				case 'LinkClicked':
 					switch (_v0.a.$) {
 						case 'Character':
