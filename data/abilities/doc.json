@@ -37,7 +37,7 @@
                     "skill": ["Deceive"]
                 }
             ],
-            "text": "Your attacks gain the (Piercing, Scarring) tags."
+            "text": "When you or an ally suffer Body fallout, you may roll Deceive+Science. On a success, the effects of the fallout can be ignored until the end of the situation."
         },
         {
             "name": "Med School Graduate",
