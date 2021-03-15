@@ -31,6 +31,7 @@ h6 {
     font-family: "Staatliches", cursive;
     font-size: 2rem;
     margin: 0;
+    line-height: 1.5;
 }
 
 h3 {
@@ -48,6 +49,10 @@ h3 {
     margin-left: auto;
     margin-right: auto;
     padding: 0 0.8rem;
+}
+
+.font-size-700 {
+    font-size: 1.5rem;
 }
 
 footer {
@@ -188,7 +193,7 @@ input[type="text"] {
 
 .resistances table {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(6, 1fr);
     grid-template-rows: repeat(2, 1fr);
     justify-content: center;
     align-items: center;

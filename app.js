@@ -5553,6 +5553,7 @@ var $author$project$Boon$Domain$new = A2(
 	false,
 	_List_fromArray(
 		[$author$project$Boon$Domain$Criminal, $author$project$Boon$Domain$HighSociety, $author$project$Boon$Domain$LowSociety, $author$project$Boon$Domain$Weirdness, $author$project$Boon$Domain$Hegemony, $author$project$Boon$Domain$Science]));
+var $author$project$Boon$Resistance$Armor = {$: 'Armor'};
 var $author$project$Boon$Resistance$Body = {$: 'Body'};
 var $author$project$Boon$Resistance$Reputation = {$: 'Reputation'};
 var $author$project$Boon$Resistance$Resolve = {$: 'Resolve'};
@@ -5562,7 +5563,7 @@ var $author$project$Boon$Resistance$new = A2(
 	$author$project$TypedDict$fromListWithDefault,
 	0,
 	_List_fromArray(
-		[$author$project$Boon$Resistance$Body, $author$project$Boon$Resistance$Resolve, $author$project$Boon$Resistance$Resources, $author$project$Boon$Resistance$Shadow, $author$project$Boon$Resistance$Reputation]));
+		[$author$project$Boon$Resistance$Body, $author$project$Boon$Resistance$Resolve, $author$project$Boon$Resistance$Resources, $author$project$Boon$Resistance$Shadow, $author$project$Boon$Resistance$Reputation, $author$project$Boon$Resistance$Armor]));
 var $author$project$Boon$Skill$Compel = {$: 'Compel'};
 var $author$project$Boon$Skill$Deceive = {$: 'Deceive'};
 var $author$project$Boon$Skill$Hack = {$: 'Hack'};
@@ -5762,6 +5763,8 @@ var $author$project$Boon$Resistance$fromString = function (s) {
 			return $elm$core$Maybe$Just($author$project$Boon$Resistance$Shadow);
 		case 'Reputation':
 			return $elm$core$Maybe$Just($author$project$Boon$Resistance$Reputation);
+		case 'Armour':
+			return $elm$core$Maybe$Just($author$project$Boon$Resistance$Armor);
 		default:
 			return $elm$core$Maybe$Nothing;
 	}
@@ -6375,8 +6378,10 @@ var $author$project$Boon$Resistance$toString = function (resistance) {
 			return 'Resources';
 		case 'Shadow':
 			return 'Shadow';
-		default:
+		case 'Reputation':
 			return 'Reputation';
+		default:
+			return 'Armour';
 	}
 };
 var $author$project$Boon$Resistance$encodeResistance = function (resistance) {
@@ -8192,6 +8197,9 @@ var $author$project$Class$awoken = {
 			$author$project$Boon$GainRefresh(
 			_List_fromArray(
 				['Take something back from those who would oppress you.'])),
+			$author$project$Boon$GainEquipment(
+			_List_fromArray(
+				['Take something back from those who would oppress you.'])),
 			$author$project$Boon$GainSkills(
 			_List_fromArray(
 				[$author$project$Boon$Skill$Compel, $author$project$Boon$Skill$Resist])),
@@ -8232,7 +8240,7 @@ var $author$project$Class$cloak = {
 				[$author$project$Boon$Domain$Criminal, $author$project$Boon$Domain$HighSociety])),
 			$author$project$Boon$GainEquipment(
 			_List_fromArray(
-				['Light body armour (Armour 2)', 'Climbing gear and ropes']))
+				['Light body armour (Armour 2)', 'EITHER Climbing gear and ropes', 'Shoddy rifle (D8, Ranged, Reload, Unreliable) and Knife (D3, Concealable) OR Sword (D6) and Meteor Hammer (D3, Ranged, Stunning)']))
 		]),
 	coreAbilities: _List_fromArray(
 		[
@@ -8267,7 +8275,7 @@ var $author$project$Class$doc = {
 				[$author$project$Boon$Domain$Science, $author$project$Boon$Domain$LowSociety])),
 			$author$project$Boon$GainEquipment(
 			_List_fromArray(
-				['The common red medic outfit bearing the official white medic seal of the Hegemony.', 'A less than ideally stocked medkit.']))
+				['The common red medic outfit bearing the official white medic seal of the Hegemony', 'A less than ideally stocked medkit', 'EITHER Scalpel (D3, Concealable) OR Stun gun (D6, One-shot, Stunning)']))
 		]),
 	coreAbilities: _List_fromArray(
 		[
@@ -8740,7 +8748,7 @@ var $elm$html$Html$tr = _VirtualDom_node('tr');
 var $author$project$Boon$Resistance$view = F2(
 	function (toMsg, resistances) {
 		var resistancesList = _List_fromArray(
-			[$author$project$Boon$Resistance$Body, $author$project$Boon$Resistance$Resolve, $author$project$Boon$Resistance$Resources, $author$project$Boon$Resistance$Shadow, $author$project$Boon$Resistance$Reputation]);
+			[$author$project$Boon$Resistance$Body, $author$project$Boon$Resistance$Resolve, $author$project$Boon$Resistance$Resources, $author$project$Boon$Resistance$Shadow, $author$project$Boon$Resistance$Reputation, $author$project$Boon$Resistance$Armor]);
 		return A2(
 			$elm$html$Html$table,
 			_List_Nil,
@@ -8994,25 +9002,21 @@ var $author$project$Character$view = function (character) {
 						_List_fromArray(
 							[
 								A2(
-								$elm$html$Html$label,
+								$elm$html$Html$h2,
 								_List_Nil,
 								_List_fromArray(
 									[
-										A2(
-										$elm$html$Html$h2,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('Class')
-											])),
-										A2(
-										$elm$html$Html$input,
-										_List_fromArray(
-											[
-												$elm$html$Html$Attributes$type_('text'),
-												$elm$html$Html$Attributes$value(character._class)
-											]),
-										_List_Nil)
+										$elm$html$Html$text('Class')
+									])),
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('font-size-700')
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text(character._class)
 									]))
 							])),
 						A2(
@@ -9024,25 +9028,21 @@ var $author$project$Character$view = function (character) {
 						_List_fromArray(
 							[
 								A2(
-								$elm$html$Html$label,
+								$elm$html$Html$h2,
 								_List_Nil,
 								_List_fromArray(
 									[
-										A2(
-										$elm$html$Html$h2,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('Assignment')
-											])),
-										A2(
-										$elm$html$Html$input,
-										_List_fromArray(
-											[
-												$elm$html$Html$Attributes$type_('text'),
-												$elm$html$Html$Attributes$value(character.assignment)
-											]),
-										_List_Nil)
+										$elm$html$Html$text('Assignment')
+									])),
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('font-size-700')
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text(character.assignment)
 									]))
 							])),
 						A2(

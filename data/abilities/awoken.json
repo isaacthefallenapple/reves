@@ -36,6 +36,13 @@
             "text": "Mark 1 stress to Resolve to immediately start a fire somewhere nearby."
         },
         {
+            "name": "Way of Calm",
+            "flavor": "You shine the calming light of the Way over a situation, and tempers fade.",
+            "boons": [],
+            "text": "Mark D6 stress to Resolve to cast this spell. You, and anyone nearby to you, cannot fight, or engage in violent actions, or move above a run, for the next minute or so — you can extend it for another minute by marking another D6 stress to Resolve."
+        },
+
+        {
             "name": "Cover of Darkness",
             "flavor": null,
             "boons": [
@@ -44,6 +51,12 @@
                 }
             ],
             "text": "Mark D3 stress to Resolve. You extinguish all sources of light in the immediate area around you."
+        },
+        {
+            "name": "Way Sense",
+            "flavor": "You don't need your eyes to see.",
+            "boons": [],
+            "text": "Spend ten minutes meditating and attuning to the area around you to uncover strangeness or things out of place. You may then ask the GM to reveal some something hidden to you in your immediate area: the GM will relay the information to you as a vision or sensation, not hard data."
         }
     ],
     "medium": [
@@ -76,6 +89,12 @@
             "flavor": "Weapons moulder and crumble when brought against you and your allies.",
             "boons": [],
             "text": "Mark D3 stress to Resolve, and mark 1 stress to Resolve on each other participant in the ritual. You place your hand over the heart of each participant and ask the Way to bless them in their endeavours; if they are attacked with weapons during the next situation, those weapons inflict stress as though they were one die size smaller as they rust, malfunction and come apart in their attackers' hands."
+        },
+        {
+            "name": "Not Yet",
+            "flavor": "The Way protects you and your friends.",
+            "boons": [],
+            "text": "Once per situation, when the GM rolls for fallout on you or a nearby ally, make them re-roll their die if successful."
         }
     ],
     "high": []

@@ -31,7 +31,7 @@ doc =
         , GainRefresh [ "Help those who cannot help themselves." ]
         , GainSkills [ Patch, Compel ]
         , GainDomains [ Science, LowSociety ]
-        , GainEquipment [ "The common red medic outfit bearing the official white medic seal of the Hegemony.", "A less than ideally stocked medkit." ]
+        , GainEquipment [ "The common red medic outfit bearing the official white medic seal of the Hegemony", "A less than ideally stocked medkit", "EITHER Scalpel (D3, Concealable) OR Stun gun (D6, One-shot, Stunning)" ]
         ]
     , coreAbilities =
         [ { name = "Medical Attention"
@@ -57,7 +57,7 @@ cloak =
         , GainRefresh [ "Show someone they should not have underestimated you" ]
         , GainSkills [ Skulk, Scrap ]
         , GainDomains [ Criminal, HighSociety ]
-        , GainEquipment [ "Light body armour (Armour 2)", "Climbing gear and ropes" ]
+        , GainEquipment [ "Light body armour (Armour 2)", "EITHER Climbing gear and ropes", "Shoddy rifle (D8, Ranged, Reload, Unreliable) and Knife (D3, Concealable) OR Sword (D6) and Meteor Hammer (D3, Ranged, Stunning)" ]
         ]
     , coreAbilities =
         [ { name = "Surprise Infiltration"
@@ -82,6 +82,7 @@ awoken =
         , GainResistance Shadow 1
         , GainResistance Body 1
         , GainRefresh [ "Take something back from those who would oppress you." ]
+        , GainEquipment [ "Take something back from those who would oppress you." ]
         , GainSkills [ Compel, Resist ]
         , GainDomains [ Science, Weirdness ]
         ]

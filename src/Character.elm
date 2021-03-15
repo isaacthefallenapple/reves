@@ -233,25 +233,21 @@ view character =
                 ]
             , section
                 [ class "class" ]
-                [ label
+                [ h2
                     []
-                    [ h2
-                        []
-                        [ text "Class" ]
-                    , input [ type_ "text", value character.class ]
-                        []
-                    ]
+                    [ text "Class" ]
+                , div
+                    [ class "font-size-700" ]
+                    [ text character.class ]
                 ]
             , section
                 [ class "assignment" ]
-                [ label
+                [ h2
                     []
-                    [ h2
-                        []
-                        [ text "Assignment" ]
-                    , input [ type_ "text", value character.assignment ]
-                        []
-                    ]
+                    [ text "Assignment" ]
+                , div
+                    [ class "font-size-700" ]
+                    [ text character.assignment ]
                 ]
             , section
                 [ class "resistances" ]

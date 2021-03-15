@@ -20,6 +20,7 @@ new =
         , Resources
         , Shadow
         , Reputation
+        , Armor
         ]
 
 
@@ -29,6 +30,7 @@ type Resistance
     | Resources
     | Shadow
     | Reputation
+    | Armor
 
 
 toString : Resistance -> String
@@ -49,6 +51,9 @@ toString resistance =
         Reputation ->
             "Reputation"
 
+        Armor ->
+            "Armour"
+
 
 fromString : String -> Maybe Resistance
 fromString s =
@@ -68,6 +73,9 @@ fromString s =
         "Reputation" ->
             Just Reputation
 
+        "Armour" ->
+            Just Armor
+
         _ ->
             Nothing
 
@@ -80,7 +88,7 @@ view : (Resistances -> msg) -> Resistances -> Html msg
 view toMsg resistances =
     let
         resistancesList =
-            [ Body, Resolve, Resources, Shadow, Reputation ]
+            [ Body, Resolve, Resources, Shadow, Reputation, Armor ]
     in
     table
         []

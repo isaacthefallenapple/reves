@@ -48,6 +48,28 @@
                 }
             ],
             "text": "You can spend an hour learning as much about a subject as possible. Roll Investigate+Science to do so. On a success, choose a Domain. You are treated as possessing that Domain (or a Knack in the Domain if you already possess it) for the rest of the session or until you use this ability again, whichever comes first. If you do use this ability twice in the same session, it may not be for the same Domain both times."
+        },
+        {
+            "name": "Call in a Favour",
+            "flavor": "You have many chits to collect.",
+            "boons": [
+                {
+                    "resistance": "Resources",
+                    "bonus": 2
+                }
+            ],
+            "text": "Once per session, gain a (non-unique, mundane) piece of equipment by asking a former patient for it."
+        },
+        {
+            "name": "Build Bridges",
+            "flavor": "You sacrifice yourself for your allies.",
+            "boons": [
+                {
+                    "resistance": "Reputation",
+                    "bonus": 1
+                }
+            ],
+            "text": "Before you roll for fallout on a bond, you may mark stress on yourself to remove it from the ally — each point you mark removes 2 points of stress from them."
         }
     ],
     "medium": [
