@@ -13,7 +13,7 @@ parser : Parser (Route -> a) a
 parser =
     oneOf
         [ map Root Parser.top
-        , map Abilities (s "abilities" </> fragment identity)
+        , map Abilities (s "reves" </> s "abilities" </> fragment identity)
         ]
 
 
