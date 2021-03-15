@@ -8041,6 +8041,7 @@ var $author$project$Main$update = F2(
 									$elm$core$Debug$log,
 									'parsed url: ',
 									$author$project$Route$parse(url));
+								var _v10 = A2($elm$core$Debug$log, 'url: ', url);
 								if (route.$ === 'Abilities') {
 									var selected = route.a;
 									return A3(
