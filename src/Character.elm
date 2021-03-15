@@ -172,6 +172,7 @@ type Msg
     | UpdatedFallout String
     | UpdatedBonds String
     | UpdatedResistances Resistances
+    | ClickedSave
 
 
 
@@ -207,6 +208,9 @@ update msg character =
 
         UpdatedResistances resistances ->
             { character | resistances = resistances }
+
+        ClickedSave ->
+            character
 
 
 
@@ -335,6 +339,12 @@ view character =
                 , textarea
                     [ onInput UpdatedKnacks ]
                     [ text character.knacks ]
+                ]
+            , footer
+                []
+                [ button
+                    [ onClick ClickedSave ]
+                    [ text "Save" ]
                 ]
             ]
         ]

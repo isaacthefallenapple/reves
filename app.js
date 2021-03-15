@@ -5524,8 +5524,8 @@ var $author$project$Main$Character = F2(
 	function (a, b) {
 		return {$: 'Character', a: a, b: b};
 	});
-var $author$project$Main$PickClass = function (a) {
-	return {$: 'PickClass', a: a};
+var $author$project$Main$Landing = function (a) {
+	return {$: 'Landing', a: a};
 };
 var $elm$core$Dict$RBEmpty_elm_builtin = {$: 'RBEmpty_elm_builtin'};
 var $elm$core$Dict$empty = $elm$core$Dict$RBEmpty_elm_builtin;
@@ -6112,7 +6112,7 @@ var $author$project$Main$init = F3(
 		return _Utils_Tuple2(
 			function () {
 				if (flags.$ === 'Nothing') {
-					return $author$project$Main$PickClass(navKey);
+					return $author$project$Main$Landing(navKey);
 				} else {
 					var json = flags.a;
 					return A2(
@@ -6145,6 +6145,9 @@ var $author$project$Main$PickAssignment = F2(
 	function (a, b) {
 		return {$: 'PickAssignment', a: a, b: b};
 	});
+var $author$project$Main$PickClass = function (a) {
+	return {$: 'PickClass', a: a};
+};
 var $author$project$Main$ReadFile = function (a) {
 	return {$: 'ReadFile', a: a};
 };
@@ -7589,9 +7592,12 @@ var $author$project$Main$toNavKey = function (model) {
 		case 'DecodeErr':
 			var navKey = model.a;
 			return navKey;
-		default:
+		case 'Abilities':
 			var abilities = model.a;
 			return $author$project$Abilities$toNavKey(abilities);
+		default:
+			var navKey = model.a;
+			return navKey;
 	}
 };
 var $elm$file$File$toString = _File_toString;
@@ -7878,19 +7884,31 @@ var $author$project$Character$update = F2(
 				return _Utils_update(
 					character,
 					{bonds: bonds});
-			default:
+			case 'UpdatedResistances':
 				var resistances = msg.a;
 				return _Utils_update(
 					character,
 					{resistances: resistances});
+			default:
+				return character;
 		}
 	});
 var $author$project$Main$update = F2(
 	function (msg, model) {
 		var _v0 = _Utils_Tuple2(model, msg);
-		_v0$10:
+		_v0$11:
 		while (true) {
 			switch (_v0.b.$) {
+				case 'ClickedNewCharacter':
+					if (_v0.a.$ === 'Landing') {
+						var navKey = _v0.a.a;
+						var _v1 = _v0.b;
+						return _Utils_Tuple2(
+							$author$project$Main$PickClass(navKey),
+							$elm$core$Platform$Cmd$none);
+					} else {
+						break _v0$11;
+					}
 				case 'PickedClass':
 					if (_v0.a.$ === 'PickClass') {
 						var navKey = _v0.a.a;
@@ -7899,13 +7917,13 @@ var $author$project$Main$update = F2(
 							A2($author$project$Main$PickAssignment, navKey, _class),
 							$elm$core$Platform$Cmd$none);
 					} else {
-						break _v0$10;
+						break _v0$11;
 					}
 				case 'PickedAssignment':
 					if (_v0.a.$ === 'PickAssignment') {
-						var _v1 = _v0.a;
-						var navKey = _v1.a;
-						var _class = _v1.b;
+						var _v2 = _v0.a;
+						var navKey = _v2.a;
+						var _class = _v2.b;
 						var assignment = _v0.b.a;
 						var character = A2(
 							$author$project$Character$applyAssignment,
@@ -7915,20 +7933,36 @@ var $author$project$Main$update = F2(
 							A2($author$project$Main$Character, navKey, character),
 							$author$project$Character$save(character));
 					} else {
-						break _v0$10;
+						break _v0$11;
 					}
 				case 'CharacterMsg':
 					if (_v0.a.$ === 'Character') {
-						var _v2 = _v0.a;
-						var navKey = _v2.a;
-						var character = _v2.b;
-						var subMsg = _v0.b.a;
-						var updatedCharacter = A2($author$project$Character$update, subMsg, character);
-						return _Utils_Tuple2(
-							A2($author$project$Main$Character, navKey, updatedCharacter),
-							$author$project$Character$save(updatedCharacter));
+						if (_v0.b.a.$ === 'ClickedSave') {
+							var _v3 = _v0.a;
+							var character = _v3.b;
+							var _v4 = _v0.b.a;
+							return _Utils_Tuple2(
+								model,
+								A3(
+									$elm$file$File$Download$string,
+									character.name,
+									'application/json',
+									A2(
+										$elm$json$Json$Encode$encode,
+										2,
+										$author$project$Character$encode(character))));
+						} else {
+							var _v5 = _v0.a;
+							var navKey = _v5.a;
+							var character = _v5.b;
+							var subMsg = _v0.b.a;
+							var updatedCharacter = A2($author$project$Character$update, subMsg, character);
+							return _Utils_Tuple2(
+								A2($author$project$Main$Character, navKey, updatedCharacter),
+								$author$project$Character$save(updatedCharacter));
+						}
 					} else {
-						break _v0$10;
+						break _v0$11;
 					}
 				case 'AbilitiesMsg':
 					if (_v0.a.$ === 'Abilities') {
@@ -7940,28 +7974,10 @@ var $author$project$Main$update = F2(
 							$elm$core$Platform$Cmd$map($author$project$Main$AbilitiesMsg),
 							A2($author$project$Abilities$update, subMsg, abilities));
 					} else {
-						break _v0$10;
-					}
-				case 'ClickedSave':
-					if (_v0.a.$ === 'Character') {
-						var _v3 = _v0.a;
-						var character = _v3.b;
-						var _v4 = _v0.b;
-						return _Utils_Tuple2(
-							model,
-							A3(
-								$elm$file$File$Download$string,
-								character.name,
-								'application/json',
-								A2(
-									$elm$json$Json$Encode$encode,
-									2,
-									$author$project$Character$encode(character))));
-					} else {
-						break _v0$10;
+						break _v0$11;
 					}
 				case 'ClickedOpenFile':
-					var _v5 = _v0.b;
+					var _v6 = _v0.b;
 					return _Utils_Tuple2(
 						model,
 						A2(
@@ -7981,15 +7997,15 @@ var $author$project$Main$update = F2(
 					var content = _v0.b.a;
 					return _Utils_Tuple2(
 						function () {
-							var _v6 = A2($elm$json$Json$Decode$decodeString, $author$project$Character$decoder, content);
-							if (_v6.$ === 'Err') {
-								var err = _v6.a;
+							var _v7 = A2($elm$json$Json$Decode$decodeString, $author$project$Character$decoder, content);
+							if (_v7.$ === 'Err') {
+								var err = _v7.a;
 								return A2(
 									$author$project$Main$DecodeErr,
 									$author$project$Main$toNavKey(model),
 									err);
 							} else {
-								var character = _v6.a;
+								var character = _v7.a;
 								return A2(
 									$author$project$Main$Character,
 									$author$project$Main$toNavKey(model),
@@ -8000,9 +8016,9 @@ var $author$project$Main$update = F2(
 				case 'LinkClicked':
 					switch (_v0.a.$) {
 						case 'Character':
-							var _v7 = _v0.a;
-							var navKey = _v7.a;
-							var character = _v7.b;
+							var _v8 = _v0.a;
+							var navKey = _v8.a;
+							var character = _v8.b;
 							var urlRequest = _v0.b.a;
 							if (urlRequest.$ === 'Internal') {
 								var url = urlRequest.a;
@@ -8067,10 +8083,10 @@ var $author$project$Main$update = F2(
 									$elm$browser$Browser$Navigation$load(href));
 							}
 						default:
-							break _v0$10;
+							break _v0$11;
 					}
 				default:
-					break _v0$10;
+					break _v0$11;
 			}
 		}
 		return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
@@ -8078,6 +8094,7 @@ var $author$project$Main$update = F2(
 var $author$project$Main$CharacterMsg = function (a) {
 	return {$: 'CharacterMsg', a: a};
 };
+var $author$project$Main$ClickedNewCharacter = {$: 'ClickedNewCharacter'};
 var $author$project$Main$ClickedOpenFile = {$: 'ClickedOpenFile'};
 var $author$project$Main$PickedAssignment = function (a) {
 	return {$: 'PickedAssignment', a: a};
@@ -8646,6 +8663,7 @@ var $author$project$Abilities$view = function (abilities) {
 				},
 				primaryFirst)));
 };
+var $author$project$Character$ClickedSave = {$: 'ClickedSave'};
 var $author$project$Character$UpdatedBonds = function (a) {
 	return {$: 'UpdatedBonds', a: a};
 };
@@ -8673,6 +8691,7 @@ var $author$project$Character$UpdatedResistances = function (a) {
 var $author$project$Character$UpdatedSkills = function (a) {
 	return {$: 'UpdatedSkills', a: a};
 };
+var $elm$html$Html$footer = _VirtualDom_node('footer');
 var $elm$html$Html$input = _VirtualDom_node('input');
 var $elm$html$Html$label = _VirtualDom_node('label');
 var $elm$html$Html$main_ = _VirtualDom_node('main');
@@ -9277,6 +9296,22 @@ var $author$project$Character$view = function (character) {
 									[
 										$elm$html$Html$text(character.knacks)
 									]))
+							])),
+						A2(
+						$elm$html$Html$footer,
+						_List_Nil,
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$button,
+								_List_fromArray(
+									[
+										$elm$html$Html$Events$onClick($author$project$Character$ClickedSave)
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('Save')
+									]))
 							]))
 					]))
 			]),
@@ -9324,6 +9359,47 @@ var $author$project$Main$view = function (model) {
 					]),
 				title: 'Error'
 			};
+		case 'Landing':
+			return {
+				body: _List_fromArray(
+					[
+						A2(
+						$elm$html$Html$h1,
+						_List_Nil,
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Welcome')
+							])),
+						A2(
+						$elm$html$Html$div,
+						_List_Nil,
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$button,
+								_List_fromArray(
+									[
+										$elm$html$Html$Events$onClick($author$project$Main$ClickedOpenFile)
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('Open a character')
+									])),
+								$elm$html$Html$text(' or '),
+								A2(
+								$elm$html$Html$button,
+								_List_fromArray(
+									[
+										$elm$html$Html$Events$onClick($author$project$Main$ClickedNewCharacter)
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('Create a new one?')
+									]))
+							]))
+					]),
+				title: 'Welcome!'
+			};
 		case 'PickClass':
 			return {
 				body: _List_fromArray(
@@ -9335,21 +9411,30 @@ var $author$project$Main$view = function (model) {
 								$elm$html$Html$Attributes$class('class-picker')
 							]),
 						A2(
-							$elm$core$List$map,
-							function (class_) {
-								return A2(
-									$elm$html$Html$button,
-									_List_fromArray(
-										[
-											$elm$html$Html$Events$onClick(
-											$author$project$Main$PickedClass(class_))
-										]),
-									_List_fromArray(
-										[
-											$elm$html$Html$text(class_.name)
-										]));
-							},
-							$author$project$Class$classes))
+							$elm$core$List$cons,
+							A2(
+								$elm$html$Html$h1,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text('Pick your class')
+									])),
+							A2(
+								$elm$core$List$map,
+								function (class_) {
+									return A2(
+										$elm$html$Html$button,
+										_List_fromArray(
+											[
+												$elm$html$Html$Events$onClick(
+												$author$project$Main$PickedClass(class_))
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text(class_.name)
+											]));
+								},
+								$author$project$Class$classes)))
 					]),
 				title: 'Pick a class'
 			};
@@ -9364,21 +9449,30 @@ var $author$project$Main$view = function (model) {
 								$elm$html$Html$Attributes$class('assignment-picker')
 							]),
 						A2(
-							$elm$core$List$map,
-							function (assignment) {
-								return A2(
-									$elm$html$Html$button,
-									_List_fromArray(
-										[
-											$elm$html$Html$Events$onClick(
-											$author$project$Main$PickedAssignment(assignment))
-										]),
-									_List_fromArray(
-										[
-											$elm$html$Html$text(assignment.name)
-										]));
-							},
-							$author$project$Boon$assignments))
+							$elm$core$List$cons,
+							A2(
+								$elm$html$Html$h1,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text('Pick your assignment')
+									])),
+							A2(
+								$elm$core$List$map,
+								function (assignment) {
+									return A2(
+										$elm$html$Html$button,
+										_List_fromArray(
+											[
+												$elm$html$Html$Events$onClick(
+												$author$project$Main$PickedAssignment(assignment))
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text(assignment.name)
+											]));
+								},
+								$author$project$Boon$assignments)))
 					]),
 				title: 'Pick an assignment'
 			};

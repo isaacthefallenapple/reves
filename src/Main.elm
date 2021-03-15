@@ -32,6 +32,7 @@ type Model
     | Character Nav.Key Character.Stats
     | DecodeErr Nav.Key Decode.Error
     | Abilities Abilities
+    | Landing Nav.Key
 
 
 toNavKey : Model -> Nav.Key
@@ -52,6 +53,9 @@ toNavKey model =
         Abilities abilities ->
             Abilities.toNavKey abilities
 
+        Landing navKey ->
+            navKey
+
 
 
 -- MSG
@@ -65,10 +69,11 @@ type Msg
     | FileLoaded File
     | ReadFile String
     | RequestedAbilities (Result Http.Error Abilities.Advances)
-    | ClickedSave
+      -- | ClickedSave
     | LinkClicked Browser.UrlRequest
     | UrlChanged Url.Url
     | AbilitiesMsg Abilities.Msg
+    | ClickedNewCharacter
 
 
 
@@ -98,18 +103,40 @@ view model =
                 ]
             }
 
+        Landing _ ->
+            { title = "Welcome!"
+            , body =
+                [ h1
+                    []
+                    [ text "Welcome" ]
+                , div
+                    []
+                    [ button
+                        [ onClick ClickedOpenFile ]
+                        [ text "Open a character" ]
+                    , text " or "
+                    , button
+                        [ onClick ClickedNewCharacter ]
+                        [ text "Create a new one?" ]
+                    ]
+                ]
+            }
+
         PickClass _ ->
             { title = "Pick a class"
             , body =
                 [ div
                     [ class "class-picker" ]
-                    (List.map
-                        (\class_ ->
-                            button
-                                [ onClick (PickedClass class_) ]
-                                [ text class_.name ]
-                        )
-                        Class.classes
+                    (h1
+                        []
+                        [ text "Pick your class" ]
+                        :: List.map
+                            (\class_ ->
+                                button
+                                    [ onClick (PickedClass class_) ]
+                                    [ text class_.name ]
+                            )
+                            Class.classes
                     )
                 ]
             }
@@ -119,13 +146,16 @@ view model =
             , body =
                 [ div
                     [ class "assignment-picker" ]
-                    (List.map
-                        (\assignment ->
-                            button
-                                [ onClick (PickedAssignment assignment) ]
-                                [ text assignment.name ]
-                        )
-                        Boon.assignments
+                    (h1
+                        []
+                        [ text "Pick your assignment" ]
+                        :: List.map
+                            (\assignment ->
+                                button
+                                    [ onClick (PickedAssignment assignment) ]
+                                    [ text assignment.name ]
+                            )
+                            Boon.assignments
                     )
                 ]
             }
@@ -153,6 +183,9 @@ view model =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case ( model, msg ) of
+        ( Landing navKey, ClickedNewCharacter ) ->
+            ( PickClass navKey, Cmd.none )
+
         ( PickClass navKey, PickedClass class ) ->
             ( PickAssignment navKey class, Cmd.none )
 
@@ -167,6 +200,13 @@ update msg model =
             , Character.save character
             )
 
+        ( Character _ character, CharacterMsg ClickedSave ) ->
+            ( model
+            , Download.string character.name
+                "application/json"
+                (Encode.encode 2 (Character.encode character))
+            )
+
         ( Character navKey character, CharacterMsg subMsg ) ->
             let
                 updatedCharacter =
@@ -176,13 +216,6 @@ update msg model =
 
         ( Abilities abilities, AbilitiesMsg subMsg ) ->
             Tuple.mapBoth Abilities (Cmd.map AbilitiesMsg) (Abilities.update subMsg abilities)
-
-        ( Character _ character, ClickedSave ) ->
-            ( model
-            , Download.string character.name
-                "application/json"
-                (Encode.encode 2 (Character.encode character))
-            )
 
         ( _, ClickedOpenFile ) ->
             ( model, Select.file [ "application/json" ] FileLoaded )
@@ -261,7 +294,7 @@ init : Maybe String -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
 init flags _ navKey =
     ( case flags of
         Nothing ->
-            PickClass navKey
+            Landing navKey
 
         Just json ->
             Character navKey (Character.decodeLocalCharacter json)
