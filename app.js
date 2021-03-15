@@ -8231,7 +8231,7 @@ var $author$project$Class$awoken = {
 				['Take something back from those who would oppress you.'])),
 			$author$project$Boon$GainEquipment(
 			_List_fromArray(
-				['Take something back from those who would oppress you.'])),
+				['A small Ur-artefact whose powers have not revealed themselves to you', 'EITHER A knife (D3, Concealable) OR A staff (D3, Conduit)'])),
 			$author$project$Boon$GainSkills(
 			_List_fromArray(
 				[$author$project$Boon$Skill$Compel, $author$project$Boon$Skill$Resist])),

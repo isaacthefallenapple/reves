@@ -82,7 +82,7 @@ awoken =
         , GainResistance Shadow 1
         , GainResistance Body 1
         , GainRefresh [ "Take something back from those who would oppress you." ]
-        , GainEquipment [ "Take something back from those who would oppress you." ]
+        , GainEquipment [ "A small Ur-artefact whose powers have not revealed themselves to you", "EITHER A knife (D3, Concealable) OR A staff (D3, Conduit)" ]
         , GainSkills [ Compel, Resist ]
         , GainDomains [ Science, Weirdness ]
         ]
