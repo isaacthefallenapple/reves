@@ -25,14 +25,14 @@ parse url =
 
 toString : Route -> String
 toString route =
-    "/"
+    "/reves/"
         ++ (case route of
                 Root ->
-                    "reves/"
+                    ""
 
                 Abilities (Just frag) ->
-                    "reves/abilities#" ++ frag
+                    "abilities#" ++ frag
 
                 Abilities Nothing ->
-                    "reves/abilities"
+                    "abilities"
            )

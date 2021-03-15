@@ -7615,16 +7615,16 @@ var $author$project$Main$toNavKey = function (model) {
 };
 var $elm$file$File$toString = _File_toString;
 var $author$project$Route$toString = function (route) {
-	return '/' + function () {
+	return '/reves/' + function () {
 		if (route.$ === 'Root') {
-			return 'reves/';
+			return '';
 		} else {
 			if (route.a.$ === 'Just') {
 				var frag = route.a.a;
-				return 'reves/abilities#' + frag;
+				return 'abilities#' + frag;
 			} else {
 				var _v1 = route.a;
-				return 'reves/abilities';
+				return 'abilities';
 			}
 		}
 	}();
