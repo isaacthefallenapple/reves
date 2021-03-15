@@ -5579,7 +5579,7 @@ var $author$project$Boon$Skill$new = A2(
 	false,
 	_List_fromArray(
 		[$author$project$Boon$Skill$Compel, $author$project$Boon$Skill$Deceive, $author$project$Boon$Skill$Hack, $author$project$Boon$Skill$Patch, $author$project$Boon$Skill$Scramble, $author$project$Boon$Skill$Scrap, $author$project$Boon$Skill$Skulk, $author$project$Boon$Skill$Investigate, $author$project$Boon$Skill$Steal, $author$project$Boon$Skill$Resist]));
-var $author$project$Character$blank = {abilities: $elm$core$Dict$empty, assignment: '', bonds: '', _class: '', domains: $author$project$Boon$Domain$new, equipment: '', fallout: '', knacks: '', name: '', refresh: '', resistances: $author$project$Boon$Resistance$new, skills: $author$project$Boon$Skill$new};
+var $author$project$Character$blank = {abilities: $elm$core$Dict$empty, assignment: '', bonds: '', _class: '', domains: $author$project$Boon$Domain$new, equipment: '', fallout: '', knacks: '', name: '', notes: '', refresh: '', resistances: $author$project$Boon$Resistance$new, skills: $author$project$Boon$Skill$new};
 var $elm$json$Json$Decode$decodeString = _Json_runOnString;
 var $author$project$Character$Stats = function (name) {
 	return function (_class) {
@@ -5593,7 +5593,9 @@ var $author$project$Character$Stats = function (name) {
 									return function (bonds) {
 										return function (fallout) {
 											return function (resistances) {
-												return {abilities: abilities, assignment: assignment, bonds: bonds, _class: _class, domains: domains, equipment: equipment, fallout: fallout, knacks: knacks, name: name, refresh: refresh, resistances: resistances, skills: skills};
+												return function (notes) {
+													return {abilities: abilities, assignment: assignment, bonds: bonds, _class: _class, domains: domains, equipment: equipment, fallout: fallout, knacks: knacks, name: name, notes: notes, refresh: refresh, resistances: resistances, skills: skills};
+												};
 											};
 										};
 									};
@@ -6031,65 +6033,70 @@ var $NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional = F4(
 	});
 var $author$project$Character$decoder = A4(
 	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-	'resistances',
-	$author$project$Boon$Resistance$decoder,
-	$author$project$Boon$Resistance$new,
+	'notes',
+	$elm$json$Json$Decode$string,
+	'',
 	A4(
 		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-		'fallout',
-		$elm$json$Json$Decode$string,
-		'',
+		'resistances',
+		$author$project$Boon$Resistance$decoder,
+		$author$project$Boon$Resistance$new,
 		A4(
 			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-			'bonds',
+			'fallout',
 			$elm$json$Json$Decode$string,
 			'',
 			A4(
 				$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-				'abilities',
-				$elm$json$Json$Decode$dict($author$project$Ability$decoder),
-				$elm$core$Dict$empty,
+				'bonds',
+				$elm$json$Json$Decode$string,
+				'',
 				A4(
 					$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-					'refresh',
-					$elm$json$Json$Decode$string,
-					'',
+					'abilities',
+					$elm$json$Json$Decode$dict($author$project$Ability$decoder),
+					$elm$core$Dict$empty,
 					A4(
 						$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-						'equipment',
+						'refresh',
 						$elm$json$Json$Decode$string,
 						'',
 						A4(
 							$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-							'knacks',
+							'equipment',
 							$elm$json$Json$Decode$string,
 							'',
 							A4(
 								$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-								'domains',
-								$author$project$Boon$Domain$decoder,
-								$author$project$Boon$Domain$new,
+								'knacks',
+								$elm$json$Json$Decode$string,
+								'',
 								A4(
 									$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-									'skills',
-									$author$project$Boon$Skill$decoder,
-									$author$project$Boon$Skill$new,
+									'domains',
+									$author$project$Boon$Domain$decoder,
+									$author$project$Boon$Domain$new,
 									A4(
 										$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-										'assignment',
-										$elm$json$Json$Decode$string,
-										'',
+										'skills',
+										$author$project$Boon$Skill$decoder,
+										$author$project$Boon$Skill$new,
 										A4(
 											$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-											'class',
+											'assignment',
 											$elm$json$Json$Decode$string,
 											'',
 											A4(
 												$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-												'name',
+												'class',
 												$elm$json$Json$Decode$string,
 												'',
-												$elm$json$Json$Decode$succeed($author$project$Character$Stats)))))))))))));
+												A4(
+													$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
+													'name',
+													$elm$json$Json$Decode$string,
+													'',
+													$elm$json$Json$Decode$succeed($author$project$Character$Stats))))))))))))));
 var $elm$core$Result$withDefault = F2(
 	function (def, result) {
 		if (result.$ === 'Ok') {
@@ -6575,7 +6582,10 @@ var $author$project$Character$encode = function (character) {
 				$author$project$Boon$Domain$encode(character.domains)),
 				_Utils_Tuple2(
 				'resistances',
-				$author$project$Boon$Resistance$encode(character.resistances))
+				$author$project$Boon$Resistance$encode(character.resistances)),
+				_Utils_Tuple2(
+				'notes',
+				$elm$json$Json$Encode$string(character.notes))
 			]));
 };
 var $elm$time$Time$Posix = function (a) {
@@ -7889,6 +7899,11 @@ var $author$project$Character$update = F2(
 				return _Utils_update(
 					character,
 					{resistances: resistances});
+			case 'UpdatedNotes':
+				var notes = msg.a;
+				return _Utils_update(
+					character,
+					{notes: notes});
 			default:
 				return character;
 		}
@@ -8682,6 +8697,9 @@ var $author$project$Character$UpdatedKnacks = function (a) {
 var $author$project$Character$UpdatedName = function (a) {
 	return {$: 'UpdatedName', a: a};
 };
+var $author$project$Character$UpdatedNotes = function (a) {
+	return {$: 'UpdatedNotes', a: a};
+};
 var $author$project$Character$UpdatedRefresh = function (a) {
 	return {$: 'UpdatedRefresh', a: a};
 };
@@ -9298,20 +9316,46 @@ var $author$project$Character$view = function (character) {
 									]))
 							])),
 						A2(
-						$elm$html$Html$footer,
-						_List_Nil,
+						$elm$html$Html$section,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('notes')
+							]),
 						_List_fromArray(
 							[
 								A2(
-								$elm$html$Html$button,
+								$elm$html$Html$h2,
+								_List_Nil,
 								_List_fromArray(
 									[
-										$elm$html$Html$Events$onClick($author$project$Character$ClickedSave)
+										$elm$html$Html$text('Notes')
+									])),
+								A2(
+								$elm$html$Html$textarea,
+								_List_fromArray(
+									[
+										$elm$html$Html$Events$onInput($author$project$Character$UpdatedNotes)
 									]),
 								_List_fromArray(
 									[
-										$elm$html$Html$text('Save')
+										$elm$html$Html$text(character.notes)
 									]))
+							]))
+					])),
+				A2(
+				$elm$html$Html$footer,
+				_List_Nil,
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$button,
+						_List_fromArray(
+							[
+								$elm$html$Html$Events$onClick($author$project$Character$ClickedSave)
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Save')
 							]))
 					]))
 			]),

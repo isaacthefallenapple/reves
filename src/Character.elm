@@ -33,6 +33,7 @@ type alias Stats =
     , bonds : String
     , fallout : String
     , resistances : Resistances
+    , notes : String
     }
 
 
@@ -50,6 +51,7 @@ blank =
     , bonds = ""
     , fallout = ""
     , resistances = Resistances.new
+    , notes = ""
     }
 
 
@@ -129,6 +131,7 @@ encode character =
         , ( "skills", Skills.encode character.skills )
         , ( "domains", Domains.encode character.domains )
         , ( "resistances", Resistances.encode character.resistances )
+        , ( "notes", Encode.string character.notes )
         ]
 
 
@@ -151,6 +154,7 @@ decoder =
         |> Pipeline.optional "bonds" Decode.string ""
         |> Pipeline.optional "fallout" Decode.string ""
         |> Pipeline.optional "resistances" Resistances.decoder Resistances.new
+        |> Pipeline.optional "notes" Decode.string ""
 
 
 decodeLocalCharacter : String -> Stats
@@ -172,6 +176,7 @@ type Msg
     | UpdatedFallout String
     | UpdatedBonds String
     | UpdatedResistances Resistances
+    | UpdatedNotes String
     | ClickedSave
 
 
@@ -208,6 +213,9 @@ update msg character =
 
         UpdatedResistances resistances ->
             { character | resistances = resistances }
+
+        UpdatedNotes notes ->
+            { character | notes = notes }
 
         ClickedSave ->
             character
@@ -340,12 +348,21 @@ view character =
                     [ onInput UpdatedKnacks ]
                     [ text character.knacks ]
                 ]
-            , footer
-                []
-                [ button
-                    [ onClick ClickedSave ]
-                    [ text "Save" ]
+            , section
+                [ class "notes" ]
+                [ h2
+                    []
+                    [ text "Notes" ]
+                , textarea
+                    [ onInput UpdatedNotes ]
+                    [ text character.notes ]
                 ]
+            ]
+        , footer
+            []
+            [ button
+                [ onClick ClickedSave ]
+                [ text "Save" ]
             ]
         ]
     }

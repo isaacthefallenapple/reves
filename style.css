@@ -10,7 +10,8 @@ main {
         "res    res    res  "
         "snd    abils  equip"
         "snd    knacks bonds"
-        "snd    refr   fall";
+        "snd    refr   fall"
+        "  .    notes  notes";
     grid-template-columns: 20ch repeat(2, minmax(10em, 20em));
     grid-auto-rows: minmax(5em, max-content);
     gap: 2rem 1rem;
@@ -116,6 +117,10 @@ input[type="text"] {
 
 .refresh {
     grid-area: refr;
+}
+
+.notes {
+    grid-area: notes;
 }
 
 .abilities {
