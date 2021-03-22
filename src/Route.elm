@@ -11,10 +11,11 @@ type Route
 
 parser : Parser (Route -> a) a
 parser =
-    oneOf
-        [ map Root Parser.top
-        , map Abilities (s "reves" </> s "abilities" </> fragment identity)
-        ]
+    s "reves"
+        </> oneOf
+                [ map Root Parser.top
+                , map Abilities (s "abilities" </> fragment identity)
+                ]
 
 
 parse : Url.Url -> Route
