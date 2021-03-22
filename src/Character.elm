@@ -290,7 +290,7 @@ view character =
                         []
                         [ text "Abilities" ]
                     , a
-                        [ href ("abilities#" ++ character.class) ]
+                        [ href ("/reves/abilities#" ++ character.class) ]
                         [ text "add more" ]
                     ]
                 , ul
