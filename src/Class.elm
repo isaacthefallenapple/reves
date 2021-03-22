@@ -57,7 +57,7 @@ cloak =
         , GainRefresh [ "Show someone they should not have underestimated you" ]
         , GainSkills [ Skulk, Scrap ]
         , GainDomains [ Criminal, HighSociety ]
-        , GainEquipment [ "Light body armour (Armour 2)", "EITHER Climbing gear and ropes", "Shoddy rifle (D8, Ranged, Reload, Unreliable) and Knife (D3, Concealable) OR Sword (D6) and Meteor Hammer (D3, Ranged, Stunning)" ]
+        , GainEquipment [ "Light body armour (Armour 2)", "Climbing gear and ropes", "EITHER Shoddy rifle (D8, Ranged, Reload, Unreliable) and Knife (D3, Concealable) OR Sword (D6) and Meteor Hammer (D3, Ranged, Stunning)" ]
         ]
     , coreAbilities =
         [ { name = "Surprise Infiltration"
