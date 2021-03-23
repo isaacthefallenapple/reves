@@ -201,39 +201,31 @@ changeRoute route model =
     let
         navKey =
             toNavKey model
-
-        pushUrl =
-            Nav.pushUrl navKey (Route.toString route)
-
-        replaceUrl =
-            Nav.replaceUrl navKey (Route.toString route)
     in
     case ( model, route ) of
         ( Abilities abilities, Route.Root ) ->
-            ( Character navKey abilities.character, pushUrl )
+            ( Character navKey abilities.character, Cmd.none )
 
         ( Character _ character, Route.Abilities selected ) ->
-            Tuple.mapSecond (\cmd -> Cmd.batch [ cmd, pushUrl ]) (wrap Abilities AbilitiesMsg (Abilities.init navKey selected character))
+            wrap Abilities AbilitiesMsg (Abilities.init navKey selected character)
 
         ( PickClass _, Route.Root ) ->
-            ( Landing navKey, replaceUrl )
+            ( Landing navKey, Cmd.none )
 
         ( PickAssignment _ _, Route.Root ) ->
-            ( Landing navKey, replaceUrl )
+            ( Landing navKey, Cmd.none )
 
         ( Landing _, Route.Root ) ->
-            ( model, pushUrl )
+            ( model, Cmd.none )
 
         ( Character _ _, Route.Root ) ->
-            ( model, pushUrl )
+            ( model, Cmd.none )
 
         ( Character _ character, Route.PlayAid topic selected ) ->
-            Tuple.mapSecond
-                (\cmd -> Cmd.batch [ cmd, pushUrl ])
-                (wrap (PlayAid navKey character) identity (PlayAids.init GotPlayAid topic selected))
+            wrap (PlayAid navKey character) identity (PlayAids.init GotPlayAid topic selected)
 
         ( PlayAid _ character _, Route.Root ) ->
-            ( Character navKey character, pushUrl )
+            ( Character navKey character, Cmd.none )
 
         ( _, _ ) ->
             ( model, Cmd.none )
@@ -296,11 +288,7 @@ update msg model =
         ( _, LinkClicked urlRequest ) ->
             case urlRequest of
                 Browser.Internal url ->
-                    let
-                        route =
-                            Debug.log "parsed url" (Route.parse url)
-                    in
-                    changeRoute route model
+                    ( model, Nav.pushUrl (toNavKey model) (Url.toString url) )
 
                 Browser.External href ->
                     let
@@ -308,6 +296,9 @@ update msg model =
                             Debug.log "got external url req" href
                     in
                     ( model, Nav.load href )
+
+        ( _, UrlChanged url ) ->
+            changeRoute (Route.parse url) model
 
         ( _, _ ) ->
             ( model, Cmd.none )

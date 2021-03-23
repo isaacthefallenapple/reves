@@ -5540,11 +5540,11 @@ var $author$project$Main$PlayAid = F3(
 	function (a, b, c) {
 		return {$: 'PlayAid', a: a, b: b, c: c};
 	});
-var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $author$project$Abilities$GotMetadata = function (a) {
 	return {$: 'GotMetadata', a: a};
 };
 var $author$project$Abilities$Loading = {$: 'Loading'};
+var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Dict$RBEmpty_elm_builtin = {$: 'RBEmpty_elm_builtin'};
 var $elm$core$Dict$empty = $elm$core$Dict$RBEmpty_elm_builtin;
 var $elm$json$Json$Decode$decodeString = _Json_runOnString;
@@ -6413,17 +6413,7 @@ var $author$project$PlayAids$init = F3(
 					url: $author$project$PlayAids$location + ($author$project$PlayAids$topicToString(topic) + '.json')
 				}));
 	});
-var $elm$core$Tuple$mapSecond = F2(
-	function (func, _v0) {
-		var x = _v0.a;
-		var y = _v0.b;
-		return _Utils_Tuple2(
-			x,
-			func(y));
-	});
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
-var $elm$browser$Browser$Navigation$pushUrl = _Browser_pushUrl;
-var $elm$browser$Browser$Navigation$replaceUrl = _Browser_replaceUrl;
 var $author$project$Abilities$toNavKey = function ($) {
 	return $.navKey;
 };
@@ -6452,42 +6442,6 @@ var $author$project$Main$toNavKey = function (model) {
 			return navKey;
 	}
 };
-var $elm$core$Maybe$map = F2(
-	function (f, maybe) {
-		if (maybe.$ === 'Just') {
-			var value = maybe.a;
-			return $elm$core$Maybe$Just(
-				f(value));
-		} else {
-			return $elm$core$Maybe$Nothing;
-		}
-	});
-var $author$project$Route$toString = function (route) {
-	return '/reves/' + function () {
-		switch (route.$) {
-			case 'Root':
-				return '';
-			case 'Abilities':
-				if (route.a.$ === 'Just') {
-					var frag = route.a.a;
-					return 'abilities#' + frag;
-				} else {
-					var _v1 = route.a;
-					return 'abilities';
-				}
-			default:
-				var topic = route.a;
-				var selected = route.b;
-				return 'play-aid/' + ($author$project$PlayAids$topicToString(topic) + A2(
-					$elm$core$Maybe$withDefault,
-					'',
-					A2(
-						$elm$core$Maybe$map,
-						$elm$core$Basics$append('#'),
-						selected)));
-		}
-	}();
-};
 var $elm$core$Platform$Cmd$map = _Platform_map;
 var $author$project$Main$wrap = F3(
 	function (toModel, toMsg, _v0) {
@@ -6500,14 +6454,6 @@ var $author$project$Main$wrap = F3(
 var $author$project$Main$changeRoute = F2(
 	function (route, model) {
 		var navKey = $author$project$Main$toNavKey(model);
-		var pushUrl = A2(
-			$elm$browser$Browser$Navigation$pushUrl,
-			navKey,
-			$author$project$Route$toString(route));
-		var replaceUrl = A2(
-			$elm$browser$Browser$Navigation$replaceUrl,
-			navKey,
-			$author$project$Route$toString(route));
 		var _v0 = _Utils_Tuple2(model, route);
 		_v0$8:
 		while (true) {
@@ -6517,18 +6463,11 @@ var $author$project$Main$changeRoute = F2(
 						var _v2 = _v0.a;
 						var character = _v2.b;
 						var selected = _v0.b.a;
-						return A2(
-							$elm$core$Tuple$mapSecond,
-							function (cmd) {
-								return $elm$core$Platform$Cmd$batch(
-									_List_fromArray(
-										[cmd, pushUrl]));
-							},
-							A3(
-								$author$project$Main$wrap,
-								$author$project$Main$Abilities,
-								$author$project$Main$AbilitiesMsg,
-								A3($author$project$Abilities$init, navKey, selected, character)));
+						return A3(
+							$author$project$Main$wrap,
+							$author$project$Main$Abilities,
+							$author$project$Main$AbilitiesMsg,
+							A3($author$project$Abilities$init, navKey, selected, character));
 					} else {
 						break _v0$8;
 					}
@@ -6539,18 +6478,11 @@ var $author$project$Main$changeRoute = F2(
 						var _v10 = _v0.b;
 						var topic = _v10.a;
 						var selected = _v10.b;
-						return A2(
-							$elm$core$Tuple$mapSecond,
-							function (cmd) {
-								return $elm$core$Platform$Cmd$batch(
-									_List_fromArray(
-										[cmd, pushUrl]));
-							},
-							A3(
-								$author$project$Main$wrap,
-								A2($author$project$Main$PlayAid, navKey, character),
-								$elm$core$Basics$identity,
-								A3($author$project$PlayAids$init, $author$project$Main$GotPlayAid, topic, selected)));
+						return A3(
+							$author$project$Main$wrap,
+							A2($author$project$Main$PlayAid, navKey, character),
+							$elm$core$Basics$identity,
+							A3($author$project$PlayAids$init, $author$project$Main$GotPlayAid, topic, selected));
 					} else {
 						break _v0$8;
 					}
@@ -6561,32 +6493,32 @@ var $author$project$Main$changeRoute = F2(
 							var _v1 = _v0.b;
 							return _Utils_Tuple2(
 								A2($author$project$Main$Character, navKey, abilities.character),
-								pushUrl);
+								$elm$core$Platform$Cmd$none);
 						case 'PickClass':
 							var _v3 = _v0.b;
 							return _Utils_Tuple2(
 								$author$project$Main$Landing(navKey),
-								replaceUrl);
+								$elm$core$Platform$Cmd$none);
 						case 'PickAssignment':
 							var _v4 = _v0.a;
 							var _v5 = _v0.b;
 							return _Utils_Tuple2(
 								$author$project$Main$Landing(navKey),
-								replaceUrl);
+								$elm$core$Platform$Cmd$none);
 						case 'Landing':
 							var _v6 = _v0.b;
-							return _Utils_Tuple2(model, pushUrl);
+							return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 						case 'Character':
 							var _v7 = _v0.a;
 							var _v8 = _v0.b;
-							return _Utils_Tuple2(model, pushUrl);
+							return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 						case 'PlayAid':
 							var _v11 = _v0.a;
 							var character = _v11.b;
 							var _v12 = _v0.b;
 							return _Utils_Tuple2(
 								A2($author$project$Main$Character, navKey, character),
-								pushUrl);
+								$elm$core$Platform$Cmd$none);
 						default:
 							break _v0$8;
 					}
@@ -6699,6 +6631,16 @@ var $author$project$Boon$Domain$fromString = function (s) {
 			return $elm$core$Maybe$Nothing;
 	}
 };
+var $elm$core$Maybe$map = F2(
+	function (f, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return $elm$core$Maybe$Just(
+				f(value));
+		} else {
+			return $elm$core$Maybe$Nothing;
+		}
+	});
 var $author$project$Boon$Domain$domainDecoder = A2(
 	$elm$json$Json$Decode$andThen,
 	A2(
@@ -7842,6 +7784,7 @@ var $elm$file$File$Select$file = F2(
 	});
 var $elm$browser$Browser$Navigation$load = _Browser_load;
 var $elm$core$Debug$log = _Debug_log;
+var $elm$browser$Browser$Navigation$pushUrl = _Browser_pushUrl;
 var $author$project$Ports$storeCharacter = _Platform_outgoingPort('storeCharacter', $elm$json$Json$Encode$string);
 var $author$project$Character$save = function (character) {
 	return $author$project$Ports$storeCharacter(
@@ -7858,6 +7801,50 @@ var $elm$file$File$Download$string = F3(
 			A3(_File_download, name, mime, content));
 	});
 var $elm$file$File$toString = _File_toString;
+var $elm$url$Url$addPort = F2(
+	function (maybePort, starter) {
+		if (maybePort.$ === 'Nothing') {
+			return starter;
+		} else {
+			var port_ = maybePort.a;
+			return starter + (':' + $elm$core$String$fromInt(port_));
+		}
+	});
+var $elm$url$Url$addPrefixed = F3(
+	function (prefix, maybeSegment, starter) {
+		if (maybeSegment.$ === 'Nothing') {
+			return starter;
+		} else {
+			var segment = maybeSegment.a;
+			return _Utils_ap(
+				starter,
+				_Utils_ap(prefix, segment));
+		}
+	});
+var $elm$url$Url$toString = function (url) {
+	var http = function () {
+		var _v0 = url.protocol;
+		if (_v0.$ === 'Http') {
+			return 'http://';
+		} else {
+			return 'https://';
+		}
+	}();
+	return A3(
+		$elm$url$Url$addPrefixed,
+		'#',
+		url.fragment,
+		A3(
+			$elm$url$Url$addPrefixed,
+			'?',
+			url.query,
+			_Utils_ap(
+				A2(
+					$elm$url$Url$addPort,
+					url.port_,
+					_Utils_ap(http, url.host)),
+				url.path)));
+};
 var $author$project$Abilities$Failed = function (a) {
 	return {$: 'Failed', a: a};
 };
@@ -7983,6 +7970,32 @@ var $author$project$Abilities$statusFromResult = function (result) {
 		var err = result.a;
 		return $author$project$Abilities$Failed(err);
 	}
+};
+var $author$project$Route$toString = function (route) {
+	return '/reves/' + function () {
+		switch (route.$) {
+			case 'Root':
+				return '';
+			case 'Abilities':
+				if (route.a.$ === 'Just') {
+					var frag = route.a.a;
+					return 'abilities#' + frag;
+				} else {
+					var _v1 = route.a;
+					return 'abilities';
+				}
+			default:
+				var topic = route.a;
+				var selected = route.b;
+				return 'play-aid/' + ($author$project$PlayAids$topicToString(topic) + A2(
+					$elm$core$Maybe$withDefault,
+					'',
+					A2(
+						$elm$core$Maybe$map,
+						$elm$core$Basics$append('#'),
+						selected)));
+		}
+	}();
 };
 var $elm$core$Dict$values = function (dict) {
 	return A3(
@@ -8167,7 +8180,7 @@ var $author$project$PlayAids$update = F2(
 var $author$project$Main$update = F2(
 	function (msg, model) {
 		var _v0 = _Utils_Tuple2(model, msg);
-		_v0$11:
+		_v0$12:
 		while (true) {
 			switch (_v0.b.$) {
 				case 'ClickedNewCharacter':
@@ -8178,7 +8191,7 @@ var $author$project$Main$update = F2(
 							$author$project$Main$PickClass(navKey),
 							$elm$core$Platform$Cmd$none);
 					} else {
-						break _v0$11;
+						break _v0$12;
 					}
 				case 'PickedClass':
 					if (_v0.a.$ === 'PickClass') {
@@ -8188,7 +8201,7 @@ var $author$project$Main$update = F2(
 							A2($author$project$Main$PickAssignment, navKey, _class),
 							$elm$core$Platform$Cmd$none);
 					} else {
-						break _v0$11;
+						break _v0$12;
 					}
 				case 'PickedAssignment':
 					if (_v0.a.$ === 'PickAssignment') {
@@ -8204,7 +8217,7 @@ var $author$project$Main$update = F2(
 							A2($author$project$Main$Character, navKey, character),
 							$author$project$Character$save(character));
 					} else {
-						break _v0$11;
+						break _v0$12;
 					}
 				case 'CharacterMsg':
 					if (_v0.a.$ === 'Character') {
@@ -8233,7 +8246,7 @@ var $author$project$Main$update = F2(
 								$author$project$Character$save(updatedCharacter));
 						}
 					} else {
-						break _v0$11;
+						break _v0$12;
 					}
 				case 'AbilitiesMsg':
 					if (_v0.a.$ === 'Abilities') {
@@ -8245,7 +8258,7 @@ var $author$project$Main$update = F2(
 							$elm$core$Platform$Cmd$map($author$project$Main$AbilitiesMsg),
 							A2($author$project$Abilities$update, subMsg, abilities));
 					} else {
-						break _v0$11;
+						break _v0$12;
 					}
 				case 'GotPlayAid':
 					if (_v0.a.$ === 'PlayAid') {
@@ -8262,7 +8275,7 @@ var $author$project$Main$update = F2(
 								A2($author$project$PlayAids$update, result, playAid)),
 							$elm$core$Platform$Cmd$none);
 					} else {
-						break _v0$11;
+						break _v0$12;
 					}
 				case 'ClickedOpenFile':
 					var _v7 = _v0.b;
@@ -8305,11 +8318,12 @@ var $author$project$Main$update = F2(
 					var urlRequest = _v0.b.a;
 					if (urlRequest.$ === 'Internal') {
 						var url = urlRequest.a;
-						var route = A2(
-							$elm$core$Debug$log,
-							'parsed url',
-							$author$project$Route$parse(url));
-						return A2($author$project$Main$changeRoute, route, model);
+						return _Utils_Tuple2(
+							model,
+							A2(
+								$elm$browser$Browser$Navigation$pushUrl,
+								$author$project$Main$toNavKey(model),
+								$elm$url$Url$toString(url)));
 					} else {
 						var href = urlRequest.a;
 						var _v10 = A2($elm$core$Debug$log, 'got external url req', href);
@@ -8317,8 +8331,14 @@ var $author$project$Main$update = F2(
 							model,
 							$elm$browser$Browser$Navigation$load(href));
 					}
+				case 'UrlChanged':
+					var url = _v0.b.a;
+					return A2(
+						$author$project$Main$changeRoute,
+						$author$project$Route$parse(url),
+						model);
 				default:
-					break _v0$11;
+					break _v0$12;
 			}
 		}
 		return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
