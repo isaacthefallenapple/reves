@@ -273,7 +273,7 @@ view character =
                         []
                         [ text "Skills" ]
                     , a
-                        [ href "play-aid/skills" ]
+                        [ href "/reves/play-aid/skills" ]
                         [ text "?" ]
                     , viewBoolDict UpdatedSkills Skills.toString character.skills
                     ]
@@ -283,7 +283,7 @@ view character =
                         []
                         [ text "Domains" ]
                     , a
-                        [ href "play-aid/domains" ]
+                        [ href "/reves/play-aid/domains" ]
                         [ text "?" ]
                     , viewBoolDict UpdatedDomains Domains.toString character.domains
                     ]
@@ -324,7 +324,7 @@ view character =
                     []
                     [ text "Equipment" ]
                 , a
-                    [ href "play-aid/weapons" ]
+                    [ href "/reves/play-aid/weapons" ]
                     [ text "?" ]
                 , textarea
                     [ onInput UpdatedEquipment ]

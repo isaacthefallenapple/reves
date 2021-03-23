@@ -9356,7 +9356,7 @@ var $author$project$Character$view = function (character) {
 										$elm$html$Html$a,
 										_List_fromArray(
 											[
-												$elm$html$Html$Attributes$href('play-aid/skills')
+												$elm$html$Html$Attributes$href('/reves/play-aid/skills')
 											]),
 										_List_fromArray(
 											[
@@ -9383,7 +9383,7 @@ var $author$project$Character$view = function (character) {
 										$elm$html$Html$a,
 										_List_fromArray(
 											[
-												$elm$html$Html$Attributes$href('play-aid/domains')
+												$elm$html$Html$Attributes$href('/reves/play-aid/domains')
 											]),
 										_List_fromArray(
 											[
@@ -9487,7 +9487,7 @@ var $author$project$Character$view = function (character) {
 								$elm$html$Html$a,
 								_List_fromArray(
 									[
-										$elm$html$Html$Attributes$href('play-aid/weapons')
+										$elm$html$Html$Attributes$href('/reves/play-aid/weapons')
 									]),
 								_List_fromArray(
 									[
