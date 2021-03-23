@@ -1,0 +1,7 @@
+{
+    "Assault": "You may choose to mark 1 stress against this armour; if you do so, you gain mastery to Scrap on your next action.",
+    "Camouflaged": "The armour is designed to camouflage the wearer in specific terrain; when they use Skulk in that terrain, they do so with mastery.",
+    "Concealable": "When you attempt to conceal this armour, roll with mastery.",
+    "Implacable": "Piercing weapons do not negate this armour, Devastating ones do.",
+    "Heavy": "When wearing armour, you may not use the Scramble or Skulk skills to gain additional dice."
+}
