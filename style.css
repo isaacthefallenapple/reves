@@ -35,6 +35,10 @@ h6 {
     line-height: 1.5;
 }
 
+article {
+    max-width: 72ch;
+}
+
 h3 {
     font-family: "Source Code Pro", monospace;
     font-size: 1.2rem;

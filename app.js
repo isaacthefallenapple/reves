@@ -4532,6 +4532,23 @@ function _Http_track(router, xhr, tracker)
 	});
 }
 
+function _Url_percentEncode(string)
+{
+	return encodeURIComponent(string);
+}
+
+function _Url_percentDecode(string)
+{
+	try
+	{
+		return $elm$core$Maybe$Just(decodeURIComponent(string));
+	}
+	catch (e)
+	{
+		return $elm$core$Maybe$Nothing;
+	}
+}
+
 
 // DECODER
 
@@ -4708,24 +4725,7 @@ function _File_toUrl(blob)
 	});
 }
 
-
-
-function _Url_percentEncode(string)
-{
-	return encodeURIComponent(string);
-}
-
-function _Url_percentDecode(string)
-{
-	try
-	{
-		return $elm$core$Maybe$Just(decodeURIComponent(string));
-	}
-	catch (e)
-	{
-		return $elm$core$Maybe$Nothing;
-	}
-}var $elm$core$Maybe$Just = function (a) {
+var $elm$core$Maybe$Just = function (a) {
 	return {$: 'Just', a: a};
 };
 var $author$project$Main$LinkClicked = function (a) {
@@ -5527,338 +5527,86 @@ var $author$project$Main$Character = F2(
 var $author$project$Main$Landing = function (a) {
 	return {$: 'Landing', a: a};
 };
-var $author$project$Route$Root = {$: 'Root'};
+var $author$project$Main$Abilities = function (a) {
+	return {$: 'Abilities', a: a};
+};
+var $author$project$Main$AbilitiesMsg = function (a) {
+	return {$: 'AbilitiesMsg', a: a};
+};
+var $author$project$Main$GotPlayAid = function (a) {
+	return {$: 'GotPlayAid', a: a};
+};
+var $author$project$Main$PlayAid = F3(
+	function (a, b, c) {
+		return {$: 'PlayAid', a: a, b: b, c: c};
+	});
+var $elm$core$Platform$Cmd$batch = _Platform_batch;
+var $author$project$Abilities$GotMetadata = function (a) {
+	return {$: 'GotMetadata', a: a};
+};
+var $author$project$Abilities$Loading = {$: 'Loading'};
 var $elm$core$Dict$RBEmpty_elm_builtin = {$: 'RBEmpty_elm_builtin'};
 var $elm$core$Dict$empty = $elm$core$Dict$RBEmpty_elm_builtin;
-var $author$project$Boon$Domain$Criminal = {$: 'Criminal'};
-var $author$project$Boon$Domain$Hegemony = {$: 'Hegemony'};
-var $author$project$Boon$Domain$HighSociety = {$: 'HighSociety'};
-var $author$project$Boon$Domain$LowSociety = {$: 'LowSociety'};
-var $author$project$Boon$Domain$Science = {$: 'Science'};
-var $author$project$Boon$Domain$Weirdness = {$: 'Weirdness'};
-var $author$project$TypedDict$TypedDict = function (a) {
-	return {$: 'TypedDict', a: a};
-};
-var $author$project$TypedDict$fromListWithDefault = F2(
-	function (defaultVal, keys) {
-		return $author$project$TypedDict$TypedDict(
-			A2(
-				$elm$core$List$map,
-				function (k) {
-					return _Utils_Tuple2(k, defaultVal);
-				},
-				keys));
-	});
-var $author$project$Boon$Domain$new = A2(
-	$author$project$TypedDict$fromListWithDefault,
-	false,
-	_List_fromArray(
-		[$author$project$Boon$Domain$Criminal, $author$project$Boon$Domain$HighSociety, $author$project$Boon$Domain$LowSociety, $author$project$Boon$Domain$Weirdness, $author$project$Boon$Domain$Hegemony, $author$project$Boon$Domain$Science]));
-var $author$project$Boon$Resistance$Armor = {$: 'Armor'};
-var $author$project$Boon$Resistance$Body = {$: 'Body'};
-var $author$project$Boon$Resistance$Reputation = {$: 'Reputation'};
-var $author$project$Boon$Resistance$Resolve = {$: 'Resolve'};
-var $author$project$Boon$Resistance$Resources = {$: 'Resources'};
-var $author$project$Boon$Resistance$Shadow = {$: 'Shadow'};
-var $author$project$Boon$Resistance$new = A2(
-	$author$project$TypedDict$fromListWithDefault,
-	0,
-	_List_fromArray(
-		[$author$project$Boon$Resistance$Body, $author$project$Boon$Resistance$Resolve, $author$project$Boon$Resistance$Resources, $author$project$Boon$Resistance$Shadow, $author$project$Boon$Resistance$Reputation, $author$project$Boon$Resistance$Armor]));
-var $author$project$Boon$Skill$Compel = {$: 'Compel'};
-var $author$project$Boon$Skill$Deceive = {$: 'Deceive'};
-var $author$project$Boon$Skill$Hack = {$: 'Hack'};
-var $author$project$Boon$Skill$Investigate = {$: 'Investigate'};
-var $author$project$Boon$Skill$Patch = {$: 'Patch'};
-var $author$project$Boon$Skill$Resist = {$: 'Resist'};
-var $author$project$Boon$Skill$Scramble = {$: 'Scramble'};
-var $author$project$Boon$Skill$Scrap = {$: 'Scrap'};
-var $author$project$Boon$Skill$Skulk = {$: 'Skulk'};
-var $author$project$Boon$Skill$Steal = {$: 'Steal'};
-var $author$project$Boon$Skill$new = A2(
-	$author$project$TypedDict$fromListWithDefault,
-	false,
-	_List_fromArray(
-		[$author$project$Boon$Skill$Compel, $author$project$Boon$Skill$Deceive, $author$project$Boon$Skill$Hack, $author$project$Boon$Skill$Patch, $author$project$Boon$Skill$Scramble, $author$project$Boon$Skill$Scrap, $author$project$Boon$Skill$Skulk, $author$project$Boon$Skill$Investigate, $author$project$Boon$Skill$Steal, $author$project$Boon$Skill$Resist]));
-var $author$project$Character$blank = {abilities: $elm$core$Dict$empty, assignment: '', bonds: '', _class: '', domains: $author$project$Boon$Domain$new, equipment: '', fallout: '', knacks: '', name: '', notes: '', refresh: '', resistances: $author$project$Boon$Resistance$new, skills: $author$project$Boon$Skill$new};
 var $elm$json$Json$Decode$decodeString = _Json_runOnString;
-var $author$project$Character$Stats = function (name) {
-	return function (_class) {
-		return function (assignment) {
-			return function (skills) {
-				return function (domains) {
-					return function (knacks) {
-						return function (equipment) {
-							return function (refresh) {
-								return function (abilities) {
-									return function (bonds) {
-										return function (fallout) {
-											return function (resistances) {
-												return function (notes) {
-													return {abilities: abilities, assignment: assignment, bonds: bonds, _class: _class, domains: domains, equipment: equipment, fallout: fallout, knacks: knacks, name: name, notes: notes, refresh: refresh, resistances: resistances, skills: skills};
-												};
-											};
-										};
-									};
-								};
-							};
-						};
-					};
-				};
-			};
-		};
-	};
-};
-var $author$project$Ability$Ability = F4(
-	function (name, flavor, boons, text) {
-		return {boons: boons, flavor: flavor, name: name, text: text};
-	});
-var $author$project$Boon$GainDomains = function (a) {
-	return {$: 'GainDomains', a: a};
-};
-var $elm$json$Json$Decode$andThen = _Json_andThen;
-var $elm$core$Basics$composeR = F3(
-	function (f, g, x) {
-		return g(
-			f(x));
-	});
-var $elm$json$Json$Decode$fail = _Json_fail;
-var $author$project$Boon$Domain$fromString = function (s) {
-	switch (s) {
-		case 'Criminal':
-			return $elm$core$Maybe$Just($author$project$Boon$Domain$Criminal);
-		case 'High Society':
-			return $elm$core$Maybe$Just($author$project$Boon$Domain$HighSociety);
-		case 'Low Society':
-			return $elm$core$Maybe$Just($author$project$Boon$Domain$LowSociety);
-		case 'Weirdness':
-			return $elm$core$Maybe$Just($author$project$Boon$Domain$Weirdness);
-		case 'Hegemony':
-			return $elm$core$Maybe$Just($author$project$Boon$Domain$Hegemony);
-		case 'Science':
-			return $elm$core$Maybe$Just($author$project$Boon$Domain$Science);
-		default:
-			return $elm$core$Maybe$Nothing;
-	}
-};
-var $elm$core$Maybe$map = F2(
-	function (f, maybe) {
-		if (maybe.$ === 'Just') {
-			var value = maybe.a;
-			return $elm$core$Maybe$Just(
-				f(value));
-		} else {
-			return $elm$core$Maybe$Nothing;
-		}
-	});
-var $elm$json$Json$Decode$string = _Json_decodeString;
-var $elm$core$Maybe$withDefault = F2(
-	function (_default, maybe) {
-		if (maybe.$ === 'Just') {
-			var value = maybe.a;
-			return value;
-		} else {
-			return _default;
-		}
-	});
-var $author$project$Boon$Domain$domainDecoder = A2(
-	$elm$json$Json$Decode$andThen,
-	A2(
-		$elm$core$Basics$composeR,
-		$author$project$Boon$Domain$fromString,
-		A2(
-			$elm$core$Basics$composeR,
-			$elm$core$Maybe$map($elm$json$Json$Decode$succeed),
-			$elm$core$Maybe$withDefault(
-				$elm$json$Json$Decode$fail('error')))),
-	$elm$json$Json$Decode$string);
-var $elm$json$Json$Decode$field = _Json_decodeField;
-var $elm$json$Json$Decode$list = _Json_decodeList;
-var $author$project$Boon$newDomainDecoder = A2(
-	$elm$json$Json$Decode$map,
-	$author$project$Boon$GainDomains,
-	A2(
-		$elm$json$Json$Decode$field,
-		'domain',
-		$elm$json$Json$Decode$list($author$project$Boon$Domain$domainDecoder)));
-var $author$project$Boon$GainEquipment = function (a) {
-	return {$: 'GainEquipment', a: a};
-};
-var $author$project$Boon$newEquipmentDecoder = A2(
-	$elm$json$Json$Decode$map,
-	$author$project$Boon$GainEquipment,
-	A2(
-		$elm$json$Json$Decode$field,
-		'equipment',
-		$elm$json$Json$Decode$list($elm$json$Json$Decode$string)));
-var $author$project$Boon$GainRefresh = function (a) {
-	return {$: 'GainRefresh', a: a};
-};
-var $author$project$Boon$newRefreshDecoder = A2(
-	$elm$json$Json$Decode$map,
-	$author$project$Boon$GainRefresh,
-	A2(
-		$elm$json$Json$Decode$field,
-		'refresh',
-		$elm$json$Json$Decode$list($elm$json$Json$Decode$string)));
-var $author$project$Boon$GainSkills = function (a) {
-	return {$: 'GainSkills', a: a};
-};
-var $author$project$Boon$Skill$fromString = function (s) {
-	switch (s) {
-		case 'Compel':
-			return $elm$core$Maybe$Just($author$project$Boon$Skill$Compel);
-		case 'Deceive':
-			return $elm$core$Maybe$Just($author$project$Boon$Skill$Deceive);
-		case 'Hack':
-			return $elm$core$Maybe$Just($author$project$Boon$Skill$Hack);
-		case 'Patch':
-			return $elm$core$Maybe$Just($author$project$Boon$Skill$Patch);
-		case 'Scramble':
-			return $elm$core$Maybe$Just($author$project$Boon$Skill$Scramble);
-		case 'Scrap':
-			return $elm$core$Maybe$Just($author$project$Boon$Skill$Scrap);
-		case 'Skulk':
-			return $elm$core$Maybe$Just($author$project$Boon$Skill$Skulk);
-		case 'Investigate':
-			return $elm$core$Maybe$Just($author$project$Boon$Skill$Investigate);
-		case 'Steal':
-			return $elm$core$Maybe$Just($author$project$Boon$Skill$Steal);
-		case 'Resist':
-			return $elm$core$Maybe$Just($author$project$Boon$Skill$Resist);
-		default:
-			return $elm$core$Maybe$Nothing;
-	}
-};
-var $author$project$Boon$Skill$skillDecoder = A2(
-	$elm$json$Json$Decode$andThen,
-	A2(
-		$elm$core$Basics$composeR,
-		$author$project$Boon$Skill$fromString,
-		A2(
-			$elm$core$Basics$composeR,
-			$elm$core$Maybe$map($elm$json$Json$Decode$succeed),
-			$elm$core$Maybe$withDefault(
-				$elm$json$Json$Decode$fail('error')))),
-	$elm$json$Json$Decode$string);
-var $author$project$Boon$newSkillDecoder = A2(
-	$elm$json$Json$Decode$map,
-	$author$project$Boon$GainSkills,
-	A2(
-		$elm$json$Json$Decode$field,
-		'skill',
-		$elm$json$Json$Decode$list($author$project$Boon$Skill$skillDecoder)));
-var $elm$json$Json$Decode$oneOf = _Json_oneOf;
-var $author$project$Boon$GainResistance = F2(
+var $elm$http$Http$BadStatus_ = F2(
 	function (a, b) {
-		return {$: 'GainResistance', a: a, b: b};
+		return {$: 'BadStatus_', a: a, b: b};
 	});
-var $elm$json$Json$Decode$int = _Json_decodeInt;
-var $author$project$Boon$Resistance$fromString = function (s) {
-	switch (s) {
-		case 'Body':
-			return $elm$core$Maybe$Just($author$project$Boon$Resistance$Body);
-		case 'Resolve':
-			return $elm$core$Maybe$Just($author$project$Boon$Resistance$Resolve);
-		case 'Resources':
-			return $elm$core$Maybe$Just($author$project$Boon$Resistance$Resources);
-		case 'Shadow':
-			return $elm$core$Maybe$Just($author$project$Boon$Resistance$Shadow);
-		case 'Reputation':
-			return $elm$core$Maybe$Just($author$project$Boon$Resistance$Reputation);
-		case 'Armour':
-			return $elm$core$Maybe$Just($author$project$Boon$Resistance$Armor);
-		default:
-			return $elm$core$Maybe$Nothing;
+var $elm$http$Http$BadUrl_ = function (a) {
+	return {$: 'BadUrl_', a: a};
+};
+var $elm$http$Http$GoodStatus_ = F2(
+	function (a, b) {
+		return {$: 'GoodStatus_', a: a, b: b};
+	});
+var $elm$http$Http$NetworkError_ = {$: 'NetworkError_'};
+var $elm$http$Http$Receiving = function (a) {
+	return {$: 'Receiving', a: a};
+};
+var $elm$http$Http$Sending = function (a) {
+	return {$: 'Sending', a: a};
+};
+var $elm$http$Http$Timeout_ = {$: 'Timeout_'};
+var $elm$core$Maybe$isJust = function (maybe) {
+	if (maybe.$ === 'Just') {
+		return true;
+	} else {
+		return false;
 	}
 };
-var $author$project$Boon$Resistance$resistanceDecoder = A2(
-	$elm$json$Json$Decode$andThen,
-	A2(
-		$elm$core$Basics$composeR,
-		$author$project$Boon$Resistance$fromString,
-		A2(
-			$elm$core$Basics$composeR,
-			$elm$core$Maybe$map($elm$json$Json$Decode$succeed),
-			$elm$core$Maybe$withDefault(
-				$elm$json$Json$Decode$fail('error')))),
-	$elm$json$Json$Decode$string);
-var $author$project$Boon$resistanceUpDecoder = A3(
-	$elm$json$Json$Decode$map2,
-	$author$project$Boon$GainResistance,
-	A2($elm$json$Json$Decode$field, 'resistance', $author$project$Boon$Resistance$resistanceDecoder),
-	A2($elm$json$Json$Decode$field, 'bonus', $elm$json$Json$Decode$int));
-var $author$project$Boon$decoder = $elm$json$Json$Decode$oneOf(
-	_List_fromArray(
-		[$author$project$Boon$resistanceUpDecoder, $author$project$Boon$newSkillDecoder, $author$project$Boon$newDomainDecoder, $author$project$Boon$newEquipmentDecoder, $author$project$Boon$newRefreshDecoder]));
-var $elm$json$Json$Decode$map4 = _Json_map4;
-var $elm$json$Json$Decode$null = _Json_decodeNull;
-var $elm$json$Json$Decode$nullable = function (decoder) {
-	return $elm$json$Json$Decode$oneOf(
-		_List_fromArray(
-			[
-				$elm$json$Json$Decode$null($elm$core$Maybe$Nothing),
-				A2($elm$json$Json$Decode$map, $elm$core$Maybe$Just, decoder)
-			]));
-};
-var $author$project$Ability$decoder = A5(
-	$elm$json$Json$Decode$map4,
-	$author$project$Ability$Ability,
-	A2($elm$json$Json$Decode$field, 'name', $elm$json$Json$Decode$string),
-	A2(
-		$elm$json$Json$Decode$field,
-		'flavor',
-		$elm$json$Json$Decode$nullable($elm$json$Json$Decode$string)),
-	A2(
-		$elm$json$Json$Decode$field,
-		'boons',
-		$elm$json$Json$Decode$list($author$project$Boon$decoder)),
-	A2($elm$json$Json$Decode$field, 'text', $elm$json$Json$Decode$string));
-var $elm$json$Json$Decode$bool = _Json_decodeBool;
-var $author$project$TypedDict$from = function (list) {
-	return $author$project$TypedDict$TypedDict(list);
-};
-var $elm$json$Json$Decode$keyValuePairs = _Json_decodeKeyValuePairs;
-var $elm$core$Tuple$mapFirst = F2(
-	function (func, _v0) {
-		var x = _v0.a;
-		var y = _v0.b;
-		return _Utils_Tuple2(
-			func(x),
-			y);
+var $elm$core$Platform$sendToSelf = _Platform_sendToSelf;
+var $elm$core$Basics$compare = _Utils_compare;
+var $elm$core$Dict$get = F2(
+	function (targetKey, dict) {
+		get:
+		while (true) {
+			if (dict.$ === 'RBEmpty_elm_builtin') {
+				return $elm$core$Maybe$Nothing;
+			} else {
+				var key = dict.b;
+				var value = dict.c;
+				var left = dict.d;
+				var right = dict.e;
+				var _v1 = A2($elm$core$Basics$compare, targetKey, key);
+				switch (_v1.$) {
+					case 'LT':
+						var $temp$targetKey = targetKey,
+							$temp$dict = left;
+						targetKey = $temp$targetKey;
+						dict = $temp$dict;
+						continue get;
+					case 'EQ':
+						return $elm$core$Maybe$Just(value);
+					default:
+						var $temp$targetKey = targetKey,
+							$temp$dict = right;
+						targetKey = $temp$targetKey;
+						dict = $temp$dict;
+						continue get;
+				}
+			}
+		}
 	});
-var $author$project$TypedDict$decoder = F2(
-	function (fromString, valueDecoder) {
-		return A2(
-			$elm$json$Json$Decode$map,
-			A2(
-				$elm$core$Basics$composeR,
-				$elm$core$List$map(
-					$elm$core$Tuple$mapFirst(fromString)),
-				$author$project$TypedDict$from),
-			$elm$json$Json$Decode$keyValuePairs(valueDecoder));
-	});
-var $author$project$Boon$Domain$decoder = A2(
-	$author$project$TypedDict$decoder,
-	A2(
-		$elm$core$Basics$composeR,
-		$author$project$Boon$Domain$fromString,
-		$elm$core$Maybe$withDefault($author$project$Boon$Domain$LowSociety)),
-	$elm$json$Json$Decode$bool);
-var $author$project$Boon$Resistance$decoder = A2(
-	$author$project$TypedDict$decoder,
-	A2(
-		$elm$core$Basics$composeR,
-		$author$project$Boon$Resistance$fromString,
-		$elm$core$Maybe$withDefault($author$project$Boon$Resistance$Body)),
-	$elm$json$Json$Decode$int);
-var $author$project$Boon$Skill$decoder = A2(
-	$author$project$TypedDict$decoder,
-	A2(
-		$elm$core$Basics$composeR,
-		$author$project$Boon$Skill$fromString,
-		$elm$core$Maybe$withDefault($author$project$Boon$Skill$Compel)),
-	$elm$json$Json$Decode$bool);
 var $elm$core$Dict$Black = {$: 'Black'};
 var $elm$core$Dict$RBNode_elm_builtin = F5(
 	function (a, b, c, d, e) {
@@ -5919,7 +5667,6 @@ var $elm$core$Dict$balance = F5(
 			}
 		}
 	});
-var $elm$core$Basics$compare = _Utils_compare;
 var $elm$core$Dict$insertHelp = F3(
 	function (key, value, dict) {
 		if (dict.$ === 'RBEmpty_elm_builtin') {
@@ -5966,435 +5713,6 @@ var $elm$core$Dict$insert = F3(
 		} else {
 			var x = _v0;
 			return x;
-		}
-	});
-var $elm$core$Dict$fromList = function (assocs) {
-	return A3(
-		$elm$core$List$foldl,
-		F2(
-			function (_v0, dict) {
-				var key = _v0.a;
-				var value = _v0.b;
-				return A3($elm$core$Dict$insert, key, value, dict);
-			}),
-		$elm$core$Dict$empty,
-		assocs);
-};
-var $elm$json$Json$Decode$dict = function (decoder) {
-	return A2(
-		$elm$json$Json$Decode$map,
-		$elm$core$Dict$fromList,
-		$elm$json$Json$Decode$keyValuePairs(decoder));
-};
-var $NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$custom = $elm$json$Json$Decode$map2($elm$core$Basics$apR);
-var $elm$json$Json$Decode$decodeValue = _Json_run;
-var $elm$json$Json$Decode$value = _Json_decodeValue;
-var $NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optionalDecoder = F3(
-	function (pathDecoder, valDecoder, fallback) {
-		var nullOr = function (decoder) {
-			return $elm$json$Json$Decode$oneOf(
-				_List_fromArray(
-					[
-						decoder,
-						$elm$json$Json$Decode$null(fallback)
-					]));
-		};
-		var handleResult = function (input) {
-			var _v0 = A2($elm$json$Json$Decode$decodeValue, pathDecoder, input);
-			if (_v0.$ === 'Ok') {
-				var rawValue = _v0.a;
-				var _v1 = A2(
-					$elm$json$Json$Decode$decodeValue,
-					nullOr(valDecoder),
-					rawValue);
-				if (_v1.$ === 'Ok') {
-					var finalResult = _v1.a;
-					return $elm$json$Json$Decode$succeed(finalResult);
-				} else {
-					var finalErr = _v1.a;
-					return $elm$json$Json$Decode$fail(
-						$elm$json$Json$Decode$errorToString(finalErr));
-				}
-			} else {
-				return $elm$json$Json$Decode$succeed(fallback);
-			}
-		};
-		return A2($elm$json$Json$Decode$andThen, handleResult, $elm$json$Json$Decode$value);
-	});
-var $NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional = F4(
-	function (key, valDecoder, fallback, decoder) {
-		return A2(
-			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$custom,
-			A3(
-				$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optionalDecoder,
-				A2($elm$json$Json$Decode$field, key, $elm$json$Json$Decode$value),
-				valDecoder,
-				fallback),
-			decoder);
-	});
-var $author$project$Character$decoder = A4(
-	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-	'notes',
-	$elm$json$Json$Decode$string,
-	'',
-	A4(
-		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-		'resistances',
-		$author$project$Boon$Resistance$decoder,
-		$author$project$Boon$Resistance$new,
-		A4(
-			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-			'fallout',
-			$elm$json$Json$Decode$string,
-			'',
-			A4(
-				$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-				'bonds',
-				$elm$json$Json$Decode$string,
-				'',
-				A4(
-					$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-					'abilities',
-					$elm$json$Json$Decode$dict($author$project$Ability$decoder),
-					$elm$core$Dict$empty,
-					A4(
-						$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-						'refresh',
-						$elm$json$Json$Decode$string,
-						'',
-						A4(
-							$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-							'equipment',
-							$elm$json$Json$Decode$string,
-							'',
-							A4(
-								$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-								'knacks',
-								$elm$json$Json$Decode$string,
-								'',
-								A4(
-									$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-									'domains',
-									$author$project$Boon$Domain$decoder,
-									$author$project$Boon$Domain$new,
-									A4(
-										$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-										'skills',
-										$author$project$Boon$Skill$decoder,
-										$author$project$Boon$Skill$new,
-										A4(
-											$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-											'assignment',
-											$elm$json$Json$Decode$string,
-											'',
-											A4(
-												$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-												'class',
-												$elm$json$Json$Decode$string,
-												'',
-												A4(
-													$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-													'name',
-													$elm$json$Json$Decode$string,
-													'',
-													$elm$json$Json$Decode$succeed($author$project$Character$Stats))))))))))))));
-var $elm$core$Result$withDefault = F2(
-	function (def, result) {
-		if (result.$ === 'Ok') {
-			var a = result.a;
-			return a;
-		} else {
-			return def;
-		}
-	});
-var $author$project$Character$decodeLocalCharacter = function (storedState) {
-	return A2(
-		$elm$core$Result$withDefault,
-		$author$project$Character$blank,
-		A2($elm$json$Json$Decode$decodeString, $author$project$Character$decoder, storedState));
-};
-var $elm$browser$Browser$Navigation$replaceUrl = _Browser_replaceUrl;
-var $author$project$Route$toString = function (route) {
-	return '/reves/' + function () {
-		if (route.$ === 'Root') {
-			return '';
-		} else {
-			if (route.a.$ === 'Just') {
-				var frag = route.a.a;
-				return 'abilities#' + frag;
-			} else {
-				var _v1 = route.a;
-				return 'abilities';
-			}
-		}
-	}();
-};
-var $author$project$Main$init = F3(
-	function (flags, _v0, navKey) {
-		return _Utils_Tuple2(
-			function () {
-				if (flags.$ === 'Nothing') {
-					return $author$project$Main$Landing(navKey);
-				} else {
-					var json = flags.a;
-					return A2(
-						$author$project$Main$Character,
-						navKey,
-						$author$project$Character$decodeLocalCharacter(json));
-				}
-			}(),
-			A2(
-				$elm$browser$Browser$Navigation$replaceUrl,
-				navKey,
-				$author$project$Route$toString($author$project$Route$Root)));
-	});
-var $elm$core$Platform$Sub$batch = _Platform_batch;
-var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
-var $author$project$Main$subscriptions = function (_v0) {
-	return $elm$core$Platform$Sub$none;
-};
-var $author$project$Main$Abilities = function (a) {
-	return {$: 'Abilities', a: a};
-};
-var $author$project$Main$AbilitiesMsg = function (a) {
-	return {$: 'AbilitiesMsg', a: a};
-};
-var $author$project$Main$DecodeErr = F2(
-	function (a, b) {
-		return {$: 'DecodeErr', a: a, b: b};
-	});
-var $author$project$Main$FileLoaded = function (a) {
-	return {$: 'FileLoaded', a: a};
-};
-var $author$project$Main$PickAssignment = F2(
-	function (a, b) {
-		return {$: 'PickAssignment', a: a, b: b};
-	});
-var $author$project$Main$PickClass = function (a) {
-	return {$: 'PickClass', a: a};
-};
-var $author$project$Main$ReadFile = function (a) {
-	return {$: 'ReadFile', a: a};
-};
-var $elm$core$Basics$clamp = F3(
-	function (low, high, number) {
-		return (_Utils_cmp(number, low) < 0) ? low : ((_Utils_cmp(number, high) > 0) ? high : number);
-	});
-var $author$project$TypedDict$set = F3(
-	function (key, val, _v0) {
-		var dict = _v0.a;
-		return $author$project$TypedDict$TypedDict(
-			A2(
-				$elm$core$List$map,
-				function (_v1) {
-					var k = _v1.a;
-					var v = _v1.b;
-					return _Utils_eq(k, key) ? _Utils_Tuple2(k, val) : _Utils_Tuple2(k, v);
-				},
-				dict));
-	});
-var $author$project$TypedDict$setAll = F2(
-	function (kvPairs, dict) {
-		return A3(
-			$elm$core$List$foldl,
-			function (_v0) {
-				var k = _v0.a;
-				var v = _v0.b;
-				return A2($author$project$TypedDict$set, k, v);
-			},
-			dict,
-			kvPairs);
-	});
-var $author$project$TypedDict$update = F3(
-	function (key, updater, _v0) {
-		var dict = _v0.a;
-		return $author$project$TypedDict$TypedDict(
-			A2(
-				$elm$core$List$map,
-				function (_v1) {
-					var k = _v1.a;
-					var v = _v1.b;
-					return _Utils_eq(k, key) ? _Utils_Tuple2(
-						k,
-						updater(v)) : _Utils_Tuple2(k, v);
-				},
-				dict));
-	});
-var $author$project$Character$applyBoon = F2(
-	function (boon, character) {
-		switch (boon.$) {
-			case 'GainResistance':
-				var resistance = boon.a;
-				var bonus = boon.b;
-				return _Utils_update(
-					character,
-					{
-						resistances: A3(
-							$author$project$TypedDict$update,
-							resistance,
-							A2(
-								$elm$core$Basics$composeR,
-								$elm$core$Basics$add(bonus),
-								A2($elm$core$Basics$clamp, 0, 5)),
-							character.resistances)
-					});
-			case 'GainDomains':
-				var domains = boon.a;
-				return _Utils_update(
-					character,
-					{
-						domains: A2(
-							$author$project$TypedDict$setAll,
-							A2(
-								$elm$core$List$map,
-								function (d) {
-									return _Utils_Tuple2(d, true);
-								},
-								domains),
-							character.domains)
-					});
-			case 'GainSkills':
-				var skills = boon.a;
-				return _Utils_update(
-					character,
-					{
-						skills: A2(
-							$author$project$TypedDict$setAll,
-							A2(
-								$elm$core$List$map,
-								function (s) {
-									return _Utils_Tuple2(s, true);
-								},
-								skills),
-							character.skills)
-					});
-			case 'GainEquipment':
-				var equipment = boon.a;
-				return _Utils_update(
-					character,
-					{
-						equipment: character.equipment + (A2($elm$core$String$join, '\n\n', equipment) + '\n\n')
-					});
-			default:
-				var refresh = boon.a;
-				return _Utils_update(
-					character,
-					{
-						refresh: character.refresh + (A2($elm$core$String$join, '\n\n', refresh) + '\n\n')
-					});
-		}
-	});
-var $author$project$Character$applyBoons = F2(
-	function (boons, character) {
-		return A3($elm$core$List$foldl, $author$project$Character$applyBoon, character, boons);
-	});
-var $author$project$Character$applyAssignment = F2(
-	function (_v0, character) {
-		var name = _v0.name;
-		var boons = _v0.boons;
-		return A2(
-			$author$project$Character$applyBoons,
-			boons,
-			_Utils_update(
-				character,
-				{assignment: name}));
-	});
-var $author$project$Character$addAbilities = F2(
-	function (abilities, character) {
-		return A3(
-			$elm$core$List$foldl,
-			function (ability) {
-				return $author$project$Character$applyBoons(ability.boons);
-			},
-			_Utils_update(
-				character,
-				{
-					abilities: A3(
-						$elm$core$List$foldl,
-						function (ability) {
-							return A2($elm$core$Dict$insert, ability.name, ability);
-						},
-						character.abilities,
-						abilities)
-				}),
-			abilities);
-	});
-var $author$project$Character$applyClass = F2(
-	function (_v0, character) {
-		var name = _v0.name;
-		var boons = _v0.boons;
-		var coreAbilities = _v0.coreAbilities;
-		return A2(
-			$author$project$Character$addAbilities,
-			coreAbilities,
-			A2(
-				$author$project$Character$applyBoons,
-				boons,
-				_Utils_update(
-					character,
-					{_class: name})));
-	});
-var $elm$core$Platform$Cmd$batch = _Platform_batch;
-var $author$project$Abilities$GotMetadata = function (a) {
-	return {$: 'GotMetadata', a: a};
-};
-var $author$project$Abilities$Loading = {$: 'Loading'};
-var $elm$http$Http$BadStatus_ = F2(
-	function (a, b) {
-		return {$: 'BadStatus_', a: a, b: b};
-	});
-var $elm$http$Http$BadUrl_ = function (a) {
-	return {$: 'BadUrl_', a: a};
-};
-var $elm$http$Http$GoodStatus_ = F2(
-	function (a, b) {
-		return {$: 'GoodStatus_', a: a, b: b};
-	});
-var $elm$http$Http$NetworkError_ = {$: 'NetworkError_'};
-var $elm$http$Http$Receiving = function (a) {
-	return {$: 'Receiving', a: a};
-};
-var $elm$http$Http$Sending = function (a) {
-	return {$: 'Sending', a: a};
-};
-var $elm$http$Http$Timeout_ = {$: 'Timeout_'};
-var $elm$core$Maybe$isJust = function (maybe) {
-	if (maybe.$ === 'Just') {
-		return true;
-	} else {
-		return false;
-	}
-};
-var $elm$core$Platform$sendToSelf = _Platform_sendToSelf;
-var $elm$core$Dict$get = F2(
-	function (targetKey, dict) {
-		get:
-		while (true) {
-			if (dict.$ === 'RBEmpty_elm_builtin') {
-				return $elm$core$Maybe$Nothing;
-			} else {
-				var key = dict.b;
-				var value = dict.c;
-				var left = dict.d;
-				var right = dict.e;
-				var _v1 = A2($elm$core$Basics$compare, targetKey, key);
-				switch (_v1.$) {
-					case 'LT':
-						var $temp$targetKey = targetKey,
-							$temp$dict = left;
-						targetKey = $temp$targetKey;
-						dict = $temp$dict;
-						continue get;
-					case 'EQ':
-						return $elm$core$Maybe$Just(value);
-					default:
-						var $temp$targetKey = targetKey,
-							$temp$dict = right;
-						targetKey = $temp$targetKey;
-						dict = $temp$dict;
-						continue get;
-				}
-			}
 		}
 	});
 var $elm$core$Dict$getMin = function (dict) {
@@ -6770,6 +6088,11 @@ var $elm$core$Dict$update = F3(
 			return A2($elm$core$Dict$remove, targetKey, dictionary);
 		}
 	});
+var $elm$core$Basics$composeR = F3(
+	function (f, g, x) {
+		return g(
+			f(x));
+	});
 var $elm$http$Http$expectStringResponse = F2(
 	function (toMsg, toResult) {
 		return A3(
@@ -7009,9 +6332,38 @@ var $elm$http$Http$get = function (r) {
 	return $elm$http$Http$request(
 		{body: $elm$http$Http$emptyBody, expect: r.expect, headers: _List_Nil, method: 'GET', timeout: $elm$core$Maybe$Nothing, tracker: $elm$core$Maybe$Nothing, url: r.url});
 };
+var $elm$core$Dict$fromList = function (assocs) {
+	return A3(
+		$elm$core$List$foldl,
+		F2(
+			function (_v0, dict) {
+				var key = _v0.a;
+				var value = _v0.b;
+				return A3($elm$core$Dict$insert, key, value, dict);
+			}),
+		$elm$core$Dict$empty,
+		assocs);
+};
+var $elm$json$Json$Decode$keyValuePairs = _Json_decodeKeyValuePairs;
+var $elm$json$Json$Decode$dict = function (decoder) {
+	return A2(
+		$elm$json$Json$Decode$map,
+		$elm$core$Dict$fromList,
+		$elm$json$Json$Decode$keyValuePairs(decoder));
+};
+var $elm$json$Json$Decode$string = _Json_decodeString;
 var $author$project$Abilities$metadataDecoder = $elm$json$Json$Decode$dict($elm$json$Json$Decode$string);
 var $author$project$Abilities$location = '/reves/data/abilities/';
 var $author$project$Abilities$metadataLocation = $author$project$Abilities$location + 'metadata.json';
+var $elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
 var $author$project$Abilities$init = F3(
 	function (navKey, maybeSelected, character) {
 		return _Utils_Tuple2(
@@ -7034,6 +6386,33 @@ var $author$project$Abilities$init = F3(
 						})
 					])));
 	});
+var $author$project$PlayAids$Loading = {$: 'Loading'};
+var $author$project$PlayAids$location = '/reves/data/play-aids/';
+var $author$project$PlayAids$topicToString = function (topic) {
+	switch (topic.$) {
+		case 'Weapons':
+			return 'weapons';
+		case 'Armor':
+			return 'armour';
+		case 'Skills':
+			return 'skills';
+		default:
+			return 'domains';
+	}
+};
+var $author$project$PlayAids$init = F3(
+	function (toMsg, topic, maybeSelected) {
+		return _Utils_Tuple2(
+			{aids: $author$project$PlayAids$Loading, selected: maybeSelected, topic: topic},
+			$elm$http$Http$get(
+				{
+					expect: A2(
+						$elm$http$Http$expectJson,
+						toMsg,
+						$elm$json$Json$Decode$dict($elm$json$Json$Decode$string)),
+					url: $author$project$PlayAids$location + ($author$project$PlayAids$topicToString(topic) + '.json')
+				}));
+	});
 var $elm$core$Tuple$mapSecond = F2(
 	function (func, _v0) {
 		var x = _v0.a;
@@ -7044,6 +6423,7 @@ var $elm$core$Tuple$mapSecond = F2(
 	});
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $elm$browser$Browser$Navigation$pushUrl = _Browser_pushUrl;
+var $elm$browser$Browser$Navigation$replaceUrl = _Browser_replaceUrl;
 var $author$project$Abilities$toNavKey = function ($) {
 	return $.navKey;
 };
@@ -7064,10 +6444,49 @@ var $author$project$Main$toNavKey = function (model) {
 		case 'Abilities':
 			var abilities = model.a;
 			return $author$project$Abilities$toNavKey(abilities);
+		case 'Landing':
+			var navKey = model.a;
+			return navKey;
 		default:
 			var navKey = model.a;
 			return navKey;
 	}
+};
+var $elm$core$Maybe$map = F2(
+	function (f, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return $elm$core$Maybe$Just(
+				f(value));
+		} else {
+			return $elm$core$Maybe$Nothing;
+		}
+	});
+var $author$project$Route$toString = function (route) {
+	return '/reves/' + function () {
+		switch (route.$) {
+			case 'Root':
+				return '';
+			case 'Abilities':
+				if (route.a.$ === 'Just') {
+					var frag = route.a.a;
+					return 'abilities#' + frag;
+				} else {
+					var _v1 = route.a;
+					return 'abilities';
+				}
+			default:
+				var topic = route.a;
+				var selected = route.b;
+				return 'play-aid/' + ($author$project$PlayAids$topicToString(topic) + A2(
+					$elm$core$Maybe$withDefault,
+					'',
+					A2(
+						$elm$core$Maybe$map,
+						$elm$core$Basics$append('#'),
+						selected)));
+		}
+	}();
 };
 var $elm$core$Platform$Cmd$map = _Platform_map;
 var $author$project$Main$wrap = F3(
@@ -7090,53 +6509,1053 @@ var $author$project$Main$changeRoute = F2(
 			navKey,
 			$author$project$Route$toString(route));
 		var _v0 = _Utils_Tuple2(model, route);
-		_v0$4:
+		_v0$8:
 		while (true) {
-			if (_v0.b.$ === 'Abilities') {
-				if (_v0.a.$ === 'Character') {
-					var _v2 = _v0.a;
-					var character = _v2.b;
-					var selected = _v0.b.a;
-					return A2(
-						$elm$core$Tuple$mapSecond,
-						function (cmd) {
-							return $elm$core$Platform$Cmd$batch(
-								_List_fromArray(
-									[cmd, pushUrl]));
-						},
-						A3(
-							$author$project$Main$wrap,
-							$author$project$Main$Abilities,
-							$author$project$Main$AbilitiesMsg,
-							A3($author$project$Abilities$init, navKey, selected, character)));
-				} else {
-					break _v0$4;
-				}
-			} else {
-				switch (_v0.a.$) {
-					case 'Abilities':
-						var abilities = _v0.a.a;
-						var _v1 = _v0.b;
-						return _Utils_Tuple2(
-							A2($author$project$Main$Character, navKey, abilities.character),
-							pushUrl);
-					case 'PickClass':
-						var _v3 = _v0.b;
-						return _Utils_Tuple2(
-							$author$project$Main$Landing(navKey),
-							replaceUrl);
-					case 'PickAssignment':
-						var _v4 = _v0.a;
-						var _v5 = _v0.b;
-						return _Utils_Tuple2(
-							$author$project$Main$Landing(navKey),
-							replaceUrl);
-					default:
-						break _v0$4;
-				}
+			switch (_v0.b.$) {
+				case 'Abilities':
+					if (_v0.a.$ === 'Character') {
+						var _v2 = _v0.a;
+						var character = _v2.b;
+						var selected = _v0.b.a;
+						return A2(
+							$elm$core$Tuple$mapSecond,
+							function (cmd) {
+								return $elm$core$Platform$Cmd$batch(
+									_List_fromArray(
+										[cmd, pushUrl]));
+							},
+							A3(
+								$author$project$Main$wrap,
+								$author$project$Main$Abilities,
+								$author$project$Main$AbilitiesMsg,
+								A3($author$project$Abilities$init, navKey, selected, character)));
+					} else {
+						break _v0$8;
+					}
+				case 'PlayAid':
+					if (_v0.a.$ === 'Character') {
+						var _v9 = _v0.a;
+						var character = _v9.b;
+						var _v10 = _v0.b;
+						var topic = _v10.a;
+						var selected = _v10.b;
+						return A2(
+							$elm$core$Tuple$mapSecond,
+							function (cmd) {
+								return $elm$core$Platform$Cmd$batch(
+									_List_fromArray(
+										[cmd, pushUrl]));
+							},
+							A3(
+								$author$project$Main$wrap,
+								A2($author$project$Main$PlayAid, navKey, character),
+								$elm$core$Basics$identity,
+								A3($author$project$PlayAids$init, $author$project$Main$GotPlayAid, topic, selected)));
+					} else {
+						break _v0$8;
+					}
+				default:
+					switch (_v0.a.$) {
+						case 'Abilities':
+							var abilities = _v0.a.a;
+							var _v1 = _v0.b;
+							return _Utils_Tuple2(
+								A2($author$project$Main$Character, navKey, abilities.character),
+								pushUrl);
+						case 'PickClass':
+							var _v3 = _v0.b;
+							return _Utils_Tuple2(
+								$author$project$Main$Landing(navKey),
+								replaceUrl);
+						case 'PickAssignment':
+							var _v4 = _v0.a;
+							var _v5 = _v0.b;
+							return _Utils_Tuple2(
+								$author$project$Main$Landing(navKey),
+								replaceUrl);
+						case 'Landing':
+							var _v6 = _v0.b;
+							return _Utils_Tuple2(model, pushUrl);
+						case 'Character':
+							var _v7 = _v0.a;
+							var _v8 = _v0.b;
+							return _Utils_Tuple2(model, pushUrl);
+						case 'PlayAid':
+							var _v11 = _v0.a;
+							var character = _v11.b;
+							var _v12 = _v0.b;
+							return _Utils_Tuple2(
+								A2($author$project$Main$Character, navKey, character),
+								pushUrl);
+						default:
+							break _v0$8;
+					}
 			}
 		}
 		return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+	});
+var $author$project$Boon$Domain$Criminal = {$: 'Criminal'};
+var $author$project$Boon$Domain$Hegemony = {$: 'Hegemony'};
+var $author$project$Boon$Domain$HighSociety = {$: 'HighSociety'};
+var $author$project$Boon$Domain$LowSociety = {$: 'LowSociety'};
+var $author$project$Boon$Domain$Science = {$: 'Science'};
+var $author$project$Boon$Domain$Weirdness = {$: 'Weirdness'};
+var $author$project$TypedDict$TypedDict = function (a) {
+	return {$: 'TypedDict', a: a};
+};
+var $author$project$TypedDict$fromListWithDefault = F2(
+	function (defaultVal, keys) {
+		return $author$project$TypedDict$TypedDict(
+			A2(
+				$elm$core$List$map,
+				function (k) {
+					return _Utils_Tuple2(k, defaultVal);
+				},
+				keys));
+	});
+var $author$project$Boon$Domain$new = A2(
+	$author$project$TypedDict$fromListWithDefault,
+	false,
+	_List_fromArray(
+		[$author$project$Boon$Domain$Criminal, $author$project$Boon$Domain$HighSociety, $author$project$Boon$Domain$LowSociety, $author$project$Boon$Domain$Weirdness, $author$project$Boon$Domain$Hegemony, $author$project$Boon$Domain$Science]));
+var $author$project$Boon$Resistance$Armor = {$: 'Armor'};
+var $author$project$Boon$Resistance$Body = {$: 'Body'};
+var $author$project$Boon$Resistance$Reputation = {$: 'Reputation'};
+var $author$project$Boon$Resistance$Resolve = {$: 'Resolve'};
+var $author$project$Boon$Resistance$Resources = {$: 'Resources'};
+var $author$project$Boon$Resistance$Shadow = {$: 'Shadow'};
+var $author$project$Boon$Resistance$new = A2(
+	$author$project$TypedDict$fromListWithDefault,
+	0,
+	_List_fromArray(
+		[$author$project$Boon$Resistance$Body, $author$project$Boon$Resistance$Resolve, $author$project$Boon$Resistance$Resources, $author$project$Boon$Resistance$Shadow, $author$project$Boon$Resistance$Reputation, $author$project$Boon$Resistance$Armor]));
+var $author$project$Boon$Skill$Compel = {$: 'Compel'};
+var $author$project$Boon$Skill$Deceive = {$: 'Deceive'};
+var $author$project$Boon$Skill$Hack = {$: 'Hack'};
+var $author$project$Boon$Skill$Investigate = {$: 'Investigate'};
+var $author$project$Boon$Skill$Patch = {$: 'Patch'};
+var $author$project$Boon$Skill$Resist = {$: 'Resist'};
+var $author$project$Boon$Skill$Scramble = {$: 'Scramble'};
+var $author$project$Boon$Skill$Scrap = {$: 'Scrap'};
+var $author$project$Boon$Skill$Skulk = {$: 'Skulk'};
+var $author$project$Boon$Skill$Steal = {$: 'Steal'};
+var $author$project$Boon$Skill$new = A2(
+	$author$project$TypedDict$fromListWithDefault,
+	false,
+	_List_fromArray(
+		[$author$project$Boon$Skill$Compel, $author$project$Boon$Skill$Deceive, $author$project$Boon$Skill$Hack, $author$project$Boon$Skill$Patch, $author$project$Boon$Skill$Scramble, $author$project$Boon$Skill$Scrap, $author$project$Boon$Skill$Skulk, $author$project$Boon$Skill$Investigate, $author$project$Boon$Skill$Steal, $author$project$Boon$Skill$Resist]));
+var $author$project$Character$blank = {abilities: $elm$core$Dict$empty, assignment: '', bonds: '', _class: '', domains: $author$project$Boon$Domain$new, equipment: '', fallout: '', knacks: '', name: '', notes: '', refresh: '', resistances: $author$project$Boon$Resistance$new, skills: $author$project$Boon$Skill$new};
+var $author$project$Character$Stats = function (name) {
+	return function (_class) {
+		return function (assignment) {
+			return function (skills) {
+				return function (domains) {
+					return function (knacks) {
+						return function (equipment) {
+							return function (refresh) {
+								return function (abilities) {
+									return function (bonds) {
+										return function (fallout) {
+											return function (resistances) {
+												return function (notes) {
+													return {abilities: abilities, assignment: assignment, bonds: bonds, _class: _class, domains: domains, equipment: equipment, fallout: fallout, knacks: knacks, name: name, notes: notes, refresh: refresh, resistances: resistances, skills: skills};
+												};
+											};
+										};
+									};
+								};
+							};
+						};
+					};
+				};
+			};
+		};
+	};
+};
+var $author$project$Ability$Ability = F4(
+	function (name, flavor, boons, text) {
+		return {boons: boons, flavor: flavor, name: name, text: text};
+	});
+var $author$project$Boon$GainDomains = function (a) {
+	return {$: 'GainDomains', a: a};
+};
+var $elm$json$Json$Decode$andThen = _Json_andThen;
+var $elm$json$Json$Decode$fail = _Json_fail;
+var $author$project$Boon$Domain$fromString = function (s) {
+	switch (s) {
+		case 'Criminal':
+			return $elm$core$Maybe$Just($author$project$Boon$Domain$Criminal);
+		case 'High Society':
+			return $elm$core$Maybe$Just($author$project$Boon$Domain$HighSociety);
+		case 'Low Society':
+			return $elm$core$Maybe$Just($author$project$Boon$Domain$LowSociety);
+		case 'Weirdness':
+			return $elm$core$Maybe$Just($author$project$Boon$Domain$Weirdness);
+		case 'Hegemony':
+			return $elm$core$Maybe$Just($author$project$Boon$Domain$Hegemony);
+		case 'Science':
+			return $elm$core$Maybe$Just($author$project$Boon$Domain$Science);
+		default:
+			return $elm$core$Maybe$Nothing;
+	}
+};
+var $author$project$Boon$Domain$domainDecoder = A2(
+	$elm$json$Json$Decode$andThen,
+	A2(
+		$elm$core$Basics$composeR,
+		$author$project$Boon$Domain$fromString,
+		A2(
+			$elm$core$Basics$composeR,
+			$elm$core$Maybe$map($elm$json$Json$Decode$succeed),
+			$elm$core$Maybe$withDefault(
+				$elm$json$Json$Decode$fail('error')))),
+	$elm$json$Json$Decode$string);
+var $elm$json$Json$Decode$field = _Json_decodeField;
+var $elm$json$Json$Decode$list = _Json_decodeList;
+var $author$project$Boon$newDomainDecoder = A2(
+	$elm$json$Json$Decode$map,
+	$author$project$Boon$GainDomains,
+	A2(
+		$elm$json$Json$Decode$field,
+		'domain',
+		$elm$json$Json$Decode$list($author$project$Boon$Domain$domainDecoder)));
+var $author$project$Boon$GainEquipment = function (a) {
+	return {$: 'GainEquipment', a: a};
+};
+var $author$project$Boon$newEquipmentDecoder = A2(
+	$elm$json$Json$Decode$map,
+	$author$project$Boon$GainEquipment,
+	A2(
+		$elm$json$Json$Decode$field,
+		'equipment',
+		$elm$json$Json$Decode$list($elm$json$Json$Decode$string)));
+var $author$project$Boon$GainRefresh = function (a) {
+	return {$: 'GainRefresh', a: a};
+};
+var $author$project$Boon$newRefreshDecoder = A2(
+	$elm$json$Json$Decode$map,
+	$author$project$Boon$GainRefresh,
+	A2(
+		$elm$json$Json$Decode$field,
+		'refresh',
+		$elm$json$Json$Decode$list($elm$json$Json$Decode$string)));
+var $author$project$Boon$GainSkills = function (a) {
+	return {$: 'GainSkills', a: a};
+};
+var $author$project$Boon$Skill$fromString = function (s) {
+	switch (s) {
+		case 'Compel':
+			return $elm$core$Maybe$Just($author$project$Boon$Skill$Compel);
+		case 'Deceive':
+			return $elm$core$Maybe$Just($author$project$Boon$Skill$Deceive);
+		case 'Hack':
+			return $elm$core$Maybe$Just($author$project$Boon$Skill$Hack);
+		case 'Patch':
+			return $elm$core$Maybe$Just($author$project$Boon$Skill$Patch);
+		case 'Scramble':
+			return $elm$core$Maybe$Just($author$project$Boon$Skill$Scramble);
+		case 'Scrap':
+			return $elm$core$Maybe$Just($author$project$Boon$Skill$Scrap);
+		case 'Skulk':
+			return $elm$core$Maybe$Just($author$project$Boon$Skill$Skulk);
+		case 'Investigate':
+			return $elm$core$Maybe$Just($author$project$Boon$Skill$Investigate);
+		case 'Steal':
+			return $elm$core$Maybe$Just($author$project$Boon$Skill$Steal);
+		case 'Resist':
+			return $elm$core$Maybe$Just($author$project$Boon$Skill$Resist);
+		default:
+			return $elm$core$Maybe$Nothing;
+	}
+};
+var $author$project$Boon$Skill$skillDecoder = A2(
+	$elm$json$Json$Decode$andThen,
+	A2(
+		$elm$core$Basics$composeR,
+		$author$project$Boon$Skill$fromString,
+		A2(
+			$elm$core$Basics$composeR,
+			$elm$core$Maybe$map($elm$json$Json$Decode$succeed),
+			$elm$core$Maybe$withDefault(
+				$elm$json$Json$Decode$fail('error')))),
+	$elm$json$Json$Decode$string);
+var $author$project$Boon$newSkillDecoder = A2(
+	$elm$json$Json$Decode$map,
+	$author$project$Boon$GainSkills,
+	A2(
+		$elm$json$Json$Decode$field,
+		'skill',
+		$elm$json$Json$Decode$list($author$project$Boon$Skill$skillDecoder)));
+var $elm$json$Json$Decode$oneOf = _Json_oneOf;
+var $author$project$Boon$GainResistance = F2(
+	function (a, b) {
+		return {$: 'GainResistance', a: a, b: b};
+	});
+var $elm$json$Json$Decode$int = _Json_decodeInt;
+var $author$project$Boon$Resistance$fromString = function (s) {
+	switch (s) {
+		case 'Body':
+			return $elm$core$Maybe$Just($author$project$Boon$Resistance$Body);
+		case 'Resolve':
+			return $elm$core$Maybe$Just($author$project$Boon$Resistance$Resolve);
+		case 'Resources':
+			return $elm$core$Maybe$Just($author$project$Boon$Resistance$Resources);
+		case 'Shadow':
+			return $elm$core$Maybe$Just($author$project$Boon$Resistance$Shadow);
+		case 'Reputation':
+			return $elm$core$Maybe$Just($author$project$Boon$Resistance$Reputation);
+		case 'Armour':
+			return $elm$core$Maybe$Just($author$project$Boon$Resistance$Armor);
+		default:
+			return $elm$core$Maybe$Nothing;
+	}
+};
+var $author$project$Boon$Resistance$resistanceDecoder = A2(
+	$elm$json$Json$Decode$andThen,
+	A2(
+		$elm$core$Basics$composeR,
+		$author$project$Boon$Resistance$fromString,
+		A2(
+			$elm$core$Basics$composeR,
+			$elm$core$Maybe$map($elm$json$Json$Decode$succeed),
+			$elm$core$Maybe$withDefault(
+				$elm$json$Json$Decode$fail('error')))),
+	$elm$json$Json$Decode$string);
+var $author$project$Boon$resistanceUpDecoder = A3(
+	$elm$json$Json$Decode$map2,
+	$author$project$Boon$GainResistance,
+	A2($elm$json$Json$Decode$field, 'resistance', $author$project$Boon$Resistance$resistanceDecoder),
+	A2($elm$json$Json$Decode$field, 'bonus', $elm$json$Json$Decode$int));
+var $author$project$Boon$decoder = $elm$json$Json$Decode$oneOf(
+	_List_fromArray(
+		[$author$project$Boon$resistanceUpDecoder, $author$project$Boon$newSkillDecoder, $author$project$Boon$newDomainDecoder, $author$project$Boon$newEquipmentDecoder, $author$project$Boon$newRefreshDecoder]));
+var $elm$json$Json$Decode$map4 = _Json_map4;
+var $elm$json$Json$Decode$null = _Json_decodeNull;
+var $elm$json$Json$Decode$nullable = function (decoder) {
+	return $elm$json$Json$Decode$oneOf(
+		_List_fromArray(
+			[
+				$elm$json$Json$Decode$null($elm$core$Maybe$Nothing),
+				A2($elm$json$Json$Decode$map, $elm$core$Maybe$Just, decoder)
+			]));
+};
+var $author$project$Ability$decoder = A5(
+	$elm$json$Json$Decode$map4,
+	$author$project$Ability$Ability,
+	A2($elm$json$Json$Decode$field, 'name', $elm$json$Json$Decode$string),
+	A2(
+		$elm$json$Json$Decode$field,
+		'flavor',
+		$elm$json$Json$Decode$nullable($elm$json$Json$Decode$string)),
+	A2(
+		$elm$json$Json$Decode$field,
+		'boons',
+		$elm$json$Json$Decode$list($author$project$Boon$decoder)),
+	A2($elm$json$Json$Decode$field, 'text', $elm$json$Json$Decode$string));
+var $elm$json$Json$Decode$bool = _Json_decodeBool;
+var $author$project$TypedDict$from = function (list) {
+	return $author$project$TypedDict$TypedDict(list);
+};
+var $elm$core$Tuple$mapFirst = F2(
+	function (func, _v0) {
+		var x = _v0.a;
+		var y = _v0.b;
+		return _Utils_Tuple2(
+			func(x),
+			y);
+	});
+var $author$project$TypedDict$decoder = F2(
+	function (fromString, valueDecoder) {
+		return A2(
+			$elm$json$Json$Decode$map,
+			A2(
+				$elm$core$Basics$composeR,
+				$elm$core$List$map(
+					$elm$core$Tuple$mapFirst(fromString)),
+				$author$project$TypedDict$from),
+			$elm$json$Json$Decode$keyValuePairs(valueDecoder));
+	});
+var $author$project$Boon$Domain$decoder = A2(
+	$author$project$TypedDict$decoder,
+	A2(
+		$elm$core$Basics$composeR,
+		$author$project$Boon$Domain$fromString,
+		$elm$core$Maybe$withDefault($author$project$Boon$Domain$LowSociety)),
+	$elm$json$Json$Decode$bool);
+var $author$project$Boon$Resistance$decoder = A2(
+	$author$project$TypedDict$decoder,
+	A2(
+		$elm$core$Basics$composeR,
+		$author$project$Boon$Resistance$fromString,
+		$elm$core$Maybe$withDefault($author$project$Boon$Resistance$Body)),
+	$elm$json$Json$Decode$int);
+var $author$project$Boon$Skill$decoder = A2(
+	$author$project$TypedDict$decoder,
+	A2(
+		$elm$core$Basics$composeR,
+		$author$project$Boon$Skill$fromString,
+		$elm$core$Maybe$withDefault($author$project$Boon$Skill$Compel)),
+	$elm$json$Json$Decode$bool);
+var $NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$custom = $elm$json$Json$Decode$map2($elm$core$Basics$apR);
+var $elm$json$Json$Decode$decodeValue = _Json_run;
+var $elm$json$Json$Decode$value = _Json_decodeValue;
+var $NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optionalDecoder = F3(
+	function (pathDecoder, valDecoder, fallback) {
+		var nullOr = function (decoder) {
+			return $elm$json$Json$Decode$oneOf(
+				_List_fromArray(
+					[
+						decoder,
+						$elm$json$Json$Decode$null(fallback)
+					]));
+		};
+		var handleResult = function (input) {
+			var _v0 = A2($elm$json$Json$Decode$decodeValue, pathDecoder, input);
+			if (_v0.$ === 'Ok') {
+				var rawValue = _v0.a;
+				var _v1 = A2(
+					$elm$json$Json$Decode$decodeValue,
+					nullOr(valDecoder),
+					rawValue);
+				if (_v1.$ === 'Ok') {
+					var finalResult = _v1.a;
+					return $elm$json$Json$Decode$succeed(finalResult);
+				} else {
+					var finalErr = _v1.a;
+					return $elm$json$Json$Decode$fail(
+						$elm$json$Json$Decode$errorToString(finalErr));
+				}
+			} else {
+				return $elm$json$Json$Decode$succeed(fallback);
+			}
+		};
+		return A2($elm$json$Json$Decode$andThen, handleResult, $elm$json$Json$Decode$value);
+	});
+var $NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional = F4(
+	function (key, valDecoder, fallback, decoder) {
+		return A2(
+			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$custom,
+			A3(
+				$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optionalDecoder,
+				A2($elm$json$Json$Decode$field, key, $elm$json$Json$Decode$value),
+				valDecoder,
+				fallback),
+			decoder);
+	});
+var $author$project$Character$decoder = A4(
+	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
+	'notes',
+	$elm$json$Json$Decode$string,
+	'',
+	A4(
+		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
+		'resistances',
+		$author$project$Boon$Resistance$decoder,
+		$author$project$Boon$Resistance$new,
+		A4(
+			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
+			'fallout',
+			$elm$json$Json$Decode$string,
+			'',
+			A4(
+				$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
+				'bonds',
+				$elm$json$Json$Decode$string,
+				'',
+				A4(
+					$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
+					'abilities',
+					$elm$json$Json$Decode$dict($author$project$Ability$decoder),
+					$elm$core$Dict$empty,
+					A4(
+						$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
+						'refresh',
+						$elm$json$Json$Decode$string,
+						'',
+						A4(
+							$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
+							'equipment',
+							$elm$json$Json$Decode$string,
+							'',
+							A4(
+								$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
+								'knacks',
+								$elm$json$Json$Decode$string,
+								'',
+								A4(
+									$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
+									'domains',
+									$author$project$Boon$Domain$decoder,
+									$author$project$Boon$Domain$new,
+									A4(
+										$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
+										'skills',
+										$author$project$Boon$Skill$decoder,
+										$author$project$Boon$Skill$new,
+										A4(
+											$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
+											'assignment',
+											$elm$json$Json$Decode$string,
+											'',
+											A4(
+												$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
+												'class',
+												$elm$json$Json$Decode$string,
+												'',
+												A4(
+													$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
+													'name',
+													$elm$json$Json$Decode$string,
+													'',
+													$elm$json$Json$Decode$succeed($author$project$Character$Stats))))))))))))));
+var $elm$core$Result$withDefault = F2(
+	function (def, result) {
+		if (result.$ === 'Ok') {
+			var a = result.a;
+			return a;
+		} else {
+			return def;
+		}
+	});
+var $author$project$Character$decodeLocalCharacter = function (storedState) {
+	return A2(
+		$elm$core$Result$withDefault,
+		$author$project$Character$blank,
+		A2($elm$json$Json$Decode$decodeString, $author$project$Character$decoder, storedState));
+};
+var $author$project$Route$Root = {$: 'Root'};
+var $elm$url$Url$Parser$State = F5(
+	function (visited, unvisited, params, frag, value) {
+		return {frag: frag, params: params, unvisited: unvisited, value: value, visited: visited};
+	});
+var $elm$url$Url$Parser$getFirstMatch = function (states) {
+	getFirstMatch:
+	while (true) {
+		if (!states.b) {
+			return $elm$core$Maybe$Nothing;
+		} else {
+			var state = states.a;
+			var rest = states.b;
+			var _v1 = state.unvisited;
+			if (!_v1.b) {
+				return $elm$core$Maybe$Just(state.value);
+			} else {
+				if ((_v1.a === '') && (!_v1.b.b)) {
+					return $elm$core$Maybe$Just(state.value);
+				} else {
+					var $temp$states = rest;
+					states = $temp$states;
+					continue getFirstMatch;
+				}
+			}
+		}
+	}
+};
+var $elm$url$Url$Parser$removeFinalEmpty = function (segments) {
+	if (!segments.b) {
+		return _List_Nil;
+	} else {
+		if ((segments.a === '') && (!segments.b.b)) {
+			return _List_Nil;
+		} else {
+			var segment = segments.a;
+			var rest = segments.b;
+			return A2(
+				$elm$core$List$cons,
+				segment,
+				$elm$url$Url$Parser$removeFinalEmpty(rest));
+		}
+	}
+};
+var $elm$url$Url$Parser$preparePath = function (path) {
+	var _v0 = A2($elm$core$String$split, '/', path);
+	if (_v0.b && (_v0.a === '')) {
+		var segments = _v0.b;
+		return $elm$url$Url$Parser$removeFinalEmpty(segments);
+	} else {
+		var segments = _v0;
+		return $elm$url$Url$Parser$removeFinalEmpty(segments);
+	}
+};
+var $elm$url$Url$Parser$addToParametersHelp = F2(
+	function (value, maybeList) {
+		if (maybeList.$ === 'Nothing') {
+			return $elm$core$Maybe$Just(
+				_List_fromArray(
+					[value]));
+		} else {
+			var list = maybeList.a;
+			return $elm$core$Maybe$Just(
+				A2($elm$core$List$cons, value, list));
+		}
+	});
+var $elm$url$Url$percentDecode = _Url_percentDecode;
+var $elm$url$Url$Parser$addParam = F2(
+	function (segment, dict) {
+		var _v0 = A2($elm$core$String$split, '=', segment);
+		if ((_v0.b && _v0.b.b) && (!_v0.b.b.b)) {
+			var rawKey = _v0.a;
+			var _v1 = _v0.b;
+			var rawValue = _v1.a;
+			var _v2 = $elm$url$Url$percentDecode(rawKey);
+			if (_v2.$ === 'Nothing') {
+				return dict;
+			} else {
+				var key = _v2.a;
+				var _v3 = $elm$url$Url$percentDecode(rawValue);
+				if (_v3.$ === 'Nothing') {
+					return dict;
+				} else {
+					var value = _v3.a;
+					return A3(
+						$elm$core$Dict$update,
+						key,
+						$elm$url$Url$Parser$addToParametersHelp(value),
+						dict);
+				}
+			}
+		} else {
+			return dict;
+		}
+	});
+var $elm$url$Url$Parser$prepareQuery = function (maybeQuery) {
+	if (maybeQuery.$ === 'Nothing') {
+		return $elm$core$Dict$empty;
+	} else {
+		var qry = maybeQuery.a;
+		return A3(
+			$elm$core$List$foldr,
+			$elm$url$Url$Parser$addParam,
+			$elm$core$Dict$empty,
+			A2($elm$core$String$split, '&', qry));
+	}
+};
+var $elm$url$Url$Parser$parse = F2(
+	function (_v0, url) {
+		var parser = _v0.a;
+		return $elm$url$Url$Parser$getFirstMatch(
+			parser(
+				A5(
+					$elm$url$Url$Parser$State,
+					_List_Nil,
+					$elm$url$Url$Parser$preparePath(url.path),
+					$elm$url$Url$Parser$prepareQuery(url.query),
+					url.fragment,
+					$elm$core$Basics$identity)));
+	});
+var $author$project$Route$Abilities = function (a) {
+	return {$: 'Abilities', a: a};
+};
+var $author$project$Route$PlayAid = F2(
+	function (a, b) {
+		return {$: 'PlayAid', a: a, b: b};
+	});
+var $elm$url$Url$Parser$Parser = function (a) {
+	return {$: 'Parser', a: a};
+};
+var $elm$url$Url$Parser$fragment = function (toFrag) {
+	return $elm$url$Url$Parser$Parser(
+		function (_v0) {
+			var visited = _v0.visited;
+			var unvisited = _v0.unvisited;
+			var params = _v0.params;
+			var frag = _v0.frag;
+			var value = _v0.value;
+			return _List_fromArray(
+				[
+					A5(
+					$elm$url$Url$Parser$State,
+					visited,
+					unvisited,
+					params,
+					frag,
+					value(
+						toFrag(frag)))
+				]);
+		});
+};
+var $elm$url$Url$Parser$mapState = F2(
+	function (func, _v0) {
+		var visited = _v0.visited;
+		var unvisited = _v0.unvisited;
+		var params = _v0.params;
+		var frag = _v0.frag;
+		var value = _v0.value;
+		return A5(
+			$elm$url$Url$Parser$State,
+			visited,
+			unvisited,
+			params,
+			frag,
+			func(value));
+	});
+var $elm$url$Url$Parser$map = F2(
+	function (subValue, _v0) {
+		var parseArg = _v0.a;
+		return $elm$url$Url$Parser$Parser(
+			function (_v1) {
+				var visited = _v1.visited;
+				var unvisited = _v1.unvisited;
+				var params = _v1.params;
+				var frag = _v1.frag;
+				var value = _v1.value;
+				return A2(
+					$elm$core$List$map,
+					$elm$url$Url$Parser$mapState(value),
+					parseArg(
+						A5($elm$url$Url$Parser$State, visited, unvisited, params, frag, subValue)));
+			});
+	});
+var $elm$core$List$append = F2(
+	function (xs, ys) {
+		if (!ys.b) {
+			return xs;
+		} else {
+			return A3($elm$core$List$foldr, $elm$core$List$cons, ys, xs);
+		}
+	});
+var $elm$core$List$concat = function (lists) {
+	return A3($elm$core$List$foldr, $elm$core$List$append, _List_Nil, lists);
+};
+var $elm$core$List$concatMap = F2(
+	function (f, list) {
+		return $elm$core$List$concat(
+			A2($elm$core$List$map, f, list));
+	});
+var $elm$url$Url$Parser$oneOf = function (parsers) {
+	return $elm$url$Url$Parser$Parser(
+		function (state) {
+			return A2(
+				$elm$core$List$concatMap,
+				function (_v0) {
+					var parser = _v0.a;
+					return parser(state);
+				},
+				parsers);
+		});
+};
+var $elm$url$Url$Parser$custom = F2(
+	function (tipe, stringToSomething) {
+		return $elm$url$Url$Parser$Parser(
+			function (_v0) {
+				var visited = _v0.visited;
+				var unvisited = _v0.unvisited;
+				var params = _v0.params;
+				var frag = _v0.frag;
+				var value = _v0.value;
+				if (!unvisited.b) {
+					return _List_Nil;
+				} else {
+					var next = unvisited.a;
+					var rest = unvisited.b;
+					var _v2 = stringToSomething(next);
+					if (_v2.$ === 'Just') {
+						var nextValue = _v2.a;
+						return _List_fromArray(
+							[
+								A5(
+								$elm$url$Url$Parser$State,
+								A2($elm$core$List$cons, next, visited),
+								rest,
+								params,
+								frag,
+								value(nextValue))
+							]);
+					} else {
+						return _List_Nil;
+					}
+				}
+			});
+	});
+var $author$project$PlayAids$Armor = {$: 'Armor'};
+var $author$project$PlayAids$Domains = {$: 'Domains'};
+var $author$project$PlayAids$Skills = {$: 'Skills'};
+var $author$project$PlayAids$Weapons = {$: 'Weapons'};
+var $author$project$PlayAids$topicFromString = function (topic) {
+	switch (topic) {
+		case 'weapons':
+			return $elm$core$Maybe$Just($author$project$PlayAids$Weapons);
+		case 'armour':
+			return $elm$core$Maybe$Just($author$project$PlayAids$Armor);
+		case 'skills':
+			return $elm$core$Maybe$Just($author$project$PlayAids$Skills);
+		case 'domains':
+			return $elm$core$Maybe$Just($author$project$PlayAids$Domains);
+		default:
+			return $elm$core$Maybe$Nothing;
+	}
+};
+var $author$project$Route$playAid = A2($elm$url$Url$Parser$custom, 'TOPIC', $author$project$PlayAids$topicFromString);
+var $elm$url$Url$Parser$s = function (str) {
+	return $elm$url$Url$Parser$Parser(
+		function (_v0) {
+			var visited = _v0.visited;
+			var unvisited = _v0.unvisited;
+			var params = _v0.params;
+			var frag = _v0.frag;
+			var value = _v0.value;
+			if (!unvisited.b) {
+				return _List_Nil;
+			} else {
+				var next = unvisited.a;
+				var rest = unvisited.b;
+				return _Utils_eq(next, str) ? _List_fromArray(
+					[
+						A5(
+						$elm$url$Url$Parser$State,
+						A2($elm$core$List$cons, next, visited),
+						rest,
+						params,
+						frag,
+						value)
+					]) : _List_Nil;
+			}
+		});
+};
+var $elm$url$Url$Parser$slash = F2(
+	function (_v0, _v1) {
+		var parseBefore = _v0.a;
+		var parseAfter = _v1.a;
+		return $elm$url$Url$Parser$Parser(
+			function (state) {
+				return A2(
+					$elm$core$List$concatMap,
+					parseAfter,
+					parseBefore(state));
+			});
+	});
+var $elm$url$Url$Parser$top = $elm$url$Url$Parser$Parser(
+	function (state) {
+		return _List_fromArray(
+			[state]);
+	});
+var $author$project$Route$parser = A2(
+	$elm$url$Url$Parser$slash,
+	$elm$url$Url$Parser$s('reves'),
+	$elm$url$Url$Parser$oneOf(
+		_List_fromArray(
+			[
+				A2($elm$url$Url$Parser$map, $author$project$Route$Root, $elm$url$Url$Parser$top),
+				A2(
+				$elm$url$Url$Parser$map,
+				$author$project$Route$Abilities,
+				A2(
+					$elm$url$Url$Parser$slash,
+					$elm$url$Url$Parser$s('abilities'),
+					$elm$url$Url$Parser$fragment($elm$core$Basics$identity))),
+				A2(
+				$elm$url$Url$Parser$map,
+				$author$project$Route$PlayAid,
+				A2(
+					$elm$url$Url$Parser$slash,
+					$elm$url$Url$Parser$s('play-aid'),
+					A2(
+						$elm$url$Url$Parser$slash,
+						$author$project$Route$playAid,
+						$elm$url$Url$Parser$fragment($elm$core$Basics$identity))))
+			])));
+var $author$project$Route$parse = function (url) {
+	return A2(
+		$elm$core$Maybe$withDefault,
+		$author$project$Route$Root,
+		A2($elm$url$Url$Parser$parse, $author$project$Route$parser, url));
+};
+var $author$project$Main$init = F3(
+	function (flags, url, navKey) {
+		return A2(
+			$author$project$Main$changeRoute,
+			$author$project$Route$parse(url),
+			function () {
+				if (flags.$ === 'Nothing') {
+					return $author$project$Main$Landing(navKey);
+				} else {
+					var json = flags.a;
+					return A2(
+						$author$project$Main$Character,
+						navKey,
+						$author$project$Character$decodeLocalCharacter(json));
+				}
+			}());
+	});
+var $elm$core$Platform$Sub$batch = _Platform_batch;
+var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
+var $author$project$Main$subscriptions = function (_v0) {
+	return $elm$core$Platform$Sub$none;
+};
+var $author$project$Main$DecodeErr = F2(
+	function (a, b) {
+		return {$: 'DecodeErr', a: a, b: b};
+	});
+var $author$project$Main$FileLoaded = function (a) {
+	return {$: 'FileLoaded', a: a};
+};
+var $author$project$Main$PickAssignment = F2(
+	function (a, b) {
+		return {$: 'PickAssignment', a: a, b: b};
+	});
+var $author$project$Main$PickClass = function (a) {
+	return {$: 'PickClass', a: a};
+};
+var $author$project$Main$ReadFile = function (a) {
+	return {$: 'ReadFile', a: a};
+};
+var $elm$core$Basics$clamp = F3(
+	function (low, high, number) {
+		return (_Utils_cmp(number, low) < 0) ? low : ((_Utils_cmp(number, high) > 0) ? high : number);
+	});
+var $author$project$TypedDict$set = F3(
+	function (key, val, _v0) {
+		var dict = _v0.a;
+		return $author$project$TypedDict$TypedDict(
+			A2(
+				$elm$core$List$map,
+				function (_v1) {
+					var k = _v1.a;
+					var v = _v1.b;
+					return _Utils_eq(k, key) ? _Utils_Tuple2(k, val) : _Utils_Tuple2(k, v);
+				},
+				dict));
+	});
+var $author$project$TypedDict$setAll = F2(
+	function (kvPairs, dict) {
+		return A3(
+			$elm$core$List$foldl,
+			function (_v0) {
+				var k = _v0.a;
+				var v = _v0.b;
+				return A2($author$project$TypedDict$set, k, v);
+			},
+			dict,
+			kvPairs);
+	});
+var $author$project$TypedDict$update = F3(
+	function (key, updater, _v0) {
+		var dict = _v0.a;
+		return $author$project$TypedDict$TypedDict(
+			A2(
+				$elm$core$List$map,
+				function (_v1) {
+					var k = _v1.a;
+					var v = _v1.b;
+					return _Utils_eq(k, key) ? _Utils_Tuple2(
+						k,
+						updater(v)) : _Utils_Tuple2(k, v);
+				},
+				dict));
+	});
+var $author$project$Character$applyBoon = F2(
+	function (boon, character) {
+		switch (boon.$) {
+			case 'GainResistance':
+				var resistance = boon.a;
+				var bonus = boon.b;
+				return _Utils_update(
+					character,
+					{
+						resistances: A3(
+							$author$project$TypedDict$update,
+							resistance,
+							A2(
+								$elm$core$Basics$composeR,
+								$elm$core$Basics$add(bonus),
+								A2($elm$core$Basics$clamp, 0, 5)),
+							character.resistances)
+					});
+			case 'GainDomains':
+				var domains = boon.a;
+				return _Utils_update(
+					character,
+					{
+						domains: A2(
+							$author$project$TypedDict$setAll,
+							A2(
+								$elm$core$List$map,
+								function (d) {
+									return _Utils_Tuple2(d, true);
+								},
+								domains),
+							character.domains)
+					});
+			case 'GainSkills':
+				var skills = boon.a;
+				return _Utils_update(
+					character,
+					{
+						skills: A2(
+							$author$project$TypedDict$setAll,
+							A2(
+								$elm$core$List$map,
+								function (s) {
+									return _Utils_Tuple2(s, true);
+								},
+								skills),
+							character.skills)
+					});
+			case 'GainEquipment':
+				var equipment = boon.a;
+				return _Utils_update(
+					character,
+					{
+						equipment: character.equipment + (A2($elm$core$String$join, '\n\n', equipment) + '\n\n')
+					});
+			default:
+				var refresh = boon.a;
+				return _Utils_update(
+					character,
+					{
+						refresh: character.refresh + (A2($elm$core$String$join, '\n\n', refresh) + '\n\n')
+					});
+		}
+	});
+var $author$project$Character$applyBoons = F2(
+	function (boons, character) {
+		return A3($elm$core$List$foldl, $author$project$Character$applyBoon, character, boons);
+	});
+var $author$project$Character$applyAssignment = F2(
+	function (_v0, character) {
+		var name = _v0.name;
+		var boons = _v0.boons;
+		return A2(
+			$author$project$Character$applyBoons,
+			boons,
+			_Utils_update(
+				character,
+				{assignment: name}));
+	});
+var $author$project$Character$addAbilities = F2(
+	function (abilities, character) {
+		return A3(
+			$elm$core$List$foldl,
+			function (ability) {
+				return $author$project$Character$applyBoons(ability.boons);
+			},
+			_Utils_update(
+				character,
+				{
+					abilities: A3(
+						$elm$core$List$foldl,
+						function (ability) {
+							return A2($elm$core$Dict$insert, ability.name, ability);
+						},
+						character.abilities,
+						abilities)
+				}),
+			abilities);
+	});
+var $author$project$Character$applyClass = F2(
+	function (_v0, character) {
+		var name = _v0.name;
+		var boons = _v0.boons;
+		var coreAbilities = _v0.coreAbilities;
+		return A2(
+			$author$project$Character$addAbilities,
+			coreAbilities,
+			A2(
+				$author$project$Character$applyBoons,
+				boons,
+				_Utils_update(
+					character,
+					{_class: name})));
 	});
 var $elm$core$Dict$foldl = F3(
 	function (func, acc, dict) {
@@ -7423,276 +7842,6 @@ var $elm$file$File$Select$file = F2(
 	});
 var $elm$browser$Browser$Navigation$load = _Browser_load;
 var $elm$core$Debug$log = _Debug_log;
-var $elm$url$Url$Parser$State = F5(
-	function (visited, unvisited, params, frag, value) {
-		return {frag: frag, params: params, unvisited: unvisited, value: value, visited: visited};
-	});
-var $elm$url$Url$Parser$getFirstMatch = function (states) {
-	getFirstMatch:
-	while (true) {
-		if (!states.b) {
-			return $elm$core$Maybe$Nothing;
-		} else {
-			var state = states.a;
-			var rest = states.b;
-			var _v1 = state.unvisited;
-			if (!_v1.b) {
-				return $elm$core$Maybe$Just(state.value);
-			} else {
-				if ((_v1.a === '') && (!_v1.b.b)) {
-					return $elm$core$Maybe$Just(state.value);
-				} else {
-					var $temp$states = rest;
-					states = $temp$states;
-					continue getFirstMatch;
-				}
-			}
-		}
-	}
-};
-var $elm$url$Url$Parser$removeFinalEmpty = function (segments) {
-	if (!segments.b) {
-		return _List_Nil;
-	} else {
-		if ((segments.a === '') && (!segments.b.b)) {
-			return _List_Nil;
-		} else {
-			var segment = segments.a;
-			var rest = segments.b;
-			return A2(
-				$elm$core$List$cons,
-				segment,
-				$elm$url$Url$Parser$removeFinalEmpty(rest));
-		}
-	}
-};
-var $elm$url$Url$Parser$preparePath = function (path) {
-	var _v0 = A2($elm$core$String$split, '/', path);
-	if (_v0.b && (_v0.a === '')) {
-		var segments = _v0.b;
-		return $elm$url$Url$Parser$removeFinalEmpty(segments);
-	} else {
-		var segments = _v0;
-		return $elm$url$Url$Parser$removeFinalEmpty(segments);
-	}
-};
-var $elm$url$Url$Parser$addToParametersHelp = F2(
-	function (value, maybeList) {
-		if (maybeList.$ === 'Nothing') {
-			return $elm$core$Maybe$Just(
-				_List_fromArray(
-					[value]));
-		} else {
-			var list = maybeList.a;
-			return $elm$core$Maybe$Just(
-				A2($elm$core$List$cons, value, list));
-		}
-	});
-var $elm$url$Url$percentDecode = _Url_percentDecode;
-var $elm$url$Url$Parser$addParam = F2(
-	function (segment, dict) {
-		var _v0 = A2($elm$core$String$split, '=', segment);
-		if ((_v0.b && _v0.b.b) && (!_v0.b.b.b)) {
-			var rawKey = _v0.a;
-			var _v1 = _v0.b;
-			var rawValue = _v1.a;
-			var _v2 = $elm$url$Url$percentDecode(rawKey);
-			if (_v2.$ === 'Nothing') {
-				return dict;
-			} else {
-				var key = _v2.a;
-				var _v3 = $elm$url$Url$percentDecode(rawValue);
-				if (_v3.$ === 'Nothing') {
-					return dict;
-				} else {
-					var value = _v3.a;
-					return A3(
-						$elm$core$Dict$update,
-						key,
-						$elm$url$Url$Parser$addToParametersHelp(value),
-						dict);
-				}
-			}
-		} else {
-			return dict;
-		}
-	});
-var $elm$url$Url$Parser$prepareQuery = function (maybeQuery) {
-	if (maybeQuery.$ === 'Nothing') {
-		return $elm$core$Dict$empty;
-	} else {
-		var qry = maybeQuery.a;
-		return A3(
-			$elm$core$List$foldr,
-			$elm$url$Url$Parser$addParam,
-			$elm$core$Dict$empty,
-			A2($elm$core$String$split, '&', qry));
-	}
-};
-var $elm$url$Url$Parser$parse = F2(
-	function (_v0, url) {
-		var parser = _v0.a;
-		return $elm$url$Url$Parser$getFirstMatch(
-			parser(
-				A5(
-					$elm$url$Url$Parser$State,
-					_List_Nil,
-					$elm$url$Url$Parser$preparePath(url.path),
-					$elm$url$Url$Parser$prepareQuery(url.query),
-					url.fragment,
-					$elm$core$Basics$identity)));
-	});
-var $author$project$Route$Abilities = function (a) {
-	return {$: 'Abilities', a: a};
-};
-var $elm$url$Url$Parser$Parser = function (a) {
-	return {$: 'Parser', a: a};
-};
-var $elm$url$Url$Parser$fragment = function (toFrag) {
-	return $elm$url$Url$Parser$Parser(
-		function (_v0) {
-			var visited = _v0.visited;
-			var unvisited = _v0.unvisited;
-			var params = _v0.params;
-			var frag = _v0.frag;
-			var value = _v0.value;
-			return _List_fromArray(
-				[
-					A5(
-					$elm$url$Url$Parser$State,
-					visited,
-					unvisited,
-					params,
-					frag,
-					value(
-						toFrag(frag)))
-				]);
-		});
-};
-var $elm$url$Url$Parser$mapState = F2(
-	function (func, _v0) {
-		var visited = _v0.visited;
-		var unvisited = _v0.unvisited;
-		var params = _v0.params;
-		var frag = _v0.frag;
-		var value = _v0.value;
-		return A5(
-			$elm$url$Url$Parser$State,
-			visited,
-			unvisited,
-			params,
-			frag,
-			func(value));
-	});
-var $elm$url$Url$Parser$map = F2(
-	function (subValue, _v0) {
-		var parseArg = _v0.a;
-		return $elm$url$Url$Parser$Parser(
-			function (_v1) {
-				var visited = _v1.visited;
-				var unvisited = _v1.unvisited;
-				var params = _v1.params;
-				var frag = _v1.frag;
-				var value = _v1.value;
-				return A2(
-					$elm$core$List$map,
-					$elm$url$Url$Parser$mapState(value),
-					parseArg(
-						A5($elm$url$Url$Parser$State, visited, unvisited, params, frag, subValue)));
-			});
-	});
-var $elm$core$List$append = F2(
-	function (xs, ys) {
-		if (!ys.b) {
-			return xs;
-		} else {
-			return A3($elm$core$List$foldr, $elm$core$List$cons, ys, xs);
-		}
-	});
-var $elm$core$List$concat = function (lists) {
-	return A3($elm$core$List$foldr, $elm$core$List$append, _List_Nil, lists);
-};
-var $elm$core$List$concatMap = F2(
-	function (f, list) {
-		return $elm$core$List$concat(
-			A2($elm$core$List$map, f, list));
-	});
-var $elm$url$Url$Parser$oneOf = function (parsers) {
-	return $elm$url$Url$Parser$Parser(
-		function (state) {
-			return A2(
-				$elm$core$List$concatMap,
-				function (_v0) {
-					var parser = _v0.a;
-					return parser(state);
-				},
-				parsers);
-		});
-};
-var $elm$url$Url$Parser$s = function (str) {
-	return $elm$url$Url$Parser$Parser(
-		function (_v0) {
-			var visited = _v0.visited;
-			var unvisited = _v0.unvisited;
-			var params = _v0.params;
-			var frag = _v0.frag;
-			var value = _v0.value;
-			if (!unvisited.b) {
-				return _List_Nil;
-			} else {
-				var next = unvisited.a;
-				var rest = unvisited.b;
-				return _Utils_eq(next, str) ? _List_fromArray(
-					[
-						A5(
-						$elm$url$Url$Parser$State,
-						A2($elm$core$List$cons, next, visited),
-						rest,
-						params,
-						frag,
-						value)
-					]) : _List_Nil;
-			}
-		});
-};
-var $elm$url$Url$Parser$slash = F2(
-	function (_v0, _v1) {
-		var parseBefore = _v0.a;
-		var parseAfter = _v1.a;
-		return $elm$url$Url$Parser$Parser(
-			function (state) {
-				return A2(
-					$elm$core$List$concatMap,
-					parseAfter,
-					parseBefore(state));
-			});
-	});
-var $elm$url$Url$Parser$top = $elm$url$Url$Parser$Parser(
-	function (state) {
-		return _List_fromArray(
-			[state]);
-	});
-var $author$project$Route$parser = A2(
-	$elm$url$Url$Parser$slash,
-	$elm$url$Url$Parser$s('reves'),
-	$elm$url$Url$Parser$oneOf(
-		_List_fromArray(
-			[
-				A2($elm$url$Url$Parser$map, $author$project$Route$Root, $elm$url$Url$Parser$top),
-				A2(
-				$elm$url$Url$Parser$map,
-				$author$project$Route$Abilities,
-				A2(
-					$elm$url$Url$Parser$slash,
-					$elm$url$Url$Parser$s('abilities'),
-					$elm$url$Url$Parser$fragment($elm$core$Basics$identity)))
-			])));
-var $author$project$Route$parse = function (url) {
-	return A2(
-		$elm$core$Maybe$withDefault,
-		$author$project$Route$Root,
-		A2($elm$url$Url$Parser$parse, $author$project$Route$parser, url));
-};
 var $author$project$Ports$storeCharacter = _Platform_outgoingPort('storeCharacter', $elm$json$Json$Encode$string);
 var $author$project$Character$save = function (character) {
 	return $author$project$Ports$storeCharacter(
@@ -7991,10 +8140,34 @@ var $author$project$Character$update = F2(
 				return character;
 		}
 	});
+var $author$project$PlayAids$Failed = function (a) {
+	return {$: 'Failed', a: a};
+};
+var $author$project$PlayAids$Loaded = function (a) {
+	return {$: 'Loaded', a: a};
+};
+var $author$project$PlayAids$update = F2(
+	function (result, playAids) {
+		if (result.$ === 'Err') {
+			var err = result.a;
+			return _Utils_update(
+				playAids,
+				{
+					aids: $author$project$PlayAids$Failed(err)
+				});
+		} else {
+			var aids = result.a;
+			return _Utils_update(
+				playAids,
+				{
+					aids: $author$project$PlayAids$Loaded(aids)
+				});
+		}
+	});
 var $author$project$Main$update = F2(
 	function (msg, model) {
 		var _v0 = _Utils_Tuple2(model, msg);
-		_v0$10:
+		_v0$11:
 		while (true) {
 			switch (_v0.b.$) {
 				case 'ClickedNewCharacter':
@@ -8005,7 +8178,7 @@ var $author$project$Main$update = F2(
 							$author$project$Main$PickClass(navKey),
 							$elm$core$Platform$Cmd$none);
 					} else {
-						break _v0$10;
+						break _v0$11;
 					}
 				case 'PickedClass':
 					if (_v0.a.$ === 'PickClass') {
@@ -8015,7 +8188,7 @@ var $author$project$Main$update = F2(
 							A2($author$project$Main$PickAssignment, navKey, _class),
 							$elm$core$Platform$Cmd$none);
 					} else {
-						break _v0$10;
+						break _v0$11;
 					}
 				case 'PickedAssignment':
 					if (_v0.a.$ === 'PickAssignment') {
@@ -8031,7 +8204,7 @@ var $author$project$Main$update = F2(
 							A2($author$project$Main$Character, navKey, character),
 							$author$project$Character$save(character));
 					} else {
-						break _v0$10;
+						break _v0$11;
 					}
 				case 'CharacterMsg':
 					if (_v0.a.$ === 'Character') {
@@ -8060,7 +8233,7 @@ var $author$project$Main$update = F2(
 								$author$project$Character$save(updatedCharacter));
 						}
 					} else {
-						break _v0$10;
+						break _v0$11;
 					}
 				case 'AbilitiesMsg':
 					if (_v0.a.$ === 'Abilities') {
@@ -8072,10 +8245,27 @@ var $author$project$Main$update = F2(
 							$elm$core$Platform$Cmd$map($author$project$Main$AbilitiesMsg),
 							A2($author$project$Abilities$update, subMsg, abilities));
 					} else {
-						break _v0$10;
+						break _v0$11;
+					}
+				case 'GotPlayAid':
+					if (_v0.a.$ === 'PlayAid') {
+						var _v6 = _v0.a;
+						var navKey = _v6.a;
+						var character = _v6.b;
+						var playAid = _v6.c;
+						var result = _v0.b.a;
+						return _Utils_Tuple2(
+							A3(
+								$author$project$Main$PlayAid,
+								navKey,
+								character,
+								A2($author$project$PlayAids$update, result, playAid)),
+							$elm$core$Platform$Cmd$none);
+					} else {
+						break _v0$11;
 					}
 				case 'ClickedOpenFile':
-					var _v6 = _v0.b;
+					var _v7 = _v0.b;
 					return _Utils_Tuple2(
 						model,
 						A2(
@@ -8093,9 +8283,9 @@ var $author$project$Main$update = F2(
 							$elm$file$File$toString(file)));
 				case 'ReadFile':
 					var content = _v0.b.a;
-					var _v7 = A2($elm$json$Json$Decode$decodeString, $author$project$Character$decoder, content);
-					if (_v7.$ === 'Err') {
-						var err = _v7.a;
+					var _v8 = A2($elm$json$Json$Decode$decodeString, $author$project$Character$decoder, content);
+					if (_v8.$ === 'Err') {
+						var err = _v8.a;
 						return _Utils_Tuple2(
 							A2(
 								$author$project$Main$DecodeErr,
@@ -8103,7 +8293,7 @@ var $author$project$Main$update = F2(
 								err),
 							$elm$core$Platform$Cmd$none);
 					} else {
-						var character = _v7.a;
+						var character = _v8.a;
 						return _Utils_Tuple2(
 							A2(
 								$author$project$Main$Character,
@@ -8122,12 +8312,13 @@ var $author$project$Main$update = F2(
 						return A2($author$project$Main$changeRoute, route, model);
 					} else {
 						var href = urlRequest.a;
+						var _v10 = A2($elm$core$Debug$log, 'got external url req', href);
 						return _Utils_Tuple2(
 							model,
 							$elm$browser$Browser$Navigation$load(href));
 					}
 				default:
-					break _v0$10;
+					break _v0$11;
 			}
 		}
 		return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
@@ -8143,6 +8334,7 @@ var $author$project$Main$PickedAssignment = function (a) {
 var $author$project$Main$PickedClass = function (a) {
 	return {$: 'PickedClass', a: a};
 };
+var $elm$html$Html$a = _VirtualDom_node('a');
 var $author$project$Boon$dogsbody = {
 	boons: _List_fromArray(
 		[
@@ -8298,7 +8490,7 @@ var $author$project$Class$cloak = {
 				[$author$project$Boon$Domain$Criminal, $author$project$Boon$Domain$HighSociety])),
 			$author$project$Boon$GainEquipment(
 			_List_fromArray(
-				['Light body armour (Armour 2)', 'EITHER Climbing gear and ropes', 'Shoddy rifle (D8, Ranged, Reload, Unreliable) and Knife (D3, Concealable) OR Sword (D6) and Meteor Hammer (D3, Ranged, Stunning)']))
+				['Light body armour (Armour 2)', 'Climbing gear and ropes', 'EITHER Shoddy rifle (D8, Ranged, Reload, Unreliable) and Knife (D3, Concealable) OR Sword (D6) and Meteor Hammer (D3, Ranged, Stunning)']))
 		]),
 	coreAbilities: _List_fromArray(
 		[
@@ -8356,6 +8548,12 @@ var $author$project$Class$classes = _List_fromArray(
 	[$author$project$Class$doc, $author$project$Class$cloak, $author$project$Class$awoken]);
 var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm$html$Html$h1 = _VirtualDom_node('h1');
+var $elm$html$Html$Attributes$href = function (url) {
+	return A2(
+		$elm$html$Html$Attributes$stringProperty,
+		'href',
+		_VirtualDom_noJavaScriptUri(url));
+};
 var $elm$virtual_dom$VirtualDom$map = _VirtualDom_map;
 var $elm$html$Html$map = $elm$virtual_dom$VirtualDom$map;
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
@@ -8381,7 +8579,6 @@ var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $author$project$Abilities$ClickedTab = function (a) {
 	return {$: 'ClickedTab', a: a};
 };
-var $elm$html$Html$a = _VirtualDom_node('a');
 var $elm$core$Tuple$second = function (_v0) {
 	var y = _v0.b;
 	return y;
@@ -8395,12 +8592,6 @@ var $elm$html$Html$Attributes$classList = function (classes) {
 				$elm$core$List$map,
 				$elm$core$Tuple$first,
 				A2($elm$core$List$filter, $elm$core$Tuple$second, classes))));
-};
-var $elm$html$Html$Attributes$href = function (url) {
-	return A2(
-		$elm$html$Html$Attributes$stringProperty,
-		'href',
-		_VirtualDom_noJavaScriptUri(url));
 };
 var $elm$html$Html$li = _VirtualDom_node('li');
 var $elm$html$Html$nav = _VirtualDom_node('nav');
@@ -9141,6 +9332,16 @@ var $author$project$Character$view = function (character) {
 											[
 												$elm$html$Html$text('Skills')
 											])),
+										A2(
+										$elm$html$Html$a,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$href('play-aid/skills')
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('?')
+											])),
 										A3($author$project$Character$viewBoolDict, $author$project$Character$UpdatedSkills, $author$project$Boon$Skill$toString, character.skills)
 									])),
 								A2(
@@ -9157,6 +9358,16 @@ var $author$project$Character$view = function (character) {
 										_List_fromArray(
 											[
 												$elm$html$Html$text('Domains')
+											])),
+										A2(
+										$elm$html$Html$a,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$href('play-aid/domains')
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('?')
 											])),
 										A3($author$project$Character$viewBoolDict, $author$project$Character$UpdatedDomains, $author$project$Boon$Domain$toString, character.domains)
 									]))
@@ -9251,6 +9462,16 @@ var $author$project$Character$view = function (character) {
 								_List_fromArray(
 									[
 										$elm$html$Html$text('Equipment')
+									])),
+								A2(
+								$elm$html$Html$a,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$href('play-aid/weapons')
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('?')
 									])),
 								A2(
 								$elm$html$Html$textarea,
@@ -9386,6 +9607,96 @@ var $author$project$Character$view = function (character) {
 					]))
 			]),
 		title: character.name
+	};
+};
+var $elm$html$Html$article = _VirtualDom_node('article');
+var $elm$html$Html$dd = _VirtualDom_node('dd');
+var $elm$html$Html$dl = _VirtualDom_node('dl');
+var $elm$html$Html$dt = _VirtualDom_node('dt');
+var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
+var $elm$core$String$toUpper = _String_toUpper;
+var $author$project$PlayAids$topicToStringPretty = function (topic) {
+	var stringified = $author$project$PlayAids$topicToString(topic);
+	return _Utils_ap(
+		$elm$core$String$toUpper(
+			A2($elm$core$String$left, 1, stringified)),
+		A2($elm$core$String$dropLeft, 1, stringified));
+};
+var $author$project$PlayAids$view = function (playAid) {
+	var stringifiedTopic = $author$project$PlayAids$topicToStringPretty(playAid.topic);
+	return {
+		body: _List_fromArray(
+			[
+				A2(
+				$elm$html$Html$article,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('play-aid')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$a,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$href('/reves/')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('< back')
+							])),
+						A2(
+						$elm$html$Html$h1,
+						_List_Nil,
+						_List_fromArray(
+							[
+								$elm$html$Html$text(stringifiedTopic)
+							])),
+						function () {
+						var _v0 = playAid.aids;
+						switch (_v0.$) {
+							case 'Failed':
+								return $elm$html$Html$text('Error :(');
+							case 'Loading':
+								return $elm$html$Html$text('Loading...');
+							default:
+								var aids = _v0.a;
+								return A2(
+									$elm$html$Html$dl,
+									_List_Nil,
+									$elm$core$List$concat(
+										A2(
+											$elm$core$List$map,
+											function (_v1) {
+												var name = _v1.a;
+												var rules = _v1.b;
+												return _List_fromArray(
+													[
+														A2(
+														$elm$html$Html$dt,
+														_List_fromArray(
+															[
+																$elm$html$Html$Attributes$id(name)
+															]),
+														_List_fromArray(
+															[
+																$elm$html$Html$text(name)
+															])),
+														A2(
+														$elm$html$Html$dd,
+														_List_Nil,
+														_List_fromArray(
+															[
+																$elm$html$Html$text(rules)
+															]))
+													]);
+											},
+											$elm$core$Dict$toList(aids))));
+						}
+					}()
+					]))
+			]),
+		title: stringifiedTopic
 	};
 };
 var $author$project$Main$view = function (model) {
@@ -9550,13 +9861,27 @@ var $author$project$Main$view = function (model) {
 			var character = model.b;
 			var characterView = $author$project$Character$view(character);
 			return {
-				body: A2(
-					$elm$core$List$map,
-					$elm$html$Html$map($author$project$Main$CharacterMsg),
-					characterView.body),
+				body: _Utils_ap(
+					A2(
+						$elm$core$List$map,
+						$elm$html$Html$map($author$project$Main$CharacterMsg),
+						characterView.body),
+					_List_fromArray(
+						[
+							A2(
+							$elm$html$Html$a,
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$href('/reves/play-aid/weapons')
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('weapon tags')
+								]))
+						])),
 				title: characterView.title
 			};
-		default:
+		case 'Abilities':
 			var abilities = model.a;
 			return {
 				body: _List_fromArray(
@@ -9568,6 +9893,9 @@ var $author$project$Main$view = function (model) {
 					]),
 				title: abilities.selected
 			};
+		default:
+			var playAid = model.c;
+			return $author$project$PlayAids$view(playAid);
 	}
 };
 var $author$project$Main$main = $elm$browser$Browser$application(

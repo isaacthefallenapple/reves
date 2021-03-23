@@ -272,6 +272,9 @@ view character =
                     [ h2
                         []
                         [ text "Skills" ]
+                    , a
+                        [ href "play-aid/skills" ]
+                        [ text "?" ]
                     , viewBoolDict UpdatedSkills Skills.toString character.skills
                     ]
                 , section
@@ -279,6 +282,9 @@ view character =
                     [ h2
                         []
                         [ text "Domains" ]
+                    , a
+                        [ href "play-aid/domains" ]
+                        [ text "?" ]
                     , viewBoolDict UpdatedDomains Domains.toString character.domains
                     ]
                 ]
@@ -317,6 +323,9 @@ view character =
                 [ h2
                     []
                     [ text "Equipment" ]
+                , a
+                    [ href "play-aid/weapons" ]
+                    [ text "?" ]
                 , textarea
                     [ onInput UpdatedEquipment ]
                     [ text character.equipment ]

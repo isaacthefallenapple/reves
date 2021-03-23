@@ -8,6 +8,7 @@ import Browser
 import Browser.Navigation as Nav
 import Character exposing (Msg(..))
 import Class
+import Dict exposing (Dict)
 import File exposing (File)
 import File.Download as Download
 import File.Select as Select
@@ -17,6 +18,7 @@ import Html.Events exposing (..)
 import Http
 import Json.Decode as Decode
 import Json.Encode as Encode
+import PlayAids
 import Ports
 import Route exposing (Route)
 import Task
@@ -34,6 +36,7 @@ type Model
     | DecodeErr Nav.Key Decode.Error
     | Abilities Abilities
     | Landing Nav.Key
+    | PlayAid Nav.Key Character.Stats PlayAids.PlayAids
 
 
 toNavKey : Model -> Nav.Key
@@ -57,6 +60,9 @@ toNavKey model =
         Landing navKey ->
             navKey
 
+        PlayAid navKey _ _ ->
+            navKey
+
 
 
 -- MSG
@@ -75,6 +81,7 @@ type Msg
     | UrlChanged Url.Url
     | AbilitiesMsg Abilities.Msg
     | ClickedNewCharacter
+    | GotPlayAid (Result Http.Error (Dict String String))
 
 
 
@@ -168,13 +175,16 @@ view model =
             in
             { title = characterView.title
             , body =
-                List.map (Html.map CharacterMsg) characterView.body
+                List.map (Html.map CharacterMsg) characterView.body ++ [ a [ href "/reves/play-aid/weapons" ] [ text "weapon tags" ] ]
             }
 
         Abilities abilities ->
             { title = abilities.selected
             , body = [ Html.map AbilitiesMsg (Abilities.view abilities) ]
             }
+
+        PlayAid _ _ playAid ->
+            PlayAids.view playAid
 
 
 
@@ -210,6 +220,20 @@ changeRoute route model =
 
         ( PickAssignment _ _, Route.Root ) ->
             ( Landing navKey, replaceUrl )
+
+        ( Landing _, Route.Root ) ->
+            ( model, pushUrl )
+
+        ( Character _ _, Route.Root ) ->
+            ( model, pushUrl )
+
+        ( Character _ character, Route.PlayAid topic selected ) ->
+            Tuple.mapSecond
+                (\cmd -> Cmd.batch [ cmd, pushUrl ])
+                (wrap (PlayAid navKey character) identity (PlayAids.init GotPlayAid topic selected))
+
+        ( PlayAid _ character _, Route.Root ) ->
+            ( Character navKey character, pushUrl )
 
         ( _, _ ) ->
             ( model, Cmd.none )
@@ -252,6 +276,9 @@ update msg model =
         ( Abilities abilities, AbilitiesMsg subMsg ) ->
             Tuple.mapBoth Abilities (Cmd.map AbilitiesMsg) (Abilities.update subMsg abilities)
 
+        ( PlayAid navKey character playAid, GotPlayAid result ) ->
+            ( PlayAid navKey character (PlayAids.update result playAid), Cmd.none )
+
         ( _, ClickedOpenFile ) ->
             ( model, Select.file [ "application/json" ] FileLoaded )
 
@@ -276,6 +303,10 @@ update msg model =
                     changeRoute route model
 
                 Browser.External href ->
+                    let
+                        _ =
+                            Debug.log "got external url req" href
+                    in
                     ( model, Nav.load href )
 
         ( _, _ ) ->
@@ -287,15 +318,15 @@ update msg model =
 
 
 init : Maybe String -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
-init flags _ navKey =
-    ( case flags of
-        Nothing ->
-            Landing navKey
+init flags url navKey =
+    changeRoute (Route.parse url)
+        (case flags of
+            Nothing ->
+                Landing navKey
 
-        Just json ->
-            Character navKey (Character.decodeLocalCharacter json)
-    , Nav.replaceUrl navKey (Route.toString Route.Root)
-    )
+            Just json ->
+                Character navKey (Character.decodeLocalCharacter json)
+        )
 
 
 
