@@ -6334,11 +6334,11 @@ var $author$project$Character$applyClass = F2(
 					character,
 					{_class: name})));
 	});
-var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $author$project$Abilities$GotMetadata = function (a) {
 	return {$: 'GotMetadata', a: a};
 };
 var $author$project$Abilities$Loading = {$: 'Loading'};
+var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$http$Http$BadStatus_ = F2(
 	function (a, b) {
 		return {$: 'BadStatus_', a: a, b: b};
@@ -7034,16 +7034,7 @@ var $author$project$Abilities$init = F3(
 						})
 					])));
 	});
-var $elm$core$Tuple$mapSecond = F2(
-	function (func, _v0) {
-		var x = _v0.a;
-		var y = _v0.b;
-		return _Utils_Tuple2(
-			x,
-			func(y));
-	});
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
-var $elm$browser$Browser$Navigation$pushUrl = _Browser_pushUrl;
 var $author$project$Abilities$toNavKey = function ($) {
 	return $.navKey;
 };
@@ -7081,14 +7072,6 @@ var $author$project$Main$wrap = F3(
 var $author$project$Main$changeRoute = F2(
 	function (route, model) {
 		var navKey = $author$project$Main$toNavKey(model);
-		var pushUrl = A2(
-			$elm$browser$Browser$Navigation$pushUrl,
-			navKey,
-			$author$project$Route$toString(route));
-		var replaceUrl = A2(
-			$elm$browser$Browser$Navigation$replaceUrl,
-			navKey,
-			$author$project$Route$toString(route));
 		var _v0 = _Utils_Tuple2(model, route);
 		_v0$4:
 		while (true) {
@@ -7097,18 +7080,11 @@ var $author$project$Main$changeRoute = F2(
 					var _v2 = _v0.a;
 					var character = _v2.b;
 					var selected = _v0.b.a;
-					return A2(
-						$elm$core$Tuple$mapSecond,
-						function (cmd) {
-							return $elm$core$Platform$Cmd$batch(
-								_List_fromArray(
-									[cmd, pushUrl]));
-						},
-						A3(
-							$author$project$Main$wrap,
-							$author$project$Main$Abilities,
-							$author$project$Main$AbilitiesMsg,
-							A3($author$project$Abilities$init, navKey, selected, character)));
+					return A3(
+						$author$project$Main$wrap,
+						$author$project$Main$Abilities,
+						$author$project$Main$AbilitiesMsg,
+						A3($author$project$Abilities$init, navKey, selected, character));
 				} else {
 					break _v0$4;
 				}
@@ -7119,18 +7095,18 @@ var $author$project$Main$changeRoute = F2(
 						var _v1 = _v0.b;
 						return _Utils_Tuple2(
 							A2($author$project$Main$Character, navKey, abilities.character),
-							pushUrl);
+							$elm$core$Platform$Cmd$none);
 					case 'PickClass':
 						var _v3 = _v0.b;
 						return _Utils_Tuple2(
 							$author$project$Main$Landing(navKey),
-							replaceUrl);
+							$elm$core$Platform$Cmd$none);
 					case 'PickAssignment':
 						var _v4 = _v0.a;
 						var _v5 = _v0.b;
 						return _Utils_Tuple2(
 							$author$project$Main$Landing(navKey),
-							replaceUrl);
+							$elm$core$Platform$Cmd$none);
 					default:
 						break _v0$4;
 				}
@@ -7422,7 +7398,6 @@ var $elm$file$File$Select$file = F2(
 			_File_uploadOne(mimes));
 	});
 var $elm$browser$Browser$Navigation$load = _Browser_load;
-var $elm$core$Debug$log = _Debug_log;
 var $elm$url$Url$Parser$State = F5(
 	function (visited, unvisited, params, frag, value) {
 		return {frag: frag, params: params, unvisited: unvisited, value: value, visited: visited};
@@ -7693,6 +7668,7 @@ var $author$project$Route$parse = function (url) {
 		$author$project$Route$Root,
 		A2($elm$url$Url$Parser$parse, $author$project$Route$parser, url));
 };
+var $elm$browser$Browser$Navigation$pushUrl = _Browser_pushUrl;
 var $author$project$Ports$storeCharacter = _Platform_outgoingPort('storeCharacter', $elm$json$Json$Encode$string);
 var $author$project$Character$save = function (character) {
 	return $author$project$Ports$storeCharacter(
@@ -7709,6 +7685,50 @@ var $elm$file$File$Download$string = F3(
 			A3(_File_download, name, mime, content));
 	});
 var $elm$file$File$toString = _File_toString;
+var $elm$url$Url$addPort = F2(
+	function (maybePort, starter) {
+		if (maybePort.$ === 'Nothing') {
+			return starter;
+		} else {
+			var port_ = maybePort.a;
+			return starter + (':' + $elm$core$String$fromInt(port_));
+		}
+	});
+var $elm$url$Url$addPrefixed = F3(
+	function (prefix, maybeSegment, starter) {
+		if (maybeSegment.$ === 'Nothing') {
+			return starter;
+		} else {
+			var segment = maybeSegment.a;
+			return _Utils_ap(
+				starter,
+				_Utils_ap(prefix, segment));
+		}
+	});
+var $elm$url$Url$toString = function (url) {
+	var http = function () {
+		var _v0 = url.protocol;
+		if (_v0.$ === 'Http') {
+			return 'http://';
+		} else {
+			return 'https://';
+		}
+	}();
+	return A3(
+		$elm$url$Url$addPrefixed,
+		'#',
+		url.fragment,
+		A3(
+			$elm$url$Url$addPrefixed,
+			'?',
+			url.query,
+			_Utils_ap(
+				A2(
+					$elm$url$Url$addPort,
+					url.port_,
+					_Utils_ap(http, url.host)),
+				url.path)));
+};
 var $author$project$Abilities$Failed = function (a) {
 	return {$: 'Failed', a: a};
 };
@@ -7796,6 +7816,7 @@ var $author$project$Abilities$fetchFromList = function (metadata) {
 			},
 			$elm$core$Dict$toList(metadata)));
 };
+var $elm$core$Debug$log = _Debug_log;
 var $elm$core$Dict$map = F2(
 	function (func, dict) {
 		if (dict.$ === 'RBEmpty_elm_builtin') {
@@ -7994,7 +8015,7 @@ var $author$project$Character$update = F2(
 var $author$project$Main$update = F2(
 	function (msg, model) {
 		var _v0 = _Utils_Tuple2(model, msg);
-		_v0$10:
+		_v0$11:
 		while (true) {
 			switch (_v0.b.$) {
 				case 'ClickedNewCharacter':
@@ -8005,7 +8026,7 @@ var $author$project$Main$update = F2(
 							$author$project$Main$PickClass(navKey),
 							$elm$core$Platform$Cmd$none);
 					} else {
-						break _v0$10;
+						break _v0$11;
 					}
 				case 'PickedClass':
 					if (_v0.a.$ === 'PickClass') {
@@ -8015,7 +8036,7 @@ var $author$project$Main$update = F2(
 							A2($author$project$Main$PickAssignment, navKey, _class),
 							$elm$core$Platform$Cmd$none);
 					} else {
-						break _v0$10;
+						break _v0$11;
 					}
 				case 'PickedAssignment':
 					if (_v0.a.$ === 'PickAssignment') {
@@ -8031,7 +8052,7 @@ var $author$project$Main$update = F2(
 							A2($author$project$Main$Character, navKey, character),
 							$author$project$Character$save(character));
 					} else {
-						break _v0$10;
+						break _v0$11;
 					}
 				case 'CharacterMsg':
 					if (_v0.a.$ === 'Character') {
@@ -8060,7 +8081,7 @@ var $author$project$Main$update = F2(
 								$author$project$Character$save(updatedCharacter));
 						}
 					} else {
-						break _v0$10;
+						break _v0$11;
 					}
 				case 'AbilitiesMsg':
 					if (_v0.a.$ === 'Abilities') {
@@ -8072,7 +8093,7 @@ var $author$project$Main$update = F2(
 							$elm$core$Platform$Cmd$map($author$project$Main$AbilitiesMsg),
 							A2($author$project$Abilities$update, subMsg, abilities));
 					} else {
-						break _v0$10;
+						break _v0$11;
 					}
 				case 'ClickedOpenFile':
 					var _v6 = _v0.b;
@@ -8115,19 +8136,26 @@ var $author$project$Main$update = F2(
 					var urlRequest = _v0.b.a;
 					if (urlRequest.$ === 'Internal') {
 						var url = urlRequest.a;
-						var route = A2(
-							$elm$core$Debug$log,
-							'parsed url',
-							$author$project$Route$parse(url));
-						return A2($author$project$Main$changeRoute, route, model);
+						return _Utils_Tuple2(
+							model,
+							A2(
+								$elm$browser$Browser$Navigation$pushUrl,
+								$author$project$Main$toNavKey(model),
+								$elm$url$Url$toString(url)));
 					} else {
 						var href = urlRequest.a;
 						return _Utils_Tuple2(
 							model,
 							$elm$browser$Browser$Navigation$load(href));
 					}
+				case 'UrlChanged':
+					var url = _v0.b.a;
+					return A2(
+						$author$project$Main$changeRoute,
+						$author$project$Route$parse(url),
+						model);
 				default:
-					break _v0$10;
+					break _v0$11;
 			}
 		}
 		return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
