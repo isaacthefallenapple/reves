@@ -2,6 +2,7 @@ module Route exposing (..)
 
 import PlayAids
 import Url
+import Url.Builder as Builder
 import Url.Parser as Parser exposing ((</>), Parser, fragment, map, oneOf, s)
 
 
@@ -34,22 +35,16 @@ parse url =
 
 toString : Route -> String
 toString route =
-    "/reves/"
-        ++ (case route of
-                Root ->
-                    ""
+    let
+        absolute path query frag =
+            Builder.custom Builder.Absolute ("reves" :: path) query frag
+    in
+    case route of
+        Root ->
+            absolute [] [] Nothing
 
-                Abilities (Just frag) ->
-                    "abilities#" ++ frag
+        Abilities selected ->
+            absolute [ "abilities" ] [] selected
 
-                Abilities Nothing ->
-                    "abilities"
-
-                PlayAid topic selected ->
-                    "play-aid/"
-                        ++ PlayAids.topicToString topic
-                        ++ (selected
-                                |> Maybe.map ((++) "#")
-                                |> Maybe.withDefault ""
-                           )
-           )
+        PlayAid topic selected ->
+            absolute [ "play-aid", PlayAids.topicToString topic ] [] selected

@@ -6414,6 +6414,14 @@ var $author$project$PlayAids$init = F3(
 				}));
 	});
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
+var $author$project$Abilities$setSelected = F2(
+	function (selected, abilities) {
+		return _Utils_update(
+			abilities,
+			{
+				selected: A2($elm$core$Maybe$withDefault, abilities.primary, selected)
+			});
+	});
 var $author$project$Abilities$toNavKey = function ($) {
 	return $.navKey;
 };
@@ -6455,21 +6463,29 @@ var $author$project$Main$changeRoute = F2(
 	function (route, model) {
 		var navKey = $author$project$Main$toNavKey(model);
 		var _v0 = _Utils_Tuple2(model, route);
-		_v0$8:
+		_v0$9:
 		while (true) {
 			switch (_v0.b.$) {
 				case 'Abilities':
-					if (_v0.a.$ === 'Character') {
-						var _v2 = _v0.a;
-						var character = _v2.b;
-						var selected = _v0.b.a;
-						return A3(
-							$author$project$Main$wrap,
-							$author$project$Main$Abilities,
-							$author$project$Main$AbilitiesMsg,
-							A3($author$project$Abilities$init, navKey, selected, character));
-					} else {
-						break _v0$8;
+					switch (_v0.a.$) {
+						case 'Abilities':
+							var abilities = _v0.a.a;
+							var selected = _v0.b.a;
+							return _Utils_Tuple2(
+								$author$project$Main$Abilities(
+									A2($author$project$Abilities$setSelected, selected, abilities)),
+								$elm$core$Platform$Cmd$none);
+						case 'Character':
+							var _v2 = _v0.a;
+							var character = _v2.b;
+							var selected = _v0.b.a;
+							return A3(
+								$author$project$Main$wrap,
+								$author$project$Main$Abilities,
+								$author$project$Main$AbilitiesMsg,
+								A3($author$project$Abilities$init, navKey, selected, character));
+						default:
+							break _v0$9;
 					}
 				case 'PlayAid':
 					if (_v0.a.$ === 'Character') {
@@ -6484,7 +6500,7 @@ var $author$project$Main$changeRoute = F2(
 							$elm$core$Basics$identity,
 							A3($author$project$PlayAids$init, $author$project$Main$GotPlayAid, topic, selected));
 					} else {
-						break _v0$8;
+						break _v0$9;
 					}
 				default:
 					switch (_v0.a.$) {
@@ -6520,7 +6536,7 @@ var $author$project$Main$changeRoute = F2(
 								A2($author$project$Main$Character, navKey, character),
 								$elm$core$Platform$Cmd$none);
 						default:
-							break _v0$8;
+							break _v0$9;
 					}
 			}
 		}
@@ -7971,31 +7987,81 @@ var $author$project$Abilities$statusFromResult = function (result) {
 		return $author$project$Abilities$Failed(err);
 	}
 };
-var $author$project$Route$toString = function (route) {
-	return '/reves/' + function () {
-		switch (route.$) {
-			case 'Root':
-				return '';
-			case 'Abilities':
-				if (route.a.$ === 'Just') {
-					var frag = route.a.a;
-					return 'abilities#' + frag;
-				} else {
-					var _v1 = route.a;
-					return 'abilities';
-				}
-			default:
-				var topic = route.a;
-				var selected = route.b;
-				return 'play-aid/' + ($author$project$PlayAids$topicToString(topic) + A2(
-					$elm$core$Maybe$withDefault,
-					'',
-					A2(
-						$elm$core$Maybe$map,
-						$elm$core$Basics$append('#'),
-						selected)));
+var $elm$url$Url$Builder$Absolute = {$: 'Absolute'};
+var $elm$url$Url$Builder$rootToPrePath = function (root) {
+	switch (root.$) {
+		case 'Absolute':
+			return '/';
+		case 'Relative':
+			return '';
+		default:
+			var prePath = root.a;
+			return prePath + '/';
+	}
+};
+var $elm$url$Url$Builder$toQueryPair = function (_v0) {
+	var key = _v0.a;
+	var value = _v0.b;
+	return key + ('=' + value);
+};
+var $elm$url$Url$Builder$toQuery = function (parameters) {
+	if (!parameters.b) {
+		return '';
+	} else {
+		return '?' + A2(
+			$elm$core$String$join,
+			'&',
+			A2($elm$core$List$map, $elm$url$Url$Builder$toQueryPair, parameters));
+	}
+};
+var $elm$url$Url$Builder$custom = F4(
+	function (root, pathSegments, parameters, maybeFragment) {
+		var fragmentless = _Utils_ap(
+			$elm$url$Url$Builder$rootToPrePath(root),
+			_Utils_ap(
+				A2($elm$core$String$join, '/', pathSegments),
+				$elm$url$Url$Builder$toQuery(parameters)));
+		if (maybeFragment.$ === 'Nothing') {
+			return fragmentless;
+		} else {
+			var fragment = maybeFragment.a;
+			return fragmentless + ('#' + fragment);
 		}
-	}();
+	});
+var $author$project$Route$toString = function (route) {
+	var absolute = F3(
+		function (path, query, frag) {
+			return A4(
+				$elm$url$Url$Builder$custom,
+				$elm$url$Url$Builder$Absolute,
+				A2($elm$core$List$cons, 'reves', path),
+				query,
+				frag);
+		});
+	switch (route.$) {
+		case 'Root':
+			return A3(absolute, _List_Nil, _List_Nil, $elm$core$Maybe$Nothing);
+		case 'Abilities':
+			var selected = route.a;
+			return A3(
+				absolute,
+				_List_fromArray(
+					['abilities']),
+				_List_Nil,
+				selected);
+		default:
+			var topic = route.a;
+			var selected = route.b;
+			return A3(
+				absolute,
+				_List_fromArray(
+					[
+						'play-aid',
+						$author$project$PlayAids$topicToString(topic)
+					]),
+				_List_Nil,
+				selected);
+	}
 };
 var $elm$core$Dict$values = function (dict) {
 	return A3(
@@ -8855,11 +8921,12 @@ var $author$project$Abilities$view = function (abilities) {
 						$elm$html$Html$a,
 						_List_fromArray(
 							[
-								$elm$html$Html$Attributes$href('/reves/')
+								$elm$html$Html$Attributes$href(
+								$author$project$Route$toString($author$project$Route$Root))
 							]),
 						_List_fromArray(
 							[
-								$elm$html$Html$text('Back')
+								$elm$html$Html$text('< Back')
 							])),
 						A2(
 						$elm$html$Html$ul,
@@ -9356,7 +9423,9 @@ var $author$project$Character$view = function (character) {
 										$elm$html$Html$a,
 										_List_fromArray(
 											[
-												$elm$html$Html$Attributes$href('/reves/play-aid/skills')
+												$elm$html$Html$Attributes$href(
+												$author$project$Route$toString(
+													A2($author$project$Route$PlayAid, $author$project$PlayAids$Skills, $elm$core$Maybe$Nothing)))
 											]),
 										_List_fromArray(
 											[
@@ -9383,7 +9452,9 @@ var $author$project$Character$view = function (character) {
 										$elm$html$Html$a,
 										_List_fromArray(
 											[
-												$elm$html$Html$Attributes$href('/reves/play-aid/domains')
+												$elm$html$Html$Attributes$href(
+												$author$project$Route$toString(
+													A2($author$project$Route$PlayAid, $author$project$PlayAids$Domains, $elm$core$Maybe$Nothing)))
 											]),
 										_List_fromArray(
 											[
@@ -9419,7 +9490,10 @@ var $author$project$Character$view = function (character) {
 										$elm$html$Html$a,
 										_List_fromArray(
 											[
-												$elm$html$Html$Attributes$href('/reves/abilities#' + character._class)
+												$elm$html$Html$Attributes$href(
+												$author$project$Route$toString(
+													$author$project$Route$Abilities(
+														$elm$core$Maybe$Just(character._class))))
 											]),
 										_List_fromArray(
 											[
@@ -9487,7 +9561,9 @@ var $author$project$Character$view = function (character) {
 								$elm$html$Html$a,
 								_List_fromArray(
 									[
-										$elm$html$Html$Attributes$href('/reves/play-aid/weapons')
+										$elm$html$Html$Attributes$href(
+										$author$project$Route$toString(
+											A2($author$project$Route$PlayAid, $author$project$PlayAids$Weapons, $elm$core$Maybe$Nothing)))
 									]),
 								_List_fromArray(
 									[

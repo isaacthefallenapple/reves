@@ -206,6 +206,9 @@ changeRoute route model =
         ( Abilities abilities, Route.Root ) ->
             ( Character navKey abilities.character, Cmd.none )
 
+        ( Abilities abilities, Route.Abilities selected ) ->
+            ( Abilities (Abilities.setSelected selected abilities), Cmd.none )
+
         ( Character _ character, Route.Abilities selected ) ->
             wrap Abilities AbilitiesMsg (Abilities.init navKey selected character)
 

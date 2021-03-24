@@ -16,7 +16,9 @@ import Html.Events exposing (..)
 import Json.Decode as Decode
 import Json.Decode.Pipeline as Pipeline
 import Json.Encode as Encode
+import PlayAids
 import Ports
+import Route
 import TypedDict exposing (TypedDict)
 
 
@@ -273,7 +275,7 @@ view character =
                         []
                         [ text "Skills" ]
                     , a
-                        [ href "/reves/play-aid/skills" ]
+                        [ href (Route.toString (Route.PlayAid PlayAids.Skills Nothing)) ]
                         [ text "?" ]
                     , viewBoolDict UpdatedSkills Skills.toString character.skills
                     ]
@@ -283,7 +285,7 @@ view character =
                         []
                         [ text "Domains" ]
                     , a
-                        [ href "/reves/play-aid/domains" ]
+                        [ href (Route.toString (Route.PlayAid PlayAids.Domains Nothing)) ]
                         [ text "?" ]
                     , viewBoolDict UpdatedDomains Domains.toString character.domains
                     ]
@@ -296,7 +298,7 @@ view character =
                         []
                         [ text "Abilities" ]
                     , a
-                        [ href ("/reves/abilities#" ++ character.class) ]
+                        [ href (Route.toString (Route.Abilities (Just character.class))) ]
                         [ text "add more" ]
                     ]
                 , ul
@@ -324,7 +326,7 @@ view character =
                     []
                     [ text "Equipment" ]
                 , a
-                    [ href "/reves/play-aid/weapons" ]
+                    [ href (Route.toString (Route.PlayAid PlayAids.Weapons Nothing)) ]
                     [ text "?" ]
                 , textarea
                     [ onInput UpdatedEquipment ]

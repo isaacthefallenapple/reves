@@ -61,6 +61,15 @@ type alias Abilities =
     }
 
 
+setSelected : Maybe String -> Abilities -> Abilities
+setSelected selected abilities =
+    { abilities
+        | selected =
+            selected
+                |> Maybe.withDefault abilities.primary
+    }
+
+
 toNavKey : Abilities -> Nav.Key
 toNavKey =
     .navKey
@@ -219,8 +228,8 @@ view abilities =
         (nav
             []
             [ a
-                [ href "/reves/" ]
-                [ text "Back" ]
+                [ href (Route.toString Route.Root) ]
+                [ text "< Back" ]
             , ul
                 [ class "tab-bar" ]
                 (List.map
