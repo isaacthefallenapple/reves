@@ -8435,7 +8435,6 @@ var $author$project$Main$PickedAssignment = function (a) {
 var $author$project$Main$PickedClass = function (a) {
 	return {$: 'PickedClass', a: a};
 };
-var $elm$html$Html$a = _VirtualDom_node('a');
 var $author$project$Boon$dogsbody = {
 	boons: _List_fromArray(
 		[
@@ -8649,12 +8648,6 @@ var $author$project$Class$classes = _List_fromArray(
 	[$author$project$Class$doc, $author$project$Class$cloak, $author$project$Class$awoken]);
 var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm$html$Html$h1 = _VirtualDom_node('h1');
-var $elm$html$Html$Attributes$href = function (url) {
-	return A2(
-		$elm$html$Html$Attributes$stringProperty,
-		'href',
-		_VirtualDom_noJavaScriptUri(url));
-};
 var $elm$virtual_dom$VirtualDom$map = _VirtualDom_map;
 var $elm$html$Html$map = $elm$virtual_dom$VirtualDom$map;
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
@@ -8680,6 +8673,7 @@ var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $author$project$Abilities$ClickedTab = function (a) {
 	return {$: 'ClickedTab', a: a};
 };
+var $elm$html$Html$a = _VirtualDom_node('a');
 var $elm$core$Tuple$second = function (_v0) {
 	var y = _v0.b;
 	return y;
@@ -8693,6 +8687,12 @@ var $elm$html$Html$Attributes$classList = function (classes) {
 				$elm$core$List$map,
 				$elm$core$Tuple$first,
 				A2($elm$core$List$filter, $elm$core$Tuple$second, classes))));
+};
+var $elm$html$Html$Attributes$href = function (url) {
+	return A2(
+		$elm$html$Html$Attributes$stringProperty,
+		'href',
+		_VirtualDom_noJavaScriptUri(url));
 };
 var $elm$html$Html$li = _VirtualDom_node('li');
 var $elm$html$Html$nav = _VirtualDom_node('nav');
@@ -9428,23 +9428,32 @@ var $author$project$Character$view = function (character) {
 								_List_fromArray(
 									[
 										A2(
-										$elm$html$Html$h2,
-										_List_Nil,
+										$elm$html$Html$div,
 										_List_fromArray(
 											[
-												$elm$html$Html$text('Skills')
-											])),
-										A2(
-										$elm$html$Html$a,
-										_List_fromArray(
-											[
-												$elm$html$Html$Attributes$href(
-												$author$project$Route$toString(
-													A2($author$project$Route$PlayAid, $author$project$PlayAids$Skills, $elm$core$Maybe$Nothing)))
+												$elm$html$Html$Attributes$class('flex gap-500')
 											]),
 										_List_fromArray(
 											[
-												$elm$html$Html$text('?')
+												A2(
+												$elm$html$Html$h2,
+												_List_Nil,
+												_List_fromArray(
+													[
+														$elm$html$Html$text('Skills')
+													])),
+												A2(
+												$elm$html$Html$a,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$href(
+														$author$project$Route$toString(
+															A2($author$project$Route$PlayAid, $author$project$PlayAids$Skills, $elm$core$Maybe$Nothing)))
+													]),
+												_List_fromArray(
+													[
+														$elm$html$Html$text('?')
+													]))
 											])),
 										A3($author$project$Character$viewBoolDict, $author$project$Character$UpdatedSkills, $author$project$Boon$Skill$toString, character.skills)
 									])),
@@ -9457,23 +9466,32 @@ var $author$project$Character$view = function (character) {
 								_List_fromArray(
 									[
 										A2(
-										$elm$html$Html$h2,
-										_List_Nil,
+										$elm$html$Html$div,
 										_List_fromArray(
 											[
-												$elm$html$Html$text('Domains')
-											])),
-										A2(
-										$elm$html$Html$a,
-										_List_fromArray(
-											[
-												$elm$html$Html$Attributes$href(
-												$author$project$Route$toString(
-													A2($author$project$Route$PlayAid, $author$project$PlayAids$Domains, $elm$core$Maybe$Nothing)))
+												$elm$html$Html$Attributes$class('flex gap-500')
 											]),
 										_List_fromArray(
 											[
-												$elm$html$Html$text('?')
+												A2(
+												$elm$html$Html$h2,
+												_List_Nil,
+												_List_fromArray(
+													[
+														$elm$html$Html$text('Domains')
+													])),
+												A2(
+												$elm$html$Html$a,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$href(
+														$author$project$Route$toString(
+															A2($author$project$Route$PlayAid, $author$project$PlayAids$Domains, $elm$core$Maybe$Nothing)))
+													]),
+												_List_fromArray(
+													[
+														$elm$html$Html$text('?')
+													]))
 											])),
 										A3($author$project$Character$viewBoolDict, $author$project$Character$UpdatedDomains, $author$project$Boon$Domain$toString, character.domains)
 									]))
@@ -9490,7 +9508,7 @@ var $author$project$Character$view = function (character) {
 								$elm$html$Html$div,
 								_List_fromArray(
 									[
-										$elm$html$Html$Attributes$class('abilities-header')
+										$elm$html$Html$Attributes$class('flex gap-500')
 									]),
 								_List_fromArray(
 									[
@@ -9566,23 +9584,32 @@ var $author$project$Character$view = function (character) {
 						_List_fromArray(
 							[
 								A2(
-								$elm$html$Html$h2,
-								_List_Nil,
+								$elm$html$Html$div,
 								_List_fromArray(
 									[
-										$elm$html$Html$text('Equipment')
-									])),
-								A2(
-								$elm$html$Html$a,
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$href(
-										$author$project$Route$toString(
-											A2($author$project$Route$PlayAid, $author$project$PlayAids$Weapons, $elm$core$Maybe$Nothing)))
+										$elm$html$Html$Attributes$class('flex gap-500')
 									]),
 								_List_fromArray(
 									[
-										$elm$html$Html$text('?')
+										A2(
+										$elm$html$Html$h2,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('Equipment')
+											])),
+										A2(
+										$elm$html$Html$a,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$href(
+												$author$project$Route$toString(
+													A2($author$project$Route$PlayAid, $author$project$PlayAids$Weapons, $elm$core$Maybe$Nothing)))
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('?')
+											]))
 									])),
 								A2(
 								$elm$html$Html$textarea,
@@ -10011,24 +10038,10 @@ var $author$project$Main$view = function (model) {
 			var character = model.b;
 			var characterView = $author$project$Character$view(character);
 			return {
-				body: _Utils_ap(
-					A2(
-						$elm$core$List$map,
-						$elm$html$Html$map($author$project$Main$CharacterMsg),
-						characterView.body),
-					_List_fromArray(
-						[
-							A2(
-							$elm$html$Html$a,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$href('/reves/play-aid/weapons')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('weapon tags')
-								]))
-						])),
+				body: A2(
+					$elm$core$List$map,
+					$elm$html$Html$map($author$project$Main$CharacterMsg),
+					characterView.body),
 				title: characterView.title
 			};
 		case 'Abilities':

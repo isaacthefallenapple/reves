@@ -271,29 +271,35 @@ view character =
                 [ class "skills-and-domains" ]
                 [ section
                     [ class "skills" ]
-                    [ h2
-                        []
-                        [ text "Skills" ]
-                    , a
-                        [ href (Route.toString (Route.PlayAid PlayAids.Skills Nothing)) ]
-                        [ text "?" ]
+                    [ div
+                        [ class "flex gap-500" ]
+                        [ h2
+                            []
+                            [ text "Skills" ]
+                        , a
+                            [ href (Route.toString (Route.PlayAid PlayAids.Skills Nothing)) ]
+                            [ text "?" ]
+                        ]
                     , viewBoolDict UpdatedSkills Skills.toString character.skills
                     ]
                 , section
                     [ class "domains" ]
-                    [ h2
-                        []
-                        [ text "Domains" ]
-                    , a
-                        [ href (Route.toString (Route.PlayAid PlayAids.Domains Nothing)) ]
-                        [ text "?" ]
+                    [ div
+                        [ class "flex gap-500" ]
+                        [ h2
+                            []
+                            [ text "Domains" ]
+                        , a
+                            [ href (Route.toString (Route.PlayAid PlayAids.Domains Nothing)) ]
+                            [ text "?" ]
+                        ]
                     , viewBoolDict UpdatedDomains Domains.toString character.domains
                     ]
                 ]
             , section
                 [ class "abilities" ]
                 [ div
-                    [ class "abilities-header" ]
+                    [ class "flex gap-500" ]
                     [ h2
                         []
                         [ text "Abilities" ]
@@ -322,12 +328,15 @@ view character =
                 ]
             , section
                 [ class "equipment" ]
-                [ h2
-                    []
-                    [ text "Equipment" ]
-                , a
-                    [ href (Route.toString (Route.PlayAid PlayAids.Weapons Nothing)) ]
-                    [ text "?" ]
+                [ div
+                    [ class "flex gap-500" ]
+                    [ h2
+                        []
+                        [ text "Equipment" ]
+                    , a
+                        [ href (Route.toString (Route.PlayAid PlayAids.Weapons Nothing)) ]
+                        [ text "?" ]
+                    ]
                 , textarea
                     [ onInput UpdatedEquipment ]
                     [ text character.equipment ]

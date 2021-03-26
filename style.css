@@ -50,6 +50,15 @@ nav ul {
     gap: 1em;
 }
 
+.flex {
+    display: flex;
+    align-items: baseline;
+}
+
+.gap-500 {
+    gap: 0.7em;
+}
+
 .gap-top-700 {
     margin-top: 1.5rem;
 }

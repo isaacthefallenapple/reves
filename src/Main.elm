@@ -175,7 +175,7 @@ view model =
             in
             { title = characterView.title
             , body =
-                List.map (Html.map CharacterMsg) characterView.body ++ [ a [ href "/reves/play-aid/weapons" ] [ text "weapon tags" ] ]
+                List.map (Html.map CharacterMsg) characterView.body
             }
 
         Abilities abilities ->
