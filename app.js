@@ -9752,6 +9752,7 @@ var $elm$url$Url$Builder$absolute = F2(
 		return '/' + (A2($elm$core$String$join, '/', pathSegments) + $elm$url$Url$Builder$toQuery(parameters));
 	});
 var $elm$html$Html$article = _VirtualDom_node('article');
+var $elm$html$Html$b = _VirtualDom_node('b');
 var $elm$html$Html$dd = _VirtualDom_node('dd');
 var $elm$html$Html$dl = _VirtualDom_node('dl');
 var $elm$html$Html$dt = _VirtualDom_node('dt');
@@ -9857,7 +9858,13 @@ var $author$project$PlayAids$view = function (playAid) {
 															]),
 														_List_fromArray(
 															[
-																$elm$html$Html$text(name)
+																A2(
+																$elm$html$Html$b,
+																_List_Nil,
+																_List_fromArray(
+																	[
+																		$elm$html$Html$text(name)
+																	]))
 															])),
 														A2(
 														$elm$html$Html$dd,

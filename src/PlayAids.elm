@@ -135,7 +135,9 @@ view playAid =
                                     [ dt
                                         [ id name
                                         ]
-                                        [ text name
+                                        [ b
+                                            []
+                                            [ text name ]
                                         ]
                                     , dd
                                         []
