@@ -230,6 +230,9 @@ changeRoute route model =
         ( PlayAid _ character _, Route.Root ) ->
             ( Character navKey character, Cmd.none )
 
+        ( PlayAid _ character _, Route.PlayAid topic selected ) ->
+            wrap (PlayAid navKey character) identity (PlayAids.init GotPlayAid topic selected)
+
         ( _, _ ) ->
             ( model, Cmd.none )
 
@@ -301,7 +304,7 @@ update msg model =
                     ( model, Nav.load href )
 
         ( _, UrlChanged url ) ->
-            changeRoute (Route.parse url) model
+            changeRoute (Debug.log "parsed url" (Route.parse url)) model
 
         ( _, _ ) ->
             ( model, Cmd.none )

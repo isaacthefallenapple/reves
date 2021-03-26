@@ -6463,7 +6463,7 @@ var $author$project$Main$changeRoute = F2(
 	function (route, model) {
 		var navKey = $author$project$Main$toNavKey(model);
 		var _v0 = _Utils_Tuple2(model, route);
-		_v0$9:
+		_v0$10:
 		while (true) {
 			switch (_v0.b.$) {
 				case 'Abilities':
@@ -6485,24 +6485,9 @@ var $author$project$Main$changeRoute = F2(
 								$author$project$Main$AbilitiesMsg,
 								A3($author$project$Abilities$init, navKey, selected, character));
 						default:
-							break _v0$9;
+							break _v0$10;
 					}
-				case 'PlayAid':
-					if (_v0.a.$ === 'Character') {
-						var _v9 = _v0.a;
-						var character = _v9.b;
-						var _v10 = _v0.b;
-						var topic = _v10.a;
-						var selected = _v10.b;
-						return A3(
-							$author$project$Main$wrap,
-							A2($author$project$Main$PlayAid, navKey, character),
-							$elm$core$Basics$identity,
-							A3($author$project$PlayAids$init, $author$project$Main$GotPlayAid, topic, selected));
-					} else {
-						break _v0$9;
-					}
-				default:
+				case 'Root':
 					switch (_v0.a.$) {
 						case 'Abilities':
 							var abilities = _v0.a.a;
@@ -6536,7 +6521,34 @@ var $author$project$Main$changeRoute = F2(
 								A2($author$project$Main$Character, navKey, character),
 								$elm$core$Platform$Cmd$none);
 						default:
-							break _v0$9;
+							break _v0$10;
+					}
+				default:
+					switch (_v0.a.$) {
+						case 'Character':
+							var _v9 = _v0.a;
+							var character = _v9.b;
+							var _v10 = _v0.b;
+							var topic = _v10.a;
+							var selected = _v10.b;
+							return A3(
+								$author$project$Main$wrap,
+								A2($author$project$Main$PlayAid, navKey, character),
+								$elm$core$Basics$identity,
+								A3($author$project$PlayAids$init, $author$project$Main$GotPlayAid, topic, selected));
+						case 'PlayAid':
+							var _v13 = _v0.a;
+							var character = _v13.b;
+							var _v14 = _v0.b;
+							var topic = _v14.a;
+							var selected = _v14.b;
+							return A3(
+								$author$project$Main$wrap,
+								A2($author$project$Main$PlayAid, navKey, character),
+								$elm$core$Basics$identity,
+								A3($author$project$PlayAids$init, $author$project$Main$GotPlayAid, topic, selected));
+						default:
+							break _v0$10;
 					}
 			}
 		}
@@ -8401,7 +8413,10 @@ var $author$project$Main$update = F2(
 					var url = _v0.b.a;
 					return A2(
 						$author$project$Main$changeRoute,
-						$author$project$Route$parse(url),
+						A2(
+							$elm$core$Debug$log,
+							'parsed url',
+							$author$project$Route$parse(url)),
 						model);
 				default:
 					break _v0$12;
@@ -9705,6 +9720,10 @@ var $author$project$Character$view = function (character) {
 		title: character.name
 	};
 };
+var $elm$url$Url$Builder$absolute = F2(
+	function (pathSegments, parameters) {
+		return '/' + (A2($elm$core$String$join, '/', pathSegments) + $elm$url$Url$Builder$toQuery(parameters));
+	});
 var $elm$html$Html$article = _VirtualDom_node('article');
 var $elm$html$Html$dd = _VirtualDom_node('dd');
 var $elm$html$Html$dl = _VirtualDom_node('dl');
@@ -9724,6 +9743,41 @@ var $author$project$PlayAids$view = function (playAid) {
 		body: _List_fromArray(
 			[
 				A2(
+				$elm$html$Html$nav,
+				_List_Nil,
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$ul,
+						_List_Nil,
+						A2(
+							$elm$core$List$map,
+							function (topic) {
+								return A2(
+									$elm$html$Html$a,
+									_List_fromArray(
+										[
+											$elm$html$Html$Attributes$href(
+											A2(
+												$elm$url$Url$Builder$absolute,
+												_List_fromArray(
+													[
+														'reves',
+														'play-aid',
+														$author$project$PlayAids$topicToString(topic)
+													]),
+												_List_Nil))
+										]),
+									_List_fromArray(
+										[
+											$elm$html$Html$text(
+											$author$project$PlayAids$topicToStringPretty(topic))
+										]));
+							},
+							_List_fromArray(
+								[$author$project$PlayAids$Weapons, $author$project$PlayAids$Armor, $author$project$PlayAids$Skills, $author$project$PlayAids$Domains])))
+					])),
+				A2(
 				$elm$html$Html$article,
 				_List_fromArray(
 					[
@@ -9739,7 +9793,7 @@ var $author$project$PlayAids$view = function (playAid) {
 							]),
 						_List_fromArray(
 							[
-								$elm$html$Html$text('< back')
+								$elm$html$Html$text('< Back')
 							])),
 						A2(
 						$elm$html$Html$h1,

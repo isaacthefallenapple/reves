@@ -6,6 +6,7 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Http
 import Json.Decode as Decode
+import Url.Builder as UrlBuilder
 
 
 
@@ -97,11 +98,24 @@ view playAid =
     in
     { title = stringifiedTopic
     , body =
-        [ article
+        [ nav
+            []
+            [ ul
+                []
+              <|
+                List.map
+                    (\topic ->
+                        a
+                            [ href <| UrlBuilder.absolute [ "reves", "play-aid", topicToString topic ] [] ]
+                            [ text (topicToStringPretty topic) ]
+                    )
+                    [ Weapons, Armor, Skills, Domains ]
+            ]
+        , article
             [ class "play-aid" ]
             [ a
                 [ href "/reves/" ]
-                [ text "< back" ]
+                [ text "< Back" ]
             , h1
                 []
                 [ text stringifiedTopic ]

@@ -45,6 +45,11 @@ h3 {
     display: inline;
 }
 
+nav ul {
+    display: flex;
+    gap: 1em;
+}
+
 .gap-top-700 {
     margin-top: 1.5rem;
 }
