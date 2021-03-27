@@ -21,17 +21,26 @@
 		const app = Elm.Main.init({
 			flags: state
 		});
-
-		app.ports.storeCharacter.subscribe((char) => {
-			localStorage.setItem(localKey, char);
-			app.ports.savedChanges.send(null);
-		});
 	</script>
 
 	<script>
-		window.addEventListener('beforeunload', (e) => {
+		const beforeUnload = (e) => {
 			e.preventDefault();
 			e.returnValue = '';
+		}
+
+		app.ports.storeCharacter.subscribe((char) => {
+			localStorage.setItem(localKey, char);
+		});
+
+		app.ports.savedCharacter.subscribe((_) => {
+			window.removeEventListener('beforeunload', beforeUnload);
+			// console.log('removed eventlistener');
+		})
+
+		app.ports.updatedCharacter.subscribe((_) => {
+			window.addEventListener('beforeunload', beforeUnload);
+			// console.log('attached eventlistener');
 		})
 	</script>
 </body>

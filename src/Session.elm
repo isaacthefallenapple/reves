@@ -1,4 +1,4 @@
-module Session exposing (Session, character, navKey, new, save, savedChanges, setCharacter, unsavedChanges)
+module Session exposing (Session, character, load, navKey, new, save, savedChanges, setCharacter, unsavedChanges)
 
 import Browser.Navigation as Nav
 import Character
@@ -18,6 +18,15 @@ type Session
 new : Nav.Key -> Session
 new key =
     NoCharacter key
+
+
+load : Nav.Key -> Character.Stats -> Session
+load key char =
+    Character
+        { navKey = key
+        , character = char
+        , unsavedChanges = False
+        }
 
 
 navKey : Session -> Nav.Key

@@ -205,14 +205,6 @@ view model =
                     { title = characterView.title
                     , body =
                         List.map (Html.map CharacterMsg) characterView.body
-                            ++ [ text
-                                    (if Session.unsavedChanges session then
-                                        "There are unsaved changes"
-
-                                     else
-                                        ""
-                                    )
-                               ]
                     }
 
                 Nothing ->
@@ -313,9 +305,12 @@ update msg model =
             ( Character (Session.savedChanges session)
             , case Session.character session of
                 Just character ->
-                    Download.string character.name
-                        "application/json"
-                        (Encode.encode 2 (Character.encode character))
+                    Cmd.batch
+                        [ Download.string character.name
+                            "application/json"
+                            (Encode.encode 2 (Character.encode character))
+                        , Ports.savedCharacter ()
+                        ]
 
                 Nothing ->
                     Cmd.none
@@ -328,7 +323,12 @@ update msg model =
                         updatedSession =
                             Session.setCharacter (Character.update subMsg character) session
                     in
-                    ( Character updatedSession, Session.save updatedSession )
+                    ( Character updatedSession
+                    , Cmd.batch
+                        [ Session.save updatedSession
+                        , Ports.updatedCharacter ()
+                        ]
+                    )
 
                 Nothing ->
                     ( model, Cmd.none )
@@ -388,7 +388,7 @@ init flags url navKey =
                 Landing (Session.new navKey)
 
             Just json ->
-                Character <| Session.setCharacter (Character.decodeLocalCharacter json) (Session.new navKey)
+                Character <| Session.load navKey (Character.decodeLocalCharacter json)
         )
 
 
@@ -398,7 +398,8 @@ init flags url navKey =
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    Ports.savedChanges (\_ -> SavedChanges)
+    -- Ports.savedChanges (\_ -> SavedChanges)
+    Sub.none
 
 
 

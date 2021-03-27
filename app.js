@@ -6963,6 +6963,14 @@ var $author$project$Character$decodeLocalCharacter = function (storedState) {
 		$author$project$Character$blank,
 		A2($elm$json$Json$Decode$decodeString, $author$project$Character$decoder, storedState));
 };
+var $author$project$Session$Character = function (a) {
+	return {$: 'Character', a: a};
+};
+var $author$project$Session$load = F2(
+	function (key, _char) {
+		return $author$project$Session$Character(
+			{character: _char, navKey: key, unsavedChanges: false});
+	});
 var $author$project$Session$NoCharacter = function (a) {
 	return {$: 'NoCharacter', a: a};
 };
@@ -7306,23 +7314,6 @@ var $author$project$Route$parse = function (url) {
 		$author$project$Route$Root,
 		A2($elm$url$Url$Parser$parse, $author$project$Route$parser, url));
 };
-var $author$project$Session$Character = function (a) {
-	return {$: 'Character', a: a};
-};
-var $author$project$Session$setCharacter = F2(
-	function (newCharacter, session) {
-		if (session.$ === 'NoCharacter') {
-			var key = session.a;
-			return $author$project$Session$Character(
-				{character: newCharacter, navKey: key, unsavedChanges: true});
-		} else {
-			var val = session.a;
-			return $author$project$Session$Character(
-				_Utils_update(
-					val,
-					{character: newCharacter, unsavedChanges: true}));
-		}
-	});
 var $author$project$Main$init = F3(
 	function (flags, url, navKey) {
 		return A2(
@@ -7336,21 +7327,16 @@ var $author$project$Main$init = F3(
 					var json = flags.a;
 					return $author$project$Main$Character(
 						A2(
-							$author$project$Session$setCharacter,
-							$author$project$Character$decodeLocalCharacter(json),
-							$author$project$Session$new(navKey)));
+							$author$project$Session$load,
+							navKey,
+							$author$project$Character$decodeLocalCharacter(json)));
 				}
 			}());
 	});
-var $author$project$Main$SavedChanges = {$: 'SavedChanges'};
-var $author$project$Ports$savedChanges = _Platform_incomingPort(
-	'savedChanges',
-	$elm$json$Json$Decode$null(_Utils_Tuple0));
+var $elm$core$Platform$Sub$batch = _Platform_batch;
+var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
 var $author$project$Main$subscriptions = function (_v0) {
-	return $author$project$Ports$savedChanges(
-		function (_v1) {
-			return $author$project$Main$SavedChanges;
-		});
+	return $elm$core$Platform$Sub$none;
 };
 var $author$project$Main$AbilitiesMsg = function (a) {
 	return {$: 'AbilitiesMsg', a: a};
@@ -7856,6 +7842,25 @@ var $author$project$Session$savedChanges = function (session) {
 				{unsavedChanges: false}));
 	}
 };
+var $author$project$Ports$savedCharacter = _Platform_outgoingPort(
+	'savedCharacter',
+	function ($) {
+		return $elm$json$Json$Encode$null;
+	});
+var $author$project$Session$setCharacter = F2(
+	function (newCharacter, session) {
+		if (session.$ === 'NoCharacter') {
+			var key = session.a;
+			return $author$project$Session$Character(
+				{character: newCharacter, navKey: key, unsavedChanges: true});
+		} else {
+			var val = session.a;
+			return $author$project$Session$Character(
+				_Utils_update(
+					val,
+					{character: newCharacter, unsavedChanges: true}));
+		}
+	});
 var $elm$file$File$Download$string = F3(
 	function (name, mime, content) {
 		return A2(
@@ -8292,6 +8297,11 @@ var $author$project$PlayAids$update = F2(
 				});
 		}
 	});
+var $author$project$Ports$updatedCharacter = _Platform_outgoingPort(
+	'updatedCharacter',
+	function ($) {
+		return $elm$json$Json$Encode$null;
+	});
 var $author$project$Main$update = F2(
 	function (msg, model) {
 		var _v0 = _Utils_Tuple2(model, msg);
@@ -8347,14 +8357,19 @@ var $author$project$Main$update = F2(
 									var _v4 = $author$project$Session$character(session);
 									if (_v4.$ === 'Just') {
 										var character = _v4.a;
-										return A3(
-											$elm$file$File$Download$string,
-											character.name,
-											'application/json',
-											A2(
-												$elm$json$Json$Encode$encode,
-												2,
-												$author$project$Character$encode(character)));
+										return $elm$core$Platform$Cmd$batch(
+											_List_fromArray(
+												[
+													A3(
+													$elm$file$File$Download$string,
+													character.name,
+													'application/json',
+													A2(
+														$elm$json$Json$Encode$encode,
+														2,
+														$author$project$Character$encode(character))),
+													$author$project$Ports$savedCharacter(_Utils_Tuple0)
+												]));
 									} else {
 										return $elm$core$Platform$Cmd$none;
 									}
@@ -8371,7 +8386,12 @@ var $author$project$Main$update = F2(
 									session);
 								return _Utils_Tuple2(
 									$author$project$Main$Character(updatedSession),
-									$author$project$Session$save(updatedSession));
+									$elm$core$Platform$Cmd$batch(
+										_List_fromArray(
+											[
+												$author$project$Session$save(updatedSession),
+												$author$project$Ports$updatedCharacter(_Utils_Tuple0)
+											])));
 							} else {
 								return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 							}
@@ -8730,14 +8750,6 @@ var $elm$html$Html$Events$onClick = function (msg) {
 var $elm$html$Html$p = _VirtualDom_node('p');
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
-var $author$project$Session$unsavedChanges = function (session) {
-	if (session.$ === 'Character') {
-		var val = session.a;
-		return val.unsavedChanges;
-	} else {
-		return false;
-	}
-};
 var $author$project$Abilities$ClickedTab = function (a) {
 	return {$: 'ClickedTab', a: a};
 };
@@ -10109,16 +10121,10 @@ var $author$project$Main$view = function (model) {
 				var character = _v1.a;
 				var characterView = $author$project$Character$view(character);
 				return {
-					body: _Utils_ap(
-						A2(
-							$elm$core$List$map,
-							$elm$html$Html$map($author$project$Main$CharacterMsg),
-							characterView.body),
-						_List_fromArray(
-							[
-								$elm$html$Html$text(
-								$author$project$Session$unsavedChanges(session) ? 'There are unsaved changes' : '')
-							])),
+					body: A2(
+						$elm$core$List$map,
+						$elm$html$Html$map($author$project$Main$CharacterMsg),
+						characterView.body),
 					title: characterView.title
 				};
 			} else {
