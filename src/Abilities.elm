@@ -10,6 +10,7 @@ import Html.Events exposing (..)
 import Http
 import Json.Decode as Decode exposing (Decoder)
 import Route
+import Session exposing (Session)
 
 
 location : String
@@ -51,7 +52,7 @@ type alias Metadata =
 
 
 type alias Abilities =
-    { navKey : Nav.Key
+    { session : Session
     , character : Character.Stats
     , primary : String
     , selected : String
@@ -70,9 +71,19 @@ setSelected selected abilities =
     }
 
 
-toNavKey : Abilities -> Nav.Key
-toNavKey =
-    .navKey
+navKey : Abilities -> Nav.Key
+navKey { session } =
+    Session.navKey session
+
+
+toSession : Abilities -> Session
+toSession =
+    .session
+
+
+updateSession : Session -> Abilities -> Abilities
+updateSession session abilities =
+    { abilities | session = session }
 
 
 type Status a
@@ -108,9 +119,9 @@ type Msg
 -- INIT
 
 
-init : Nav.Key -> Maybe String -> Character.Stats -> ( Abilities, Cmd Msg )
-init navKey maybeSelected character =
-    ( { navKey = navKey
+init : Session -> Maybe String -> Character.Stats -> ( Abilities, Cmd Msg )
+init session maybeSelected character =
+    ( { session = session
       , character = character
       , primary = character.class
       , selected = Maybe.withDefault character.class maybeSelected
@@ -173,7 +184,7 @@ update msg abilities =
 
         ClickedTab selected ->
             ( { abilities | selected = selected }
-            , Nav.pushUrl abilities.navKey (Route.toString (Route.Abilities (Just selected)))
+            , Nav.pushUrl (Session.navKey abilities.session) (Route.toString (Route.Abilities (Just selected)))
             )
 
         ApplyChosen ->

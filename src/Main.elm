@@ -21,6 +21,7 @@ import Json.Encode as Encode
 import PlayAids
 import Ports
 import Route exposing (Route)
+import Session exposing (Session)
 import Task
 import Url
 
@@ -30,38 +31,63 @@ import Url
 
 
 type Model
-    = PickClass Nav.Key
-    | PickAssignment Nav.Key Class.Class
-    | Character Nav.Key Character.Stats
-    | DecodeErr Nav.Key Decode.Error
+    = PickClass Session
+    | PickAssignment Session Class.Class
+    | Character Session
+    | DecodeErr Session Decode.Error
     | Abilities Abilities
-    | Landing Nav.Key
-    | PlayAid Nav.Key Character.Stats PlayAids.PlayAids
+    | Landing Session
+    | PlayAid Session PlayAids.PlayAids
 
 
-toNavKey : Model -> Nav.Key
-toNavKey model =
+toSession : Model -> Session
+toSession model =
     case model of
-        PickClass navKey ->
-            navKey
+        PickClass session ->
+            session
 
-        PickAssignment navKey _ ->
-            navKey
+        PickAssignment session _ ->
+            session
 
-        Character navKey _ ->
-            navKey
+        Character session ->
+            session
 
-        DecodeErr navKey _ ->
-            navKey
+        DecodeErr session _ ->
+            session
 
         Abilities abilities ->
-            Abilities.toNavKey abilities
+            Abilities.toSession abilities
 
-        Landing navKey ->
-            navKey
+        Landing session ->
+            session
 
-        PlayAid navKey _ _ ->
-            navKey
+        PlayAid session _ ->
+            session
+
+
+updateSession : Session -> Model -> Model
+updateSession session model =
+    case model of
+        PickClass _ ->
+            PickClass session
+
+        PickAssignment _ val ->
+            PickAssignment session val
+
+        Character _ ->
+            Character session
+
+        DecodeErr _ err ->
+            DecodeErr session err
+
+        Abilities abilities ->
+            Abilities (Abilities.updateSession session abilities)
+
+        Landing _ ->
+            Landing session
+
+        PlayAid _ aid ->
+            PlayAid session aid
 
 
 
@@ -82,6 +108,7 @@ type Msg
     | AbilitiesMsg Abilities.Msg
     | ClickedNewCharacter
     | GotPlayAid (Result Http.Error (Dict String String))
+    | SavedChanges
 
 
 
@@ -168,22 +195,46 @@ view model =
                 ]
             }
 
-        Character _ character ->
-            let
-                characterView =
-                    Character.view character
-            in
-            { title = characterView.title
-            , body =
-                List.map (Html.map CharacterMsg) characterView.body
-            }
+        Character session ->
+            case Session.character session of
+                Just character ->
+                    let
+                        characterView =
+                            Character.view character
+                    in
+                    { title = characterView.title
+                    , body =
+                        List.map (Html.map CharacterMsg) characterView.body
+                            ++ [ text
+                                    (if Session.unsavedChanges session then
+                                        "There are unsaved changes"
+
+                                     else
+                                        ""
+                                    )
+                               ]
+                    }
+
+                Nothing ->
+                    { title = "New Character"
+                    , body =
+                        [ p
+                            []
+                            [ text "Looks like you don't have a character yet. Wanna "
+                            , a
+                                [ href "/reves/" ]
+                                [ text "make one" ]
+                            , text "?"
+                            ]
+                        ]
+                    }
 
         Abilities abilities ->
             { title = abilities.selected
             , body = [ Html.map AbilitiesMsg (Abilities.view abilities) ]
             }
 
-        PlayAid _ _ playAid ->
+        PlayAid _ playAid ->
             PlayAids.view playAid
 
 
@@ -200,38 +251,39 @@ changeRoute : Route -> Model -> ( Model, Cmd Msg )
 changeRoute route model =
     let
         navKey =
-            toNavKey model
+            toSession model
     in
     case ( model, route ) of
+        ( Character session, Route.Root ) ->
+            case Session.character session of
+                Just _ ->
+                    ( model, Cmd.none )
+
+                Nothing ->
+                    ( Landing session, Cmd.none )
+
         ( Abilities abilities, Route.Root ) ->
-            ( Character navKey abilities.character, Cmd.none )
+            ( Character (Abilities.toSession abilities), Cmd.none )
 
         ( Abilities abilities, Route.Abilities selected ) ->
             ( Abilities (Abilities.setSelected selected abilities), Cmd.none )
 
-        ( Character _ character, Route.Abilities selected ) ->
-            wrap Abilities AbilitiesMsg (Abilities.init navKey selected character)
-
-        ( PickClass _, Route.Root ) ->
-            ( Landing navKey, Cmd.none )
+        -- ( Character session, Route.Abilities selected ) ->
+        --     wrap Abilities AbilitiesMsg (Abilities.init session selected character)
+        ( PickClass session, Route.Root ) ->
+            ( Landing session, Cmd.none )
 
         ( PickAssignment _ _, Route.Root ) ->
             ( Landing navKey, Cmd.none )
 
-        ( Landing _, Route.Root ) ->
-            ( model, Cmd.none )
+        ( Character session, Route.PlayAid topic selected ) ->
+            wrap (PlayAid session) identity (PlayAids.init GotPlayAid topic selected)
 
-        ( Character _ _, Route.Root ) ->
-            ( model, Cmd.none )
+        ( PlayAid session _, Route.Root ) ->
+            ( Character session, Cmd.none )
 
-        ( Character _ character, Route.PlayAid topic selected ) ->
-            wrap (PlayAid navKey character) identity (PlayAids.init GotPlayAid topic selected)
-
-        ( PlayAid _ character _, Route.Root ) ->
-            ( Character navKey character, Cmd.none )
-
-        ( PlayAid _ character _, Route.PlayAid topic selected ) ->
-            wrap (PlayAid navKey character) identity (PlayAids.init GotPlayAid topic selected)
+        ( PlayAid session _, Route.PlayAid topic selected ) ->
+            wrap (PlayAid session) identity (PlayAids.init GotPlayAid topic selected)
 
         ( _, _ ) ->
             ( model, Cmd.none )
@@ -240,42 +292,52 @@ changeRoute route model =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case ( model, msg ) of
-        ( Landing navKey, ClickedNewCharacter ) ->
-            ( PickClass navKey, Cmd.none )
+        ( Landing session, ClickedNewCharacter ) ->
+            ( PickClass session, Cmd.none )
 
-        ( PickClass navKey, PickedClass class ) ->
-            ( PickAssignment navKey class, Cmd.none )
+        ( PickClass session, PickedClass class ) ->
+            ( PickAssignment session class, Cmd.none )
 
-        ( PickAssignment navKey class, PickedAssignment assignment ) ->
+        ( PickAssignment session class, PickedAssignment assignment ) ->
             let
                 character =
                     Character.blank
                         |> Character.applyClass class
                         |> Character.applyAssignment assignment
             in
-            ( Character navKey character
+            ( Character (Session.setCharacter character session)
             , Character.save character
             )
 
-        ( Character _ character, CharacterMsg ClickedSave ) ->
-            ( model
-            , Download.string character.name
-                "application/json"
-                (Encode.encode 2 (Character.encode character))
+        ( Character session, CharacterMsg ClickedSave ) ->
+            ( Character (Session.savedChanges session)
+            , case Session.character session of
+                Just character ->
+                    Download.string character.name
+                        "application/json"
+                        (Encode.encode 2 (Character.encode character))
+
+                Nothing ->
+                    Cmd.none
             )
 
-        ( Character navKey character, CharacterMsg subMsg ) ->
-            let
-                updatedCharacter =
-                    Character.update subMsg character
-            in
-            ( Character navKey updatedCharacter, Character.save updatedCharacter )
+        ( Character session, CharacterMsg subMsg ) ->
+            case Session.character session of
+                Just character ->
+                    let
+                        updatedSession =
+                            Session.setCharacter (Character.update subMsg character) session
+                    in
+                    ( Character updatedSession, Session.save updatedSession )
+
+                Nothing ->
+                    ( model, Cmd.none )
 
         ( Abilities abilities, AbilitiesMsg subMsg ) ->
             Tuple.mapBoth Abilities (Cmd.map AbilitiesMsg) (Abilities.update subMsg abilities)
 
-        ( PlayAid navKey character playAid, GotPlayAid result ) ->
-            ( PlayAid navKey character (PlayAids.update result playAid), Cmd.none )
+        ( PlayAid session playAid, GotPlayAid result ) ->
+            ( PlayAid session (PlayAids.update result playAid), Cmd.none )
 
         ( _, ClickedOpenFile ) ->
             ( model, Select.file [ "application/json" ] FileLoaded )
@@ -286,15 +348,19 @@ update msg model =
         ( _, ReadFile content ) ->
             case Decode.decodeString Character.decoder content of
                 Err err ->
-                    ( DecodeErr (toNavKey model) err, Cmd.none )
+                    ( DecodeErr (toSession model) err, Cmd.none )
 
                 Ok character ->
-                    ( Character (toNavKey model) character, Character.save character )
+                    let
+                        session =
+                            Session.setCharacter character (toSession model)
+                    in
+                    ( Character session, Session.save session )
 
         ( _, LinkClicked urlRequest ) ->
             case urlRequest of
                 Browser.Internal url ->
-                    ( model, Nav.pushUrl (toNavKey model) (Url.toString url) )
+                    ( model, Nav.pushUrl (Session.navKey (toSession model)) (Url.toString url) )
 
                 Browser.External href ->
                     let
@@ -319,10 +385,10 @@ init flags url navKey =
     changeRoute (Route.parse url)
         (case flags of
             Nothing ->
-                Landing navKey
+                Landing (Session.new navKey)
 
             Just json ->
-                Character navKey (Character.decodeLocalCharacter json)
+                Character <| Session.setCharacter (Character.decodeLocalCharacter json) (Session.new navKey)
         )
 
 
@@ -332,7 +398,7 @@ init flags url navKey =
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    Sub.none
+    Ports.savedChanges (\_ -> SavedChanges)
 
 
 
