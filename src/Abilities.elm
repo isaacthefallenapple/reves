@@ -53,8 +53,9 @@ type alias Metadata =
 
 type alias Abilities =
     { session : Session
-    , character : Character.Stats
-    , primary : String
+
+    -- , character : Character.Stats
+    -- , primary : String
     , selected : String
     , metadata : Status Metadata
     , tabs : Dict String (Status Advances)
@@ -66,8 +67,15 @@ setSelected : Maybe String -> Abilities -> Abilities
 setSelected selected abilities =
     { abilities
         | selected =
-            selected
-                |> Maybe.withDefault abilities.primary
+            case ( selected, Session.character abilities.session ) of
+                ( Just s, _ ) ->
+                    s
+
+                ( Nothing, Just c ) ->
+                    c.class
+
+                ( Nothing, Nothing ) ->
+                    ""
     }
 
 
@@ -119,16 +127,15 @@ type Msg
 -- INIT
 
 
-init : Session -> Maybe String -> Character.Stats -> ( Abilities, Cmd Msg )
-init session maybeSelected character =
-    ( { session = session
-      , character = character
-      , primary = character.class
-      , selected = Maybe.withDefault character.class maybeSelected
-      , metadata = Loading
-      , tabs = Dict.empty
-      , chosen = Dict.empty
-      }
+init : Session -> Maybe String -> ( Abilities, Cmd Msg )
+init session maybeSelected =
+    ( setSelected maybeSelected
+        { session = session
+        , selected = ""
+        , metadata = Loading
+        , tabs = Dict.empty
+        , chosen = Dict.empty
+        }
     , Cmd.batch
         [ Http.get
             { url =
@@ -146,6 +153,10 @@ init session maybeSelected character =
 
 update : Msg -> Abilities -> ( Abilities, Cmd Msg )
 update msg abilities =
+    let
+        maybeCharacter =
+            Session.character abilities.session
+    in
     case msg of
         ChoseAbility ability ->
             let
@@ -175,7 +186,14 @@ update msg abilities =
                 | tabs =
                     Dict.insert name
                         (statusFromResult
-                            (Result.map (dedup abilities.character.abilities) advances)
+                            (Result.map
+                                (maybeCharacter
+                                    |> Maybe.map .abilities
+                                    |> Maybe.map dedup
+                                    |> Maybe.withDefault identity
+                                )
+                                advances
+                            )
                         )
                         abilities.tabs
               }
@@ -188,11 +206,22 @@ update msg abilities =
             )
 
         ApplyChosen ->
-            let
-                updatedCharacter =
-                    Character.addAbilities (Dict.values abilities.chosen) abilities.character
-            in
-            ( { abilities | character = updatedCharacter }, Character.save updatedCharacter )
+            -- let
+            --     updatedCharacter =
+            --         Character.addAbilities (Dict.values abilities.chosen) abilities.character
+            -- in
+            case Maybe.map (Character.addAbilities (Dict.values abilities.chosen)) maybeCharacter of
+                Nothing ->
+                    ( abilities, Cmd.none )
+
+                Just updatedCharacter ->
+                    let
+                        session =
+                            Session.setCharacter updatedCharacter abilities.session
+                    in
+                    ( { abilities | session = session }
+                    , Session.save session
+                    )
 
 
 fetchFromList : Metadata -> Cmd Msg
@@ -217,7 +246,9 @@ view : Abilities -> Html Msg
 view abilities =
     let
         primary =
-            abilities.primary
+            Session.character abilities.session
+                |> Maybe.map .class
+                |> Maybe.withDefault ""
 
         selected =
             abilities.selected

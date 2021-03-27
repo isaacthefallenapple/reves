@@ -5529,6 +5529,9 @@ var $author$project$Main$Landing = function (a) {
 var $author$project$Main$Abilities = function (a) {
 	return {$: 'Abilities', a: a};
 };
+var $author$project$Main$AbilitiesMsg = function (a) {
+	return {$: 'AbilitiesMsg', a: a};
+};
 var $author$project$Main$GotPlayAid = function (a) {
 	return {$: 'GotPlayAid', a: a};
 };
@@ -5544,9 +5547,73 @@ var $author$project$Session$character = function (session) {
 		return $elm$core$Maybe$Nothing;
 	}
 };
-var $author$project$PlayAids$Loading = {$: 'Loading'};
+var $author$project$Abilities$GotMetadata = function (a) {
+	return {$: 'GotMetadata', a: a};
+};
+var $author$project$Abilities$Loading = {$: 'Loading'};
+var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Dict$RBEmpty_elm_builtin = {$: 'RBEmpty_elm_builtin'};
 var $elm$core$Dict$empty = $elm$core$Dict$RBEmpty_elm_builtin;
+var $elm$json$Json$Decode$decodeString = _Json_runOnString;
+var $elm$http$Http$BadStatus_ = F2(
+	function (a, b) {
+		return {$: 'BadStatus_', a: a, b: b};
+	});
+var $elm$http$Http$BadUrl_ = function (a) {
+	return {$: 'BadUrl_', a: a};
+};
+var $elm$http$Http$GoodStatus_ = F2(
+	function (a, b) {
+		return {$: 'GoodStatus_', a: a, b: b};
+	});
+var $elm$http$Http$NetworkError_ = {$: 'NetworkError_'};
+var $elm$http$Http$Receiving = function (a) {
+	return {$: 'Receiving', a: a};
+};
+var $elm$http$Http$Sending = function (a) {
+	return {$: 'Sending', a: a};
+};
+var $elm$http$Http$Timeout_ = {$: 'Timeout_'};
+var $elm$core$Maybe$isJust = function (maybe) {
+	if (maybe.$ === 'Just') {
+		return true;
+	} else {
+		return false;
+	}
+};
+var $elm$core$Platform$sendToSelf = _Platform_sendToSelf;
+var $elm$core$Basics$compare = _Utils_compare;
+var $elm$core$Dict$get = F2(
+	function (targetKey, dict) {
+		get:
+		while (true) {
+			if (dict.$ === 'RBEmpty_elm_builtin') {
+				return $elm$core$Maybe$Nothing;
+			} else {
+				var key = dict.b;
+				var value = dict.c;
+				var left = dict.d;
+				var right = dict.e;
+				var _v1 = A2($elm$core$Basics$compare, targetKey, key);
+				switch (_v1.$) {
+					case 'LT':
+						var $temp$targetKey = targetKey,
+							$temp$dict = left;
+						targetKey = $temp$targetKey;
+						dict = $temp$dict;
+						continue get;
+					case 'EQ':
+						return $elm$core$Maybe$Just(value);
+					default:
+						var $temp$targetKey = targetKey,
+							$temp$dict = right;
+						targetKey = $temp$targetKey;
+						dict = $temp$dict;
+						continue get;
+				}
+			}
+		}
+	});
 var $elm$core$Dict$Black = {$: 'Black'};
 var $elm$core$Dict$RBNode_elm_builtin = F5(
 	function (a, b, c, d, e) {
@@ -5607,7 +5674,6 @@ var $elm$core$Dict$balance = F5(
 			}
 		}
 	});
-var $elm$core$Basics$compare = _Utils_compare;
 var $elm$core$Dict$insertHelp = F3(
 	function (key, value, dict) {
 		if (dict.$ === 'RBEmpty_elm_builtin') {
@@ -5654,84 +5720,6 @@ var $elm$core$Dict$insert = F3(
 		} else {
 			var x = _v0;
 			return x;
-		}
-	});
-var $elm$core$Dict$fromList = function (assocs) {
-	return A3(
-		$elm$core$List$foldl,
-		F2(
-			function (_v0, dict) {
-				var key = _v0.a;
-				var value = _v0.b;
-				return A3($elm$core$Dict$insert, key, value, dict);
-			}),
-		$elm$core$Dict$empty,
-		assocs);
-};
-var $elm$json$Json$Decode$keyValuePairs = _Json_decodeKeyValuePairs;
-var $elm$json$Json$Decode$dict = function (decoder) {
-	return A2(
-		$elm$json$Json$Decode$map,
-		$elm$core$Dict$fromList,
-		$elm$json$Json$Decode$keyValuePairs(decoder));
-};
-var $elm$json$Json$Decode$decodeString = _Json_runOnString;
-var $elm$http$Http$BadStatus_ = F2(
-	function (a, b) {
-		return {$: 'BadStatus_', a: a, b: b};
-	});
-var $elm$http$Http$BadUrl_ = function (a) {
-	return {$: 'BadUrl_', a: a};
-};
-var $elm$http$Http$GoodStatus_ = F2(
-	function (a, b) {
-		return {$: 'GoodStatus_', a: a, b: b};
-	});
-var $elm$http$Http$NetworkError_ = {$: 'NetworkError_'};
-var $elm$http$Http$Receiving = function (a) {
-	return {$: 'Receiving', a: a};
-};
-var $elm$http$Http$Sending = function (a) {
-	return {$: 'Sending', a: a};
-};
-var $elm$http$Http$Timeout_ = {$: 'Timeout_'};
-var $elm$core$Maybe$isJust = function (maybe) {
-	if (maybe.$ === 'Just') {
-		return true;
-	} else {
-		return false;
-	}
-};
-var $elm$core$Platform$sendToSelf = _Platform_sendToSelf;
-var $elm$core$Dict$get = F2(
-	function (targetKey, dict) {
-		get:
-		while (true) {
-			if (dict.$ === 'RBEmpty_elm_builtin') {
-				return $elm$core$Maybe$Nothing;
-			} else {
-				var key = dict.b;
-				var value = dict.c;
-				var left = dict.d;
-				var right = dict.e;
-				var _v1 = A2($elm$core$Basics$compare, targetKey, key);
-				switch (_v1.$) {
-					case 'LT':
-						var $temp$targetKey = targetKey,
-							$temp$dict = left;
-						targetKey = $temp$targetKey;
-						dict = $temp$dict;
-						continue get;
-					case 'EQ':
-						return $elm$core$Maybe$Just(value);
-					default:
-						var $temp$targetKey = targetKey,
-							$temp$dict = right;
-						targetKey = $temp$targetKey;
-						dict = $temp$dict;
-						continue get;
-				}
-			}
 		}
 	});
 var $elm$core$Dict$getMin = function (dict) {
@@ -6351,8 +6339,74 @@ var $elm$http$Http$get = function (r) {
 	return $elm$http$Http$request(
 		{body: $elm$http$Http$emptyBody, expect: r.expect, headers: _List_Nil, method: 'GET', timeout: $elm$core$Maybe$Nothing, tracker: $elm$core$Maybe$Nothing, url: r.url});
 };
-var $author$project$PlayAids$location = '/reves/data/play-aids/';
+var $elm$core$Dict$fromList = function (assocs) {
+	return A3(
+		$elm$core$List$foldl,
+		F2(
+			function (_v0, dict) {
+				var key = _v0.a;
+				var value = _v0.b;
+				return A3($elm$core$Dict$insert, key, value, dict);
+			}),
+		$elm$core$Dict$empty,
+		assocs);
+};
+var $elm$json$Json$Decode$keyValuePairs = _Json_decodeKeyValuePairs;
+var $elm$json$Json$Decode$dict = function (decoder) {
+	return A2(
+		$elm$json$Json$Decode$map,
+		$elm$core$Dict$fromList,
+		$elm$json$Json$Decode$keyValuePairs(decoder));
+};
 var $elm$json$Json$Decode$string = _Json_decodeString;
+var $author$project$Abilities$metadataDecoder = $elm$json$Json$Decode$dict($elm$json$Json$Decode$string);
+var $author$project$Abilities$location = '/reves/data/abilities/';
+var $author$project$Abilities$metadataLocation = $author$project$Abilities$location + 'metadata.json';
+var $author$project$Abilities$setSelected = F2(
+	function (selected, abilities) {
+		return _Utils_update(
+			abilities,
+			{
+				selected: function () {
+					var _v0 = _Utils_Tuple2(
+						selected,
+						$author$project$Session$character(abilities.session));
+					if (_v0.a.$ === 'Just') {
+						var s = _v0.a.a;
+						return s;
+					} else {
+						if (_v0.b.$ === 'Just') {
+							var _v1 = _v0.a;
+							var c = _v0.b.a;
+							return c._class;
+						} else {
+							var _v2 = _v0.a;
+							var _v3 = _v0.b;
+							return '';
+						}
+					}
+				}()
+			});
+	});
+var $author$project$Abilities$init = F2(
+	function (session, maybeSelected) {
+		return _Utils_Tuple2(
+			A2(
+				$author$project$Abilities$setSelected,
+				maybeSelected,
+				{chosen: $elm$core$Dict$empty, metadata: $author$project$Abilities$Loading, selected: '', session: session, tabs: $elm$core$Dict$empty}),
+			$elm$core$Platform$Cmd$batch(
+				_List_fromArray(
+					[
+						$elm$http$Http$get(
+						{
+							expect: A2($elm$http$Http$expectJson, $author$project$Abilities$GotMetadata, $author$project$Abilities$metadataDecoder),
+							url: $author$project$Abilities$metadataLocation
+						})
+					])));
+	});
+var $author$project$PlayAids$Loading = {$: 'Loading'};
+var $author$project$PlayAids$location = '/reves/data/play-aids/';
 var $author$project$PlayAids$topicToString = function (topic) {
 	switch (topic.$) {
 		case 'Weapons':
@@ -6378,25 +6432,7 @@ var $author$project$PlayAids$init = F3(
 					url: $author$project$PlayAids$location + ($author$project$PlayAids$topicToString(topic) + '.json')
 				}));
 	});
-var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
-var $elm$core$Maybe$withDefault = F2(
-	function (_default, maybe) {
-		if (maybe.$ === 'Just') {
-			var value = maybe.a;
-			return value;
-		} else {
-			return _default;
-		}
-	});
-var $author$project$Abilities$setSelected = F2(
-	function (selected, abilities) {
-		return _Utils_update(
-			abilities,
-			{
-				selected: A2($elm$core$Maybe$withDefault, abilities.primary, selected)
-			});
-	});
 var $author$project$Abilities$toSession = function ($) {
 	return $.session;
 };
@@ -6438,19 +6474,28 @@ var $author$project$Main$changeRoute = F2(
 	function (route, model) {
 		var navKey = $author$project$Main$toSession(model);
 		var _v0 = _Utils_Tuple2(model, route);
-		_v0$8:
+		_v0$9:
 		while (true) {
 			switch (_v0.b.$) {
 				case 'Abilities':
-					if (_v0.a.$ === 'Abilities') {
-						var abilities = _v0.a.a;
-						var selected = _v0.b.a;
-						return _Utils_Tuple2(
-							$author$project$Main$Abilities(
-								A2($author$project$Abilities$setSelected, selected, abilities)),
-							$elm$core$Platform$Cmd$none);
-					} else {
-						break _v0$8;
+					switch (_v0.a.$) {
+						case 'Abilities':
+							var abilities = _v0.a.a;
+							var selected = _v0.b.a;
+							return _Utils_Tuple2(
+								$author$project$Main$Abilities(
+									A2($author$project$Abilities$setSelected, selected, abilities)),
+								$elm$core$Platform$Cmd$none);
+						case 'Character':
+							var session = _v0.a.a;
+							var selected = _v0.b.a;
+							return A3(
+								$author$project$Main$wrap,
+								$author$project$Main$Abilities,
+								$author$project$Main$AbilitiesMsg,
+								A2($author$project$Abilities$init, session, selected));
+						default:
+							break _v0$9;
 					}
 				case 'Root':
 					switch (_v0.a.$) {
@@ -6492,7 +6537,7 @@ var $author$project$Main$changeRoute = F2(
 								$author$project$Main$Character(session),
 								$elm$core$Platform$Cmd$none);
 						default:
-							break _v0$8;
+							break _v0$9;
 					}
 				default:
 					switch (_v0.a.$) {
@@ -6518,7 +6563,7 @@ var $author$project$Main$changeRoute = F2(
 								$elm$core$Basics$identity,
 								A3($author$project$PlayAids$init, $author$project$Main$GotPlayAid, topic, selected));
 						default:
-							break _v0$8;
+							break _v0$9;
 					}
 			}
 		}
@@ -6637,6 +6682,15 @@ var $elm$core$Maybe$map = F2(
 				f(value));
 		} else {
 			return $elm$core$Maybe$Nothing;
+		}
+	});
+var $elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
 		}
 	});
 var $author$project$Boon$Domain$domainDecoder = A2(
@@ -7338,9 +7392,6 @@ var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
 var $author$project$Main$subscriptions = function (_v0) {
 	return $elm$core$Platform$Sub$none;
 };
-var $author$project$Main$AbilitiesMsg = function (a) {
-	return {$: 'AbilitiesMsg', a: a};
-};
 var $author$project$Main$DecodeErr = F2(
 	function (a, b) {
 		return {$: 'DecodeErr', a: a, b: b};
@@ -7811,6 +7862,7 @@ var $author$project$Session$navKey = function (session) {
 	}
 };
 var $elm$browser$Browser$Navigation$pushUrl = _Browser_pushUrl;
+var $elm$browser$Browser$Navigation$replaceUrl = _Browser_replaceUrl;
 var $author$project$Ports$storeCharacter = _Platform_outgoingPort('storeCharacter', $elm$json$Json$Encode$string);
 var $author$project$Character$save = function (character) {
 	return $author$project$Ports$storeCharacter(
@@ -7919,7 +7971,6 @@ var $author$project$Abilities$Failed = function (a) {
 var $author$project$Abilities$Loaded = function (a) {
 	return {$: 'Loaded', a: a};
 };
-var $author$project$Abilities$Loading = {$: 'Loading'};
 var $elm$core$Basics$always = F2(
 	function (a, _v0) {
 		return a;
@@ -7983,7 +8034,6 @@ var $author$project$Abilities$decoder = A4(
 		$elm$json$Json$Decode$field,
 		'high',
 		$elm$json$Json$Decode$list($author$project$Ability$decoder)));
-var $author$project$Abilities$location = '/reves/data/abilities/';
 var $author$project$Abilities$fetchFromList = function (metadata) {
 	return $elm$core$Platform$Cmd$batch(
 		A2(
@@ -8129,6 +8179,7 @@ var $elm$core$Dict$values = function (dict) {
 };
 var $author$project$Abilities$update = F2(
 	function (msg, abilities) {
+		var maybeCharacter = $author$project$Session$character(abilities.session);
 		switch (msg.$) {
 			case 'ChoseAbility':
 				var ability = msg.a;
@@ -8187,7 +8238,18 @@ var $author$project$Abilities$update = F2(
 								$author$project$Abilities$statusFromResult(
 									A2(
 										$elm$core$Result$map,
-										$author$project$Abilities$dedup(abilities.character.abilities),
+										A2(
+											$elm$core$Maybe$withDefault,
+											$elm$core$Basics$identity,
+											A2(
+												$elm$core$Maybe$map,
+												$author$project$Abilities$dedup,
+												A2(
+													$elm$core$Maybe$map,
+													function ($) {
+														return $.abilities;
+													},
+													maybeCharacter))),
 										advances)),
 								abilities.tabs)
 						}),
@@ -8205,15 +8267,22 @@ var $author$project$Abilities$update = F2(
 							$author$project$Route$Abilities(
 								$elm$core$Maybe$Just(selected)))));
 			default:
-				var updatedCharacter = A2(
-					$author$project$Character$addAbilities,
-					$elm$core$Dict$values(abilities.chosen),
-					abilities.character);
-				return _Utils_Tuple2(
-					_Utils_update(
-						abilities,
-						{character: updatedCharacter}),
-					$author$project$Character$save(updatedCharacter));
+				var _v2 = A2(
+					$elm$core$Maybe$map,
+					$author$project$Character$addAbilities(
+						$elm$core$Dict$values(abilities.chosen)),
+					maybeCharacter);
+				if (_v2.$ === 'Nothing') {
+					return _Utils_Tuple2(abilities, $elm$core$Platform$Cmd$none);
+				} else {
+					var updatedCharacter = _v2.a;
+					var session = A2($author$project$Session$setCharacter, updatedCharacter, abilities.session);
+					return _Utils_Tuple2(
+						_Utils_update(
+							abilities,
+							{session: session}),
+						$author$project$Session$save(session));
+				}
 		}
 	});
 var $author$project$Character$update = F2(
@@ -8468,16 +8537,44 @@ var $author$project$Main$update = F2(
 					var urlRequest = _v0.b.a;
 					if (urlRequest.$ === 'Internal') {
 						var url = urlRequest.a;
+						var urlString = $elm$url$Url$toString(url);
+						var route = $author$project$Route$parse(url);
+						var navKey = $author$project$Session$navKey(
+							$author$project$Main$toSession(model));
+						var _v10 = _Utils_Tuple2(model, route);
+						_v10$2:
+						while (true) {
+							switch (_v10.a.$) {
+								case 'Abilities':
+									if (_v10.b.$ === 'Abilities') {
+										var _v11 = A2($elm$core$Debug$log, 'intra-abilities', _Utils_Tuple0);
+										return _Utils_Tuple2(
+											model,
+											A2($elm$browser$Browser$Navigation$replaceUrl, navKey, urlString));
+									} else {
+										break _v10$2;
+									}
+								case 'PlayAid':
+									if (_v10.b.$ === 'PlayAid') {
+										var _v12 = _v10.a;
+										var _v13 = _v10.b;
+										var _v14 = A2($elm$core$Debug$log, 'intra-play-aid', _Utils_Tuple0);
+										return _Utils_Tuple2(
+											model,
+											A2($elm$browser$Browser$Navigation$replaceUrl, navKey, urlString));
+									} else {
+										break _v10$2;
+									}
+								default:
+									break _v10$2;
+							}
+						}
 						return _Utils_Tuple2(
 							model,
-							A2(
-								$elm$browser$Browser$Navigation$pushUrl,
-								$author$project$Session$navKey(
-									$author$project$Main$toSession(model)),
-								$elm$url$Url$toString(url)));
+							A2($elm$browser$Browser$Navigation$pushUrl, navKey, urlString));
 					} else {
 						var href = urlRequest.a;
-						var _v10 = A2($elm$core$Debug$log, 'got external url req', href);
+						var _v15 = A2($elm$core$Debug$log, 'got external url req', href);
 						return _Utils_Tuple2(
 							model,
 							$elm$browser$Browser$Navigation$load(href));
@@ -8978,7 +9075,15 @@ var $author$project$Abilities$viewAdvances = F4(
 var $author$project$Abilities$view = function (abilities) {
 	var tabs = abilities.tabs;
 	var selected = abilities.selected;
-	var primary = abilities.primary;
+	var primary = A2(
+		$elm$core$Maybe$withDefault,
+		'',
+		A2(
+			$elm$core$Maybe$map,
+			function ($) {
+				return $._class;
+			},
+			$author$project$Session$character(abilities.session)));
 	var primaryFirst = A2(
 		$elm$core$Maybe$withDefault,
 		$elm$core$Dict$toList(tabs),

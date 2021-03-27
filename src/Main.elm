@@ -260,8 +260,9 @@ changeRoute route model =
         ( Abilities abilities, Route.Abilities selected ) ->
             ( Abilities (Abilities.setSelected selected abilities), Cmd.none )
 
-        -- ( Character session, Route.Abilities selected ) ->
-        --     wrap Abilities AbilitiesMsg (Abilities.init session selected character)
+        ( Character session, Route.Abilities selected ) ->
+            wrap Abilities AbilitiesMsg (Abilities.init session selected)
+
         ( PickClass session, Route.Root ) ->
             ( Landing session, Cmd.none )
 
@@ -360,7 +361,33 @@ update msg model =
         ( _, LinkClicked urlRequest ) ->
             case urlRequest of
                 Browser.Internal url ->
-                    ( model, Nav.pushUrl (Session.navKey (toSession model)) (Url.toString url) )
+                    let
+                        route =
+                            Route.parse url
+
+                        navKey =
+                            Session.navKey (toSession model)
+
+                        urlString =
+                            Url.toString url
+                    in
+                    case ( model, route ) of
+                        ( Abilities _, Route.Abilities _ ) ->
+                            let
+                                _ =
+                                    Debug.log "intra-abilities" ()
+                            in
+                            ( model, Nav.replaceUrl navKey urlString )
+
+                        ( PlayAid _ _, Route.PlayAid _ _ ) ->
+                            let
+                                _ =
+                                    Debug.log "intra-play-aid" ()
+                            in
+                            ( model, Nav.replaceUrl navKey urlString )
+
+                        ( _, _ ) ->
+                            ( model, Nav.pushUrl navKey urlString )
 
                 Browser.External href ->
                     let
