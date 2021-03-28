@@ -278,8 +278,8 @@ view abilities =
                     (\( name, _ ) ->
                         li
                             [ classList [ ( "selected", name == selected ), ( "tab", True ) ] ]
-                            [ button
-                                [ onClick (ClickedTab name) ]
+                            [ a
+                                [ href (Route.toString (Route.Abilities (Just name))) ]
                                 [ text name ]
                             ]
                     )

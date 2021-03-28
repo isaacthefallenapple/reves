@@ -8847,9 +8847,6 @@ var $elm$html$Html$Events$onClick = function (msg) {
 var $elm$html$Html$p = _VirtualDom_node('p');
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
-var $author$project$Abilities$ClickedTab = function (a) {
-	return {$: 'ClickedTab', a: a};
-};
 var $elm$core$Tuple$second = function (_v0) {
 	var y = _v0.b;
 	return y;
@@ -9147,11 +9144,13 @@ var $author$project$Abilities$view = function (abilities) {
 									_List_fromArray(
 										[
 											A2(
-											$elm$html$Html$button,
+											$elm$html$Html$a,
 											_List_fromArray(
 												[
-													$elm$html$Html$Events$onClick(
-													$author$project$Abilities$ClickedTab(name))
+													$elm$html$Html$Attributes$href(
+													$author$project$Route$toString(
+														$author$project$Route$Abilities(
+															$elm$core$Maybe$Just(name))))
 												]),
 											_List_fromArray(
 												[
