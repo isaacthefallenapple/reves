@@ -7020,10 +7020,11 @@ var $author$project$Character$decodeLocalCharacter = function (storedState) {
 var $author$project$Session$Character = function (a) {
 	return {$: 'Character', a: a};
 };
+var $author$project$Session$Saved = {$: 'Saved'};
 var $author$project$Session$load = F2(
 	function (key, _char) {
 		return $author$project$Session$Character(
-			{character: _char, navKey: key, unsavedChanges: false});
+			{changes: $author$project$Session$Saved, character: _char, navKey: key});
 	});
 var $author$project$Session$NoCharacter = function (a) {
 	return {$: 'NoCharacter', a: a};
@@ -7890,7 +7891,19 @@ var $author$project$Session$savedChanges = function (session) {
 		return $author$project$Session$Character(
 			_Utils_update(
 				val,
-				{unsavedChanges: false}));
+				{changes: $author$project$Session$Saved}));
+	}
+};
+var $author$project$Session$SavedLocally = {$: 'SavedLocally'};
+var $author$project$Session$savedChangesLocally = function (session) {
+	if (session.$ === 'NoCharacter') {
+		return session;
+	} else {
+		var val = session.a;
+		return $author$project$Session$Character(
+			_Utils_update(
+				val,
+				{changes: $author$project$Session$SavedLocally}));
 	}
 };
 var $author$project$Ports$savedCharacter = _Platform_outgoingPort(
@@ -7898,18 +7911,19 @@ var $author$project$Ports$savedCharacter = _Platform_outgoingPort(
 	function ($) {
 		return $elm$json$Json$Encode$null;
 	});
+var $author$project$Session$Unsaved = {$: 'Unsaved'};
 var $author$project$Session$setCharacter = F2(
 	function (newCharacter, session) {
 		if (session.$ === 'NoCharacter') {
 			var key = session.a;
 			return $author$project$Session$Character(
-				{character: newCharacter, navKey: key, unsavedChanges: true});
+				{changes: $author$project$Session$Unsaved, character: newCharacter, navKey: key});
 		} else {
 			var val = session.a;
 			return $author$project$Session$Character(
 				_Utils_update(
 					val,
-					{character: newCharacter, unsavedChanges: true}));
+					{changes: $author$project$Session$Unsaved, character: newCharacter}));
 		}
 	});
 var $elm$file$File$Download$string = F3(
@@ -8414,56 +8428,59 @@ var $author$project$Main$update = F2(
 					} else {
 						break _v0$12;
 					}
-				case 'CharacterMsg':
+				case 'ClickedSave':
 					if (_v0.a.$ === 'Character') {
-						if (_v0.b.a.$ === 'ClickedSave') {
-							var session = _v0.a.a;
-							var _v3 = _v0.b.a;
-							return _Utils_Tuple2(
-								$author$project$Main$Character(
-									$author$project$Session$savedChanges(session)),
-								function () {
-									var _v4 = $author$project$Session$character(session);
-									if (_v4.$ === 'Just') {
-										var character = _v4.a;
-										return $elm$core$Platform$Cmd$batch(
-											_List_fromArray(
-												[
-													A3(
-													$elm$file$File$Download$string,
-													character.name,
-													'application/json',
-													A2(
-														$elm$json$Json$Encode$encode,
-														2,
-														$author$project$Character$encode(character))),
-													$author$project$Ports$savedCharacter(_Utils_Tuple0)
-												]));
-									} else {
-										return $elm$core$Platform$Cmd$none;
-									}
-								}());
-						} else {
-							var session = _v0.a.a;
-							var subMsg = _v0.b.a;
-							var _v5 = $author$project$Session$character(session);
-							if (_v5.$ === 'Just') {
-								var character = _v5.a;
-								var updatedSession = A2(
-									$author$project$Session$setCharacter,
-									A2($author$project$Character$update, subMsg, character),
-									session);
-								return _Utils_Tuple2(
-									$author$project$Main$Character(updatedSession),
-									$elm$core$Platform$Cmd$batch(
+						var session = _v0.a.a;
+						var _v3 = _v0.b;
+						return _Utils_Tuple2(
+							$author$project$Main$Character(
+								$author$project$Session$savedChanges(session)),
+							function () {
+								var _v4 = $author$project$Session$character(session);
+								if (_v4.$ === 'Just') {
+									var character = _v4.a;
+									return $elm$core$Platform$Cmd$batch(
 										_List_fromArray(
 											[
-												$author$project$Session$save(updatedSession),
-												$author$project$Ports$updatedCharacter(_Utils_Tuple0)
-											])));
-							} else {
-								return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-							}
+												A3(
+												$elm$file$File$Download$string,
+												character.name,
+												'application/json',
+												A2(
+													$elm$json$Json$Encode$encode,
+													2,
+													$author$project$Character$encode(character))),
+												$author$project$Ports$savedCharacter(_Utils_Tuple0)
+											]));
+								} else {
+									return $elm$core$Platform$Cmd$none;
+								}
+							}());
+					} else {
+						break _v0$12;
+					}
+				case 'CharacterMsg':
+					if (_v0.a.$ === 'Character') {
+						var session = _v0.a.a;
+						var subMsg = _v0.b.a;
+						var _v5 = $author$project$Session$character(session);
+						if (_v5.$ === 'Just') {
+							var character = _v5.a;
+							var updatedSession = A2(
+								$author$project$Session$setCharacter,
+								A2($author$project$Character$update, subMsg, character),
+								session);
+							return _Utils_Tuple2(
+								$author$project$Main$Character(
+									$author$project$Session$savedChangesLocally(updatedSession)),
+								$elm$core$Platform$Cmd$batch(
+									_List_fromArray(
+										[
+											$author$project$Session$save(updatedSession),
+											$author$project$Ports$updatedCharacter(_Utils_Tuple0)
+										])));
+						} else {
+							return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 						}
 					} else {
 						break _v0$12;
@@ -8593,6 +8610,7 @@ var $author$project$Main$CharacterMsg = function (a) {
 };
 var $author$project$Main$ClickedNewCharacter = {$: 'ClickedNewCharacter'};
 var $author$project$Main$ClickedOpenFile = {$: 'ClickedOpenFile'};
+var $author$project$Main$ClickedSave = {$: 'ClickedSave'};
 var $author$project$Main$PickedAssignment = function (a) {
 	return {$: 'PickedAssignment', a: a};
 };
@@ -8695,6 +8713,24 @@ var $author$project$Boon$testSubject = {
 var $author$project$Boon$assignments = _List_fromArray(
 	[$author$project$Boon$labour, $author$project$Boon$personalAssistant, $author$project$Boon$dogsbody, $author$project$Boon$security, $author$project$Boon$spy, $author$project$Boon$testSubject, $author$project$Boon$pleasure, $author$project$Boon$searchAndRescue, $author$project$Boon$escapee]);
 var $elm$html$Html$button = _VirtualDom_node('button');
+var $author$project$Session$changes = function (session) {
+	if (session.$ === 'Character') {
+		var val = session.a;
+		return val.changes;
+	} else {
+		return $author$project$Session$Saved;
+	}
+};
+var $author$project$Session$changesToString = function (val) {
+	switch (val.$) {
+		case 'Unsaved':
+			return 'There are unsaved changes.';
+		case 'SavedLocally':
+			return 'All changes saved locally.';
+		default:
+			return 'All changes saved to disk.';
+	}
+};
 var $elm$html$Html$Attributes$stringProperty = F2(
 	function (key, string) {
 		return A2(
@@ -8812,6 +8848,7 @@ var $author$project$Class$doc = {
 var $author$project$Class$classes = _List_fromArray(
 	[$author$project$Class$doc, $author$project$Class$cloak, $author$project$Class$awoken]);
 var $elm$html$Html$div = _VirtualDom_node('div');
+var $elm$html$Html$footer = _VirtualDom_node('footer');
 var $elm$html$Html$h1 = _VirtualDom_node('h1');
 var $elm$html$Html$Attributes$href = function (url) {
 	return A2(
@@ -8839,6 +8876,7 @@ var $elm$html$Html$Events$onClick = function (msg) {
 		$elm$json$Json$Decode$succeed(msg));
 };
 var $elm$html$Html$p = _VirtualDom_node('p');
+var $elm$html$Html$span = _VirtualDom_node('span');
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $elm$core$Tuple$second = function (_v0) {
@@ -9168,7 +9206,6 @@ var $author$project$Abilities$view = function (abilities) {
 				},
 				primaryFirst)));
 };
-var $author$project$Character$ClickedSave = {$: 'ClickedSave'};
 var $author$project$Character$UpdatedBonds = function (a) {
 	return {$: 'UpdatedBonds', a: a};
 };
@@ -9199,7 +9236,6 @@ var $author$project$Character$UpdatedResistances = function (a) {
 var $author$project$Character$UpdatedSkills = function (a) {
 	return {$: 'UpdatedSkills', a: a};
 };
-var $elm$html$Html$footer = _VirtualDom_node('footer');
 var $elm$html$Html$input = _VirtualDom_node('input');
 var $elm$html$Html$label = _VirtualDom_node('label');
 var $elm$html$Html$main_ = _VirtualDom_node('main');
@@ -9897,22 +9933,6 @@ var $author$project$Character$view = function (character) {
 										$elm$html$Html$text(character.notes)
 									]))
 							]))
-					])),
-				A2(
-				$elm$html$Html$footer,
-				_List_Nil,
-				_List_fromArray(
-					[
-						A2(
-						$elm$html$Html$button,
-						_List_fromArray(
-							[
-								$elm$html$Html$Events$onClick($author$project$Character$ClickedSave)
-							]),
-						_List_fromArray(
-							[
-								$elm$html$Html$text('Save')
-							]))
 					]))
 			]),
 		title: character.name
@@ -10219,10 +10239,39 @@ var $author$project$Main$view = function (model) {
 				var character = _v1.a;
 				var characterView = $author$project$Character$view(character);
 				return {
-					body: A2(
-						$elm$core$List$map,
-						$elm$html$Html$map($author$project$Main$CharacterMsg),
-						characterView.body),
+					body: _Utils_ap(
+						A2(
+							$elm$core$List$map,
+							$elm$html$Html$map($author$project$Main$CharacterMsg),
+							characterView.body),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$footer,
+								_List_Nil,
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$span,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text(
+												$author$project$Session$changesToString(
+													$author$project$Session$changes(session)))
+											])),
+										A2(
+										$elm$html$Html$button,
+										_List_fromArray(
+											[
+												$elm$html$Html$Events$onClick($author$project$Main$ClickedSave)
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('Save')
+											]))
+									]))
+							])),
 					title: characterView.title
 				};
 			} else {

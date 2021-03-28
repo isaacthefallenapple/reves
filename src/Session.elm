@@ -1,4 +1,4 @@
-module Session exposing (Session, character, load, navKey, new, save, savedChanges, setCharacter, unsavedChanges)
+module Session exposing (Session, changes, changesToString, character, load, navKey, new, save, savedChanges, savedChangesLocally, setCharacter)
 
 import Browser.Navigation as Nav
 import Character
@@ -10,9 +10,28 @@ type Session
     = Character
         { navKey : Nav.Key
         , character : Character.Stats
-        , unsavedChanges : Bool
+        , changes : Changes
         }
     | NoCharacter Nav.Key
+
+
+type Changes
+    = Unsaved
+    | Saved
+    | SavedLocally
+
+
+changesToString : Changes -> String
+changesToString val =
+    case val of
+        Unsaved ->
+            "There are unsaved changes."
+
+        SavedLocally ->
+            "All changes saved locally."
+
+        Saved ->
+            "All changes saved to disk."
 
 
 new : Nav.Key -> Session
@@ -25,7 +44,7 @@ load key char =
     Character
         { navKey = key
         , character = char
-        , unsavedChanges = False
+        , changes = Saved
         }
 
 
@@ -56,25 +75,25 @@ setCharacter newCharacter session =
             Character
                 { navKey = key
                 , character = newCharacter
-                , unsavedChanges = True
+                , changes = Unsaved
                 }
 
         Character val ->
             Character
                 { val
                     | character = newCharacter
-                    , unsavedChanges = True
+                    , changes = Unsaved
                 }
 
 
-unsavedChanges : Session -> Bool
-unsavedChanges session =
+changes : Session -> Changes
+changes session =
     case session of
         Character val ->
-            val.unsavedChanges
+            val.changes
 
         NoCharacter _ ->
-            False
+            Saved
 
 
 savedChanges : Session -> Session
@@ -84,7 +103,17 @@ savedChanges session =
             session
 
         Character val ->
-            Character { val | unsavedChanges = False }
+            Character { val | changes = Saved }
+
+
+savedChangesLocally : Session -> Session
+savedChangesLocally session =
+    case session of
+        NoCharacter _ ->
+            session
+
+        Character val ->
+            Character { val | changes = SavedLocally }
 
 
 save : Session -> Cmd msg

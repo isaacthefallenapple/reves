@@ -378,12 +378,6 @@ view character =
                     [ text character.notes ]
                 ]
             ]
-        , footer
-            []
-            [ button
-                [ onClick ClickedSave ]
-                [ text "Save" ]
-            ]
         ]
     }
 

@@ -102,7 +102,7 @@ type Msg
     | FileLoaded File
     | ReadFile String
     | RequestedAbilities (Result Http.Error Abilities.Advances)
-      -- | ClickedSave
+    | ClickedSave
     | LinkClicked Browser.UrlRequest
     | UrlChanged Url.Url
     | AbilitiesMsg Abilities.Msg
@@ -205,6 +205,17 @@ view model =
                     { title = characterView.title
                     , body =
                         List.map (Html.map CharacterMsg) characterView.body
+                            ++ [ footer
+                                    []
+                                    [ span
+                                        []
+                                        [ text (Session.changesToString (Session.changes session))
+                                        ]
+                                    , button
+                                        [ onClick ClickedSave ]
+                                        [ text "Save" ]
+                                    ]
+                               ]
                     }
 
                 Nothing ->
@@ -302,7 +313,7 @@ update msg model =
             , Character.save character
             )
 
-        ( Character session, CharacterMsg ClickedSave ) ->
+        ( Character session, ClickedSave ) ->
             ( Character (Session.savedChanges session)
             , case Session.character session of
                 Just character ->
@@ -324,7 +335,7 @@ update msg model =
                         updatedSession =
                             Session.setCharacter (Character.update subMsg character) session
                     in
-                    ( Character updatedSession
+                    ( Character (Session.savedChangesLocally updatedSession)
                     , Cmd.batch
                         [ Session.save updatedSession
                         , Ports.updatedCharacter ()
