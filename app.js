@@ -7851,7 +7851,6 @@ var $elm$file$File$Select$file = F2(
 			_File_uploadOne(mimes));
 	});
 var $elm$browser$Browser$Navigation$load = _Browser_load;
-var $elm$core$Debug$log = _Debug_log;
 var $author$project$Session$navKey = function (session) {
 	if (session.$ === 'Character') {
 		var val = session.a;
@@ -8052,6 +8051,7 @@ var $author$project$Abilities$fetchFromList = function (metadata) {
 			},
 			$elm$core$Dict$toList(metadata)));
 };
+var $elm$core$Debug$log = _Debug_log;
 var $elm$core$Dict$map = F2(
 	function (func, dict) {
 		if (dict.$ === 'RBEmpty_elm_builtin') {
@@ -8547,7 +8547,6 @@ var $author$project$Main$update = F2(
 							switch (_v10.a.$) {
 								case 'Abilities':
 									if (_v10.b.$ === 'Abilities') {
-										var _v11 = A2($elm$core$Debug$log, 'intra-abilities', _Utils_Tuple0);
 										return _Utils_Tuple2(
 											model,
 											A2($elm$browser$Browser$Navigation$replaceUrl, navKey, urlString));
@@ -8556,9 +8555,8 @@ var $author$project$Main$update = F2(
 									}
 								case 'PlayAid':
 									if (_v10.b.$ === 'PlayAid') {
-										var _v12 = _v10.a;
-										var _v13 = _v10.b;
-										var _v14 = A2($elm$core$Debug$log, 'intra-play-aid', _Utils_Tuple0);
+										var _v11 = _v10.a;
+										var _v12 = _v10.b;
 										return _Utils_Tuple2(
 											model,
 											A2($elm$browser$Browser$Navigation$replaceUrl, navKey, urlString));
@@ -8574,7 +8572,6 @@ var $author$project$Main$update = F2(
 							A2($elm$browser$Browser$Navigation$pushUrl, navKey, urlString));
 					} else {
 						var href = urlRequest.a;
-						var _v15 = A2($elm$core$Debug$log, 'got external url req', href);
 						return _Utils_Tuple2(
 							model,
 							$elm$browser$Browser$Navigation$load(href));
@@ -8583,10 +8580,7 @@ var $author$project$Main$update = F2(
 					var url = _v0.b.a;
 					return A2(
 						$author$project$Main$changeRoute,
-						A2(
-							$elm$core$Debug$log,
-							'parsed url',
-							$author$project$Route$parse(url)),
+						$author$project$Route$parse(url),
 						model);
 				default:
 					break _v0$12;

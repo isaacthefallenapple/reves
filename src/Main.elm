@@ -373,31 +373,19 @@ update msg model =
                     in
                     case ( model, route ) of
                         ( Abilities _, Route.Abilities _ ) ->
-                            let
-                                _ =
-                                    Debug.log "intra-abilities" ()
-                            in
                             ( model, Nav.replaceUrl navKey urlString )
 
                         ( PlayAid _ _, Route.PlayAid _ _ ) ->
-                            let
-                                _ =
-                                    Debug.log "intra-play-aid" ()
-                            in
                             ( model, Nav.replaceUrl navKey urlString )
 
                         ( _, _ ) ->
                             ( model, Nav.pushUrl navKey urlString )
 
                 Browser.External href ->
-                    let
-                        _ =
-                            Debug.log "got external url req" href
-                    in
                     ( model, Nav.load href )
 
         ( _, UrlChanged url ) ->
-            changeRoute (Debug.log "parsed url" (Route.parse url)) model
+            changeRoute (Route.parse url) model
 
         ( _, _ ) ->
             ( model, Cmd.none )
