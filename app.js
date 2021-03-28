@@ -7397,10 +7397,15 @@ var $author$project$Main$init = F3(
 				}
 			}());
 	});
-var $elm$core$Platform$Sub$batch = _Platform_batch;
-var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
+var $author$project$Main$SavedChanges = {$: 'SavedChanges'};
+var $author$project$Ports$confirmLocalStorage = _Platform_incomingPort(
+	'confirmLocalStorage',
+	$elm$json$Json$Decode$null(_Utils_Tuple0));
 var $author$project$Main$subscriptions = function (_v0) {
-	return $elm$core$Platform$Sub$none;
+	return $author$project$Ports$confirmLocalStorage(
+		function (_v1) {
+			return $author$project$Main$SavedChanges;
+		});
 };
 var $author$project$Main$DecodeErr = F2(
 	function (a, b) {
@@ -7888,13 +7893,6 @@ var $author$project$Session$navKey = function (session) {
 var $elm$browser$Browser$Navigation$pushUrl = _Browser_pushUrl;
 var $elm$browser$Browser$Navigation$replaceUrl = _Browser_replaceUrl;
 var $author$project$Ports$storeCharacter = _Platform_outgoingPort('storeCharacter', $elm$json$Json$Encode$string);
-var $author$project$Character$save = function (character) {
-	return $author$project$Ports$storeCharacter(
-		A2(
-			$elm$json$Json$Encode$encode,
-			2,
-			$author$project$Character$encode(character)));
-};
 var $author$project$Session$save = function (session) {
 	if (session.$ === 'NoCharacter') {
 		return $elm$core$Platform$Cmd$none;
@@ -8403,6 +8401,36 @@ var $author$project$PlayAids$update = F2(
 				});
 		}
 	});
+var $author$project$Abilities$updateSession = F2(
+	function (session, abilities) {
+		return _Utils_update(
+			abilities,
+			{session: session});
+	});
+var $author$project$Main$updateSession = F2(
+	function (session, model) {
+		switch (model.$) {
+			case 'PickClass':
+				return $author$project$Main$PickClass(session);
+			case 'PickAssignment':
+				var val = model.b;
+				return A2($author$project$Main$PickAssignment, session, val);
+			case 'Character':
+				return $author$project$Main$Character(session);
+			case 'DecodeErr':
+				var err = model.b;
+				return A2($author$project$Main$DecodeErr, session, err);
+			case 'Abilities':
+				var abilities = model.a;
+				return $author$project$Main$Abilities(
+					A2($author$project$Abilities$updateSession, session, abilities));
+			case 'Landing':
+				return $author$project$Main$Landing(session);
+			default:
+				var aid = model.b;
+				return A2($author$project$Main$PlayAid, session, aid);
+		}
+	});
 var $author$project$Ports$updatedCharacter = _Platform_outgoingPort(
 	'updatedCharacter',
 	function ($) {
@@ -8411,7 +8439,7 @@ var $author$project$Ports$updatedCharacter = _Platform_outgoingPort(
 var $author$project$Main$update = F2(
 	function (msg, model) {
 		var _v0 = _Utils_Tuple2(model, msg);
-		_v0$12:
+		_v0$13:
 		while (true) {
 			switch (_v0.b.$) {
 				case 'ClickedNewCharacter':
@@ -8422,7 +8450,7 @@ var $author$project$Main$update = F2(
 							$author$project$Main$PickClass(session),
 							$elm$core$Platform$Cmd$none);
 					} else {
-						break _v0$12;
+						break _v0$13;
 					}
 				case 'PickedClass':
 					if (_v0.a.$ === 'PickClass') {
@@ -8432,7 +8460,7 @@ var $author$project$Main$update = F2(
 							A2($author$project$Main$PickAssignment, session, _class),
 							$elm$core$Platform$Cmd$none);
 					} else {
-						break _v0$12;
+						break _v0$13;
 					}
 				case 'PickedAssignment':
 					if (_v0.a.$ === 'PickAssignment') {
@@ -8444,12 +8472,12 @@ var $author$project$Main$update = F2(
 							$author$project$Character$applyAssignment,
 							assignment,
 							A2($author$project$Character$applyClass, _class, $author$project$Character$blank));
+						var updatedSession = A2($author$project$Session$setCharacter, character, session);
 						return _Utils_Tuple2(
-							$author$project$Main$Character(
-								A2($author$project$Session$setCharacter, character, session)),
-							$author$project$Character$save(character));
+							$author$project$Main$Character(updatedSession),
+							$author$project$Session$save(updatedSession));
 					} else {
-						break _v0$12;
+						break _v0$13;
 					}
 				case 'ClickedSave':
 					if (_v0.a.$ === 'Character') {
@@ -8480,7 +8508,7 @@ var $author$project$Main$update = F2(
 								}
 							}());
 					} else {
-						break _v0$12;
+						break _v0$13;
 					}
 				case 'CharacterMsg':
 					if (_v0.a.$ === 'Character') {
@@ -8494,8 +8522,7 @@ var $author$project$Main$update = F2(
 								A2($author$project$Character$update, subMsg, character),
 								session);
 							return _Utils_Tuple2(
-								$author$project$Main$Character(
-									$author$project$Session$savedChangesLocally(updatedSession)),
+								$author$project$Main$Character(updatedSession),
 								$elm$core$Platform$Cmd$batch(
 									_List_fromArray(
 										[
@@ -8506,7 +8533,7 @@ var $author$project$Main$update = F2(
 							return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 						}
 					} else {
-						break _v0$12;
+						break _v0$13;
 					}
 				case 'AbilitiesMsg':
 					if (_v0.a.$ === 'Abilities') {
@@ -8518,7 +8545,7 @@ var $author$project$Main$update = F2(
 							$elm$core$Platform$Cmd$map($author$project$Main$AbilitiesMsg),
 							A2($author$project$Abilities$update, subMsg, abilities));
 					} else {
-						break _v0$12;
+						break _v0$13;
 					}
 				case 'GotPlayAid':
 					if (_v0.a.$ === 'PlayAid') {
@@ -8533,7 +8560,7 @@ var $author$project$Main$update = F2(
 								A2($author$project$PlayAids$update, result, playAid)),
 							$elm$core$Platform$Cmd$none);
 					} else {
-						break _v0$12;
+						break _v0$13;
 					}
 				case 'ClickedOpenFile':
 					var _v7 = _v0.b;
@@ -8622,8 +8649,17 @@ var $author$project$Main$update = F2(
 						$author$project$Main$changeRoute,
 						$author$project$Route$parse(url),
 						model);
+				case 'SavedChanges':
+					var _v13 = _v0.b;
+					return _Utils_Tuple2(
+						A2(
+							$author$project$Main$updateSession,
+							$author$project$Session$savedChangesLocally(
+								$author$project$Main$toSession(model)),
+							model),
+						$elm$core$Platform$Cmd$none);
 				default:
-					break _v0$12;
+					break _v0$13;
 			}
 		}
 		return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);

@@ -308,9 +308,12 @@ update msg model =
                     Character.blank
                         |> Character.applyClass class
                         |> Character.applyAssignment assignment
+
+                updatedSession =
+                    Session.setCharacter character session
             in
-            ( Character (Session.setCharacter character session)
-            , Character.save character
+            ( Character updatedSession
+            , Session.save updatedSession
             )
 
         ( Character session, ClickedSave ) ->
@@ -335,7 +338,7 @@ update msg model =
                         updatedSession =
                             Session.setCharacter (Character.update subMsg character) session
                     in
-                    ( Character (Session.savedChangesLocally updatedSession)
+                    ( Character updatedSession
                     , Cmd.batch
                         [ Session.save updatedSession
                         , Ports.updatedCharacter ()
@@ -398,6 +401,13 @@ update msg model =
         ( _, UrlChanged url ) ->
             changeRoute (Route.parse url) model
 
+        ( _, SavedChanges ) ->
+            ( updateSession
+                (Session.savedChangesLocally (toSession model))
+                model
+            , Cmd.none
+            )
+
         ( _, _ ) ->
             ( model, Cmd.none )
 
@@ -424,8 +434,7 @@ init flags url navKey =
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    -- Ports.savedChanges (\_ -> SavedChanges)
-    Sub.none
+    Ports.confirmLocalStorage (\_ -> SavedChanges)
 
 
 
