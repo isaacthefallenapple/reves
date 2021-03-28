@@ -68,7 +68,8 @@ nav ul {
     max-width: 70rem;
     margin-left: auto;
     margin-right: auto;
-    padding: 0 0.8rem;
+    padding-inline: 0.8em;
+    padding-bottom: 3em;
 }
 
 .font-size-700 {
@@ -76,10 +77,15 @@ nav ul {
 }
 
 footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
     display: flex;
-    flex-shrink: 0;
-    margin-top: auto;
-    /* position: sticky; */
+    align-items: center;
+    height: 2.5em;
+    padding-block: 0.5em;
+    width: 100%;
+    background-color: lightgrey;
 }
 
 footer > :last-child {
@@ -94,10 +100,21 @@ button {
     font-size: large;
 }
 
+button {
+    all: unset;
+    padding: 0.5em 1em;
+    border: 2px solid black;
+}
+
+button:hover {
+    background-color: black;
+    color: white;
+}
+
 textarea {
     overflow: auto;
     padding: 1ch;
-    width: 90%;
+    width: 100%;
 }
 
 input[type="text"] {
