@@ -365,7 +365,7 @@ update msg model =
                 Ok character ->
                     let
                         session =
-                            Session.setCharacter character (toSession model)
+                            Session.load character (toSession model)
                     in
                     ( Character session, Session.save session )
 
@@ -414,7 +414,7 @@ init flags url navKey =
                 Landing (Session.new navKey)
 
             Just json ->
-                Character <| Session.load navKey (Character.decodeLocalCharacter json)
+                Character <| Session.loadLocal (Character.decodeLocalCharacter json) (Session.new navKey)
         )
 
 

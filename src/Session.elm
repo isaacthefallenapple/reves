@@ -1,4 +1,4 @@
-module Session exposing (Session, changes, changesToString, character, load, navKey, new, save, savedChanges, savedChangesLocally, setCharacter)
+module Session exposing (Session, changes, changesToString, character, load, loadLocal, navKey, new, save, savedChanges, savedChangesLocally, setCharacter)
 
 import Browser.Navigation as Nav
 import Character
@@ -39,13 +39,40 @@ new key =
     NoCharacter key
 
 
-load : Nav.Key -> Character.Stats -> Session
-load key char =
-    Character
-        { navKey = key
-        , character = char
-        , changes = Saved
-        }
+load : Character.Stats -> Session -> Session
+load char session =
+    case session of
+        NoCharacter key ->
+            Character
+                { navKey = key
+                , character = char
+                , changes = Saved
+                }
+
+        Character val ->
+            Character
+                { val
+                    | character = char
+                    , changes = Saved
+                }
+
+
+loadLocal : Character.Stats -> Session -> Session
+loadLocal char session =
+    case session of
+        NoCharacter key ->
+            Character
+                { navKey = key
+                , character = char
+                , changes = SavedLocally
+                }
+
+        Character val ->
+            Character
+                { val
+                    | character = char
+                    , changes = SavedLocally
+                }
 
 
 navKey : Session -> Nav.Key

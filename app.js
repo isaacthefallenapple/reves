@@ -7020,11 +7020,20 @@ var $author$project$Character$decodeLocalCharacter = function (storedState) {
 var $author$project$Session$Character = function (a) {
 	return {$: 'Character', a: a};
 };
-var $author$project$Session$Saved = {$: 'Saved'};
-var $author$project$Session$load = F2(
-	function (key, _char) {
-		return $author$project$Session$Character(
-			{changes: $author$project$Session$Saved, character: _char, navKey: key});
+var $author$project$Session$SavedLocally = {$: 'SavedLocally'};
+var $author$project$Session$loadLocal = F2(
+	function (_char, session) {
+		if (session.$ === 'NoCharacter') {
+			var key = session.a;
+			return $author$project$Session$Character(
+				{changes: $author$project$Session$SavedLocally, character: _char, navKey: key});
+		} else {
+			var val = session.a;
+			return $author$project$Session$Character(
+				_Utils_update(
+					val,
+					{changes: $author$project$Session$SavedLocally, character: _char}));
+		}
 	});
 var $author$project$Session$NoCharacter = function (a) {
 	return {$: 'NoCharacter', a: a};
@@ -7382,9 +7391,9 @@ var $author$project$Main$init = F3(
 					var json = flags.a;
 					return $author$project$Main$Character(
 						A2(
-							$author$project$Session$load,
-							navKey,
-							$author$project$Character$decodeLocalCharacter(json)));
+							$author$project$Session$loadLocal,
+							$author$project$Character$decodeLocalCharacter(json),
+							$author$project$Session$new(navKey)));
 				}
 			}());
 	});
@@ -7852,6 +7861,21 @@ var $elm$file$File$Select$file = F2(
 			_File_uploadOne(mimes));
 	});
 var $elm$browser$Browser$Navigation$load = _Browser_load;
+var $author$project$Session$Saved = {$: 'Saved'};
+var $author$project$Session$load = F2(
+	function (_char, session) {
+		if (session.$ === 'NoCharacter') {
+			var key = session.a;
+			return $author$project$Session$Character(
+				{changes: $author$project$Session$Saved, character: _char, navKey: key});
+		} else {
+			var val = session.a;
+			return $author$project$Session$Character(
+				_Utils_update(
+					val,
+					{changes: $author$project$Session$Saved, character: _char}));
+		}
+	});
 var $author$project$Session$navKey = function (session) {
 	if (session.$ === 'Character') {
 		var val = session.a;
@@ -7894,7 +7918,6 @@ var $author$project$Session$savedChanges = function (session) {
 				{changes: $author$project$Session$Saved}));
 	}
 };
-var $author$project$Session$SavedLocally = {$: 'SavedLocally'};
 var $author$project$Session$savedChangesLocally = function (session) {
 	if (session.$ === 'NoCharacter') {
 		return session;
@@ -8543,7 +8566,7 @@ var $author$project$Main$update = F2(
 					} else {
 						var character = _v8.a;
 						var session = A2(
-							$author$project$Session$setCharacter,
+							$author$project$Session$load,
 							character,
 							$author$project$Main$toSession(model));
 						return _Utils_Tuple2(
