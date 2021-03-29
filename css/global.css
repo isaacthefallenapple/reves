@@ -379,13 +379,20 @@ select {
   grid-area: notes;
 }
 
-.resistances > :first-child {
+.resistances {
+  --flow-space: 0.5rem;
+}
+
+.resistances-table {
   display: -ms-grid;
   display: grid;
   -ms-grid-columns: (12ch)[6];
       grid-template-columns: repeat(6, 12ch);
-  -ms-grid-rows: 2rem 2rem;
-      grid-template-rows: 2rem 2rem;
+  -ms-grid-rows: 1.8rem 2rem;
+      grid-template-rows: 1.8rem 2rem;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
   -webkit-column-gap: 1ch;
           column-gap: 1ch;
 }

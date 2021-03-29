@@ -267,7 +267,10 @@ view character =
                 ]
             , section
                 [ class "resistances" ]
-                [ Resistances.view UpdatedResistances character.resistances
+                [ h2
+                    []
+                    [ text "Resistances" ]
+                , Resistances.view UpdatedResistances character.resistances
                 ]
             , div
                 [ class "skills-and-domains" ]

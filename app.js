@@ -9367,6 +9367,7 @@ var $author$project$TypedDict$get = F2(
 					dict)));
 	});
 var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
+var $elm$html$Html$strong = _VirtualDom_node('strong');
 var $elm$core$String$toLower = _String_toLower;
 var $author$project$Boon$Resistance$view = F2(
 	function (toMsg, resistances) {
@@ -9398,8 +9399,14 @@ var $author$project$Boon$Resistance$view = F2(
 								]),
 							_List_fromArray(
 								[
-									$elm$html$Html$text(
-									$author$project$Boon$Resistance$toString(r))
+									A2(
+									$elm$html$Html$strong,
+									_List_Nil,
+									_List_fromArray(
+										[
+											$elm$html$Html$text(
+											$author$project$Boon$Resistance$toString(r))
+										]))
 								]));
 					},
 					resistancesList),
@@ -9521,7 +9528,6 @@ var $author$project$Character$viewBoolDict = F3(
 	});
 var $elm$html$Html$br = _VirtualDom_node('br');
 var $elm$html$Html$details = _VirtualDom_node('details');
-var $elm$html$Html$strong = _VirtualDom_node('strong');
 var $elm$html$Html$summary = _VirtualDom_node('summary');
 var $author$project$Ability$viewCompact = function (ability) {
 	return A2(
@@ -9686,6 +9692,13 @@ var $author$project$Character$view = function (character) {
 							]),
 						_List_fromArray(
 							[
+								A2(
+								$elm$html$Html$h2,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text('Resistances')
+									])),
 								A2($author$project$Boon$Resistance$view, $author$project$Character$UpdatedResistances, character.resistances)
 							])),
 						A2(

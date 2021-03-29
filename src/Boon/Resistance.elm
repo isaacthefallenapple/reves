@@ -100,7 +100,10 @@ view toMsg resistances =
             (\r ->
                 label
                     [ for (labelId r) ]
-                    [ text (toString r) ]
+                    [ strong
+                        []
+                        [ text (toString r) ]
+                    ]
             )
             resistancesList
             ++ List.map

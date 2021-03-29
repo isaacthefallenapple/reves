@@ -1,8 +1,11 @@
 .resistances {
-    & > :first-child {
+    --flow-space: 0.5rem;
+
+    &-table {
         display: grid;
         grid-template-columns: repeat(6, 12ch);
-        grid-template-rows: 2rem 2rem;
+        grid-template-rows: 1.8rem 2rem;
+        justify-content: space-between;
         column-gap: 1ch;
     }
 }
