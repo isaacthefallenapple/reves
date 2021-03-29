@@ -286,6 +286,12 @@ img:not([alt]) {
   padding: 0 1.33rem;
 }
 
+.textbox {
+  width: 100%;
+  height: 8em;
+  resize: none;
+}
+
 .character {
   display: -ms-grid;
   display: grid;

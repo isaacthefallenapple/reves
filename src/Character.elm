@@ -325,7 +325,9 @@ view character =
                     []
                     [ text "Fallout" ]
                 , textarea
-                    [ onInput UpdatedFallout ]
+                    [ class "textbox"
+                    , onInput UpdatedFallout
+                    ]
                     [ text character.fallout ]
                 ]
             , section
@@ -340,7 +342,9 @@ view character =
                         [ text "?" ]
                     ]
                 , textarea
-                    [ onInput UpdatedEquipment ]
+                    [ class "textbox"
+                    , onInput UpdatedEquipment
+                    ]
                     [ text character.equipment ]
                 ]
             , section
@@ -349,7 +353,9 @@ view character =
                     []
                     [ text "Refresh" ]
                 , textarea
-                    [ onInput UpdatedRefresh ]
+                    [ class "textbox"
+                    , onInput UpdatedRefresh
+                    ]
                     [ text character.refresh ]
                 ]
             , section
@@ -358,7 +364,9 @@ view character =
                     []
                     [ text "Bonds" ]
                 , textarea
-                    [ onInput UpdatedBonds ]
+                    [ class "textbox"
+                    , onInput UpdatedBonds
+                    ]
                     [ text character.bonds ]
                 ]
             , section
@@ -367,7 +375,9 @@ view character =
                     []
                     [ text "Knacks" ]
                 , textarea
-                    [ onInput UpdatedKnacks ]
+                    [ class "textbox"
+                    , onInput UpdatedKnacks
+                    ]
                     [ text character.knacks ]
                 ]
             , section
@@ -376,7 +386,9 @@ view character =
                     []
                     [ text "Notes" ]
                 , textarea
-                    [ onInput UpdatedNotes ]
+                    [ class "textbox"
+                    , onInput UpdatedNotes
+                    ]
                     [ text character.notes ]
                 ]
             ]

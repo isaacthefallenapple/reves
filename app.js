@@ -9818,6 +9818,7 @@ var $author$project$Character$view = function (character) {
 								$elm$html$Html$textarea,
 								_List_fromArray(
 									[
+										$elm$html$Html$Attributes$class('textbox'),
 										$elm$html$Html$Events$onInput($author$project$Character$UpdatedFallout)
 									]),
 								_List_fromArray(
@@ -9865,6 +9866,7 @@ var $author$project$Character$view = function (character) {
 								$elm$html$Html$textarea,
 								_List_fromArray(
 									[
+										$elm$html$Html$Attributes$class('textbox'),
 										$elm$html$Html$Events$onInput($author$project$Character$UpdatedEquipment)
 									]),
 								_List_fromArray(
@@ -9891,6 +9893,7 @@ var $author$project$Character$view = function (character) {
 								$elm$html$Html$textarea,
 								_List_fromArray(
 									[
+										$elm$html$Html$Attributes$class('textbox'),
 										$elm$html$Html$Events$onInput($author$project$Character$UpdatedRefresh)
 									]),
 								_List_fromArray(
@@ -9917,6 +9920,7 @@ var $author$project$Character$view = function (character) {
 								$elm$html$Html$textarea,
 								_List_fromArray(
 									[
+										$elm$html$Html$Attributes$class('textbox'),
 										$elm$html$Html$Events$onInput($author$project$Character$UpdatedBonds)
 									]),
 								_List_fromArray(
@@ -9943,6 +9947,7 @@ var $author$project$Character$view = function (character) {
 								$elm$html$Html$textarea,
 								_List_fromArray(
 									[
+										$elm$html$Html$Attributes$class('textbox'),
 										$elm$html$Html$Events$onInput($author$project$Character$UpdatedKnacks)
 									]),
 								_List_fromArray(
@@ -9969,6 +9974,7 @@ var $author$project$Character$view = function (character) {
 								$elm$html$Html$textarea,
 								_List_fromArray(
 									[
+										$elm$html$Html$Attributes$class('textbox'),
 										$elm$html$Html$Events$onInput($author$project$Character$UpdatedNotes)
 									]),
 								_List_fromArray(
