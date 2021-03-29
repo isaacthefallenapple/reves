@@ -296,6 +296,10 @@ img:not([alt]) {
   display: none;
 }
 
+.flow > * + * {
+  margin-top: var(--flow-space, 1em);
+}
+
 .character {
   display: -ms-grid;
   display: grid;
@@ -392,6 +396,30 @@ img:not([alt]) {
       grid-template-rows: 2rem 2rem;
   -webkit-column-gap: 1ch;
           column-gap: 1ch;
+}
+
+.ability {
+  max-width: 40ch;
+}
+
+.ability > summary {
+  list-style: none;
+  position: relative;
+}
+
+.ability > summary > :first-child {
+  padding-left: 1.5ch;
+}
+
+.ability > summary::before {
+  content: "+";
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.ability[open] > summary::before {
+  content: "-";
 }
 
 body {

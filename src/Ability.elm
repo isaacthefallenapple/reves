@@ -23,10 +23,12 @@ type alias Ability =
 viewCompact : Ability -> Html msg
 viewCompact ability =
     details
-        [ class "ability" ]
+        [ class "flow"
+        , class "ability"
+        ]
         [ summary
             []
-            (h3 [] [ text ability.name ]
+            (strong [] [ text ability.name ]
                 :: (ability.flavor
                         |> Maybe.map (\flavor -> [ br [] [], i [] [ text (flavor ++ " ") ] ])
                         |> Maybe.withDefault []

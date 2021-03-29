@@ -301,7 +301,9 @@ view character =
                         [ text "Abilities" ]
                     ]
                 , ul
-                    []
+                    [ class "flow"
+                    , class "abilities-list"
+                    ]
                     (List.map
                         (\ability ->
                             li []

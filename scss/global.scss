@@ -11,10 +11,12 @@
 @import "utilities/wrapper";
 @import "utilities/textbox";
 @import "utilities/hidden";
+@import "utilities/flow";
 
 // Blocks
 @import "blocks/character";
 @import "blocks/resistances";
+@import "blocks/ability";
 
 // Global CSS starts
 body {

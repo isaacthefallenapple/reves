@@ -9496,12 +9496,14 @@ var $author$project$Character$viewBoolDict = F3(
 	});
 var $elm$html$Html$br = _VirtualDom_node('br');
 var $elm$html$Html$details = _VirtualDom_node('details');
+var $elm$html$Html$strong = _VirtualDom_node('strong');
 var $elm$html$Html$summary = _VirtualDom_node('summary');
 var $author$project$Ability$viewCompact = function (ability) {
 	return A2(
 		$elm$html$Html$details,
 		_List_fromArray(
 			[
+				$elm$html$Html$Attributes$class('flow'),
 				$elm$html$Html$Attributes$class('ability')
 			]),
 		_List_fromArray(
@@ -9512,7 +9514,7 @@ var $author$project$Ability$viewCompact = function (ability) {
 				A2(
 					$elm$core$List$cons,
 					A2(
-						$elm$html$Html$h3,
+						$elm$html$Html$strong,
 						_List_Nil,
 						_List_fromArray(
 							[
@@ -9755,7 +9757,11 @@ var $author$project$Character$view = function (character) {
 									])),
 								A2(
 								$elm$html$Html$ul,
-								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('flow'),
+										$elm$html$Html$Attributes$class('abilities-list')
+									]),
 								A2(
 									$elm$core$List$map,
 									function (ability) {
