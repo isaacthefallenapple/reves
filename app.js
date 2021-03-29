@@ -9678,20 +9678,10 @@ var $author$project$Character$view = function (character) {
 								_List_fromArray(
 									[
 										A2(
-										$elm$html$Html$div,
+										$elm$html$Html$h2,
+										_List_Nil,
 										_List_fromArray(
 											[
-												$elm$html$Html$Attributes$class('flex gap-500')
-											]),
-										_List_fromArray(
-											[
-												A2(
-												$elm$html$Html$h2,
-												_List_Nil,
-												_List_fromArray(
-													[
-														$elm$html$Html$text('Skills')
-													])),
 												A2(
 												$elm$html$Html$a,
 												_List_fromArray(
@@ -9702,7 +9692,7 @@ var $author$project$Character$view = function (character) {
 													]),
 												_List_fromArray(
 													[
-														$elm$html$Html$text('?')
+														$elm$html$Html$text('Skills')
 													]))
 											])),
 										A3($author$project$Character$viewBoolDict, $author$project$Character$UpdatedSkills, $author$project$Boon$Skill$toString, character.skills)
@@ -9716,20 +9706,10 @@ var $author$project$Character$view = function (character) {
 								_List_fromArray(
 									[
 										A2(
-										$elm$html$Html$div,
+										$elm$html$Html$h2,
+										_List_Nil,
 										_List_fromArray(
 											[
-												$elm$html$Html$Attributes$class('flex gap-500')
-											]),
-										_List_fromArray(
-											[
-												A2(
-												$elm$html$Html$h2,
-												_List_Nil,
-												_List_fromArray(
-													[
-														$elm$html$Html$text('Domains')
-													])),
 												A2(
 												$elm$html$Html$a,
 												_List_fromArray(
@@ -9740,7 +9720,7 @@ var $author$project$Character$view = function (character) {
 													]),
 												_List_fromArray(
 													[
-														$elm$html$Html$text('?')
+														$elm$html$Html$text('Domains')
 													]))
 											])),
 										A3($author$project$Character$viewBoolDict, $author$project$Character$UpdatedDomains, $author$project$Boon$Domain$toString, character.domains)
@@ -9755,20 +9735,10 @@ var $author$project$Character$view = function (character) {
 						_List_fromArray(
 							[
 								A2(
-								$elm$html$Html$div,
+								$elm$html$Html$h2,
+								_List_Nil,
 								_List_fromArray(
 									[
-										$elm$html$Html$Attributes$class('flex gap-500')
-									]),
-								_List_fromArray(
-									[
-										A2(
-										$elm$html$Html$h2,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('Abilities')
-											])),
 										A2(
 										$elm$html$Html$a,
 										_List_fromArray(
@@ -9780,7 +9750,7 @@ var $author$project$Character$view = function (character) {
 											]),
 										_List_fromArray(
 											[
-												$elm$html$Html$text('add more')
+												$elm$html$Html$text('Abilities')
 											]))
 									])),
 								A2(
@@ -9835,20 +9805,10 @@ var $author$project$Character$view = function (character) {
 						_List_fromArray(
 							[
 								A2(
-								$elm$html$Html$div,
+								$elm$html$Html$h2,
+								_List_Nil,
 								_List_fromArray(
 									[
-										$elm$html$Html$Attributes$class('flex gap-500')
-									]),
-								_List_fromArray(
-									[
-										A2(
-										$elm$html$Html$h2,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('Equipment')
-											])),
 										A2(
 										$elm$html$Html$a,
 										_List_fromArray(
@@ -9859,7 +9819,7 @@ var $author$project$Character$view = function (character) {
 											]),
 										_List_fromArray(
 											[
-												$elm$html$Html$text('?')
+												$elm$html$Html$text('Equipment')
 											]))
 									])),
 								A2(
