@@ -1,0 +1,9 @@
+.abilities {
+    min-height: 22.5rem;
+
+    ul {
+        max-height: 18rem;
+        overflow-y: scroll;
+        position: relative;
+    }
+}

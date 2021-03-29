@@ -4,13 +4,21 @@
     max-width: 40ch;
 
     & > summary {
+        list-style: none;
+        position: relative;
+
+        &:focus {
+            outline: none;
+
+            > :first-child {
+                border-bottom: 2px solid black;
+            }
+        }
+
         & > :first-child {
             padding-left: $offset;
         }
 
-        list-style: none;
-
-        position: relative;
         &::before {
             content: "+";
             position: absolute;

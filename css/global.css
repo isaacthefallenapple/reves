@@ -398,6 +398,14 @@ select {
   position: relative;
 }
 
+.ability > summary:focus {
+  outline: none;
+}
+
+.ability > summary:focus > :first-child {
+  border-bottom: 2px solid black;
+}
+
 .ability > summary > :first-child {
   padding-left: 1.5ch;
 }
@@ -411,6 +419,16 @@ select {
 
 .ability[open] > summary::before {
   content: "-";
+}
+
+.abilities {
+  min-height: 22.5rem;
+}
+
+.abilities ul {
+  max-height: 18rem;
+  overflow-y: scroll;
+  position: relative;
 }
 
 .checkbox-list label {
