@@ -19,6 +19,8 @@
 @import "blocks/ability";
 @import "blocks/abilities";
 @import "blocks/checkbox-list";
+@import "blocks/class";
+@import "blocks/assignment";
 
 // Global CSS starts
 body {
@@ -54,6 +56,10 @@ h3 {
 
 a {
     color: currentColor;
+}
+
+section {
+    @extend .flow;
 }
 
 :focus {

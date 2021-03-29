@@ -273,7 +273,7 @@ select {
 
 .wrapper {
   max-width: 60rem;
-  margin: 0 auto;
+  margin-inline: auto;
   padding: 0 1.33rem;
 }
 
@@ -288,7 +288,7 @@ select {
   display: none;
 }
 
-.flow > * + * {
+.flow > * + *, section > * + * {
   margin-top: var(--flow-space, 1em);
 }
 
@@ -434,6 +434,14 @@ select {
 
 .checkbox-list label {
   margin-left: 0.5em;
+}
+
+.class {
+  --flow-space: get-size("300");
+}
+
+.assignment {
+  --flow-space: get-size("300");
 }
 
 body {

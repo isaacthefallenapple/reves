@@ -9590,7 +9590,7 @@ var $author$project$Character$view = function (character) {
 				$elm$html$Html$main_,
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$class('wrapper'),
+						$elm$html$Html$Attributes$class('wrapper gap-top-700'),
 						$elm$html$Html$Attributes$class('character')
 					]),
 				_List_fromArray(
@@ -9645,7 +9645,7 @@ var $author$project$Character$view = function (character) {
 								$elm$html$Html$div,
 								_List_fromArray(
 									[
-										$elm$html$Html$Attributes$class('font-size-700')
+										$elm$html$Html$Attributes$class('text-500')
 									]),
 								_List_fromArray(
 									[
@@ -9671,7 +9671,7 @@ var $author$project$Character$view = function (character) {
 								$elm$html$Html$div,
 								_List_fromArray(
 									[
-										$elm$html$Html$Attributes$class('font-size-700')
+										$elm$html$Html$Attributes$class('text-500')
 									]),
 								_List_fromArray(
 									[

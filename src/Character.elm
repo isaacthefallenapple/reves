@@ -233,7 +233,7 @@ view character =
     { title = character.name
     , body =
         [ main_
-            [ class "wrapper"
+            [ class "wrapper gap-top-700"
             , class "character"
             ]
             [ section
@@ -253,7 +253,7 @@ view character =
                     []
                     [ text "Class" ]
                 , div
-                    [ class "font-size-700" ]
+                    [ class "text-500" ]
                     [ text character.class ]
                 ]
             , section
@@ -262,7 +262,7 @@ view character =
                     []
                     [ text "Assignment" ]
                 , div
-                    [ class "font-size-700" ]
+                    [ class "text-500" ]
                     [ text character.assignment ]
                 ]
             , section
