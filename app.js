@@ -9580,7 +9580,8 @@ var $author$project$Character$view = function (character) {
 				$elm$html$Html$main_,
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$class('wrapper gap-top-700')
+						$elm$html$Html$Attributes$class('wrapper'),
+						$elm$html$Html$Attributes$class('character')
 					]),
 				_List_fromArray(
 					[

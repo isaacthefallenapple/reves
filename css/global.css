@@ -280,6 +280,100 @@ img:not([alt]) {
   }
 }
 
+.wrapper {
+  max-width: 60rem;
+  margin: 0 auto;
+  padding: 0 1.33rem;
+}
+
+.character {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: (auto)[3];
+      grid-template-columns: repeat(3, auto);
+  -ms-grid-rows: (auto)[7];
+      grid-template-rows: repeat(7, auto);
+      grid-template-areas: "name_ name_ name_" "class assignment assignment" "resistances resistances resistances" "skills-and-domains abilities equipment" "skills-and-domains knacks bonds" "skills-and-domains refresh fallout" ". notes notes";
+  gap: 1em;
+}
+
+.character .name {
+  -ms-grid-row: 1;
+  -ms-grid-column: 1;
+  -ms-grid-column-span: 3;
+  grid-area: name_;
+}
+
+.character .class {
+  -ms-grid-row: 2;
+  -ms-grid-column: 1;
+  grid-area: class;
+}
+
+.character .assignment {
+  -ms-grid-row: 2;
+  -ms-grid-column: 2;
+  -ms-grid-column-span: 2;
+  grid-area: assignment;
+}
+
+.character .resistances {
+  -ms-grid-row: 3;
+  -ms-grid-column: 1;
+  -ms-grid-column-span: 3;
+  grid-area: resistances;
+}
+
+.character .skills-and-domains {
+  -ms-grid-row: 4;
+  -ms-grid-row-span: 3;
+  -ms-grid-column: 1;
+  grid-area: skills-and-domains;
+}
+
+.character .abilities {
+  -ms-grid-row: 4;
+  -ms-grid-column: 2;
+  grid-area: abilities;
+}
+
+.character .equipment {
+  -ms-grid-row: 4;
+  -ms-grid-column: 3;
+  grid-area: equipment;
+}
+
+.character .knacks {
+  -ms-grid-row: 5;
+  -ms-grid-column: 2;
+  grid-area: knacks;
+}
+
+.character .bonds {
+  -ms-grid-row: 5;
+  -ms-grid-column: 3;
+  grid-area: bonds;
+}
+
+.character .refresh {
+  -ms-grid-row: 6;
+  -ms-grid-column: 2;
+  grid-area: refresh;
+}
+
+.character .fallout {
+  -ms-grid-row: 6;
+  -ms-grid-column: 3;
+  grid-area: fallout;
+}
+
+.character .notes {
+  -ms-grid-row: 7;
+  -ms-grid-column: 2;
+  -ms-grid-column-span: 2;
+  grid-area: notes;
+}
+
 body {
   line-height: 1.5;
   overflow-x: hidden;
@@ -307,6 +401,10 @@ h3 {
 
 a {
   color: currentColor;
+}
+
+table {
+  border-collapse: collapse;
 }
 
 :focus {

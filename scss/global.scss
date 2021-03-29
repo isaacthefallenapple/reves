@@ -7,6 +7,12 @@
 // Pull in modern reset
 @import "reset";
 
+// Utilities
+@import "utilities/wrapper";
+
+// Blocks
+@import "blocks/character";
+
 // Global CSS starts
 body {
     line-height: 1.5;
@@ -36,6 +42,10 @@ h3 {
 
 a {
     color: currentColor;
+}
+
+table {
+    border-collapse: collapse;
 }
 
 :focus {
