@@ -292,6 +292,10 @@ img:not([alt]) {
   resize: none;
 }
 
+.hidden {
+  display: none;
+}
+
 .character {
   display: -ms-grid;
   display: grid;
