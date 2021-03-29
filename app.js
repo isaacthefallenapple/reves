@@ -9333,6 +9333,7 @@ var $elm$html$Html$section = _VirtualDom_node('section');
 var $elm$html$Html$textarea = _VirtualDom_node('textarea');
 var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
 var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
+var $elm$html$Html$Attributes$for = $elm$html$Html$Attributes$stringProperty('htmlFor');
 var $elm$core$List$head = function (list) {
 	if (list.b) {
 		var x = list.a;
@@ -9357,97 +9358,79 @@ var $author$project$TypedDict$get = F2(
 						$elm$core$Basics$eq(key)),
 					dict)));
 	});
-var $elm$core$List$singleton = function (value) {
-	return _List_fromArray(
-		[value]);
-};
-var $elm$html$Html$table = _VirtualDom_node('table');
-var $elm$html$Html$tbody = _VirtualDom_node('tbody');
-var $elm$html$Html$td = _VirtualDom_node('td');
-var $elm$html$Html$th = _VirtualDom_node('th');
-var $elm$html$Html$thead = _VirtualDom_node('thead');
-var $elm$html$Html$tr = _VirtualDom_node('tr');
+var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
+var $elm$core$String$toLower = _String_toLower;
 var $author$project$Boon$Resistance$view = F2(
 	function (toMsg, resistances) {
 		var resistancesList = _List_fromArray(
 			[$author$project$Boon$Resistance$Body, $author$project$Boon$Resistance$Resolve, $author$project$Boon$Resistance$Resources, $author$project$Boon$Resistance$Shadow, $author$project$Boon$Resistance$Reputation, $author$project$Boon$Resistance$Armor]);
+		var labelId = A2(
+			$elm$core$Basics$composeR,
+			$author$project$Boon$Resistance$toString,
+			A2(
+				$elm$core$Basics$composeR,
+				$elm$core$String$toLower,
+				$elm$core$Basics$append('resistance--')));
 		return A2(
-			$elm$html$Html$table,
-			_List_Nil,
+			$elm$html$Html$div,
 			_List_fromArray(
 				[
-					A2(
-					$elm$html$Html$thead,
-					_List_Nil,
-					_List_fromArray(
-						[
-							A2(
-							$elm$html$Html$tr,
-							_List_Nil,
-							A2(
-								$elm$core$List$map,
-								A2(
-									$elm$core$Basics$composeR,
-									$author$project$Boon$Resistance$toString,
-									A2(
-										$elm$core$Basics$composeR,
-										$elm$html$Html$text,
+					$elm$html$Html$Attributes$class('resistances-table')
+				]),
+			_Utils_ap(
+				A2(
+					$elm$core$List$map,
+					function (r) {
+						return A2(
+							$elm$html$Html$label,
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$for(
+									labelId(r))
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text(
+									$author$project$Boon$Resistance$toString(r))
+								]));
+					},
+					resistancesList),
+				A2(
+					$elm$core$List$map,
+					function (r) {
+						return A2(
+							$elm$html$Html$input,
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$id(
+									labelId(r)),
+									$elm$html$Html$Attributes$type_('number'),
+									$elm$html$Html$Attributes$value(
+									$elm$core$String$fromInt(
 										A2(
-											$elm$core$Basics$composeR,
-											$elm$core$List$singleton,
-											$elm$html$Html$th(_List_Nil)))),
-								resistancesList))
-						])),
-					A2(
-					$elm$html$Html$tbody,
-					_List_Nil,
-					_List_fromArray(
-						[
-							A2(
-							$elm$html$Html$tr,
-							_List_Nil,
-							A2(
-								$elm$core$List$map,
-								function (r) {
-									return A2(
-										$elm$html$Html$td,
-										_List_Nil,
-										_List_fromArray(
-											[
-												A2(
-												$elm$html$Html$input,
-												_List_fromArray(
-													[
-														$elm$html$Html$Attributes$type_('number'),
-														$elm$html$Html$Attributes$value(
-														$elm$core$String$fromInt(
-															A2(
-																$elm$core$Maybe$withDefault,
-																0,
-																A2($author$project$TypedDict$get, r, resistances)))),
-														$elm$html$Html$Events$onInput(
-														function (s) {
-															return toMsg(
-																A3(
-																	$author$project$TypedDict$set,
-																	r,
-																	A3(
-																		$elm$core$Basics$clamp,
-																		0,
-																		5,
-																		A2(
-																			$elm$core$Maybe$withDefault,
-																			0,
-																			$elm$core$String$toInt(s))),
-																	resistances));
-														})
-													]),
-												_List_Nil)
-											]));
-								},
-								resistancesList))
-						]))
-				]));
+											$elm$core$Maybe$withDefault,
+											0,
+											A2($author$project$TypedDict$get, r, resistances)))),
+									$elm$html$Html$Events$onInput(
+									function (s) {
+										return toMsg(
+											A3(
+												$author$project$TypedDict$set,
+												r,
+												A3(
+													$elm$core$Basics$clamp,
+													0,
+													5,
+													A2(
+														$elm$core$Maybe$withDefault,
+														0,
+														$elm$core$String$toInt(s))),
+												resistances));
+									})
+								]),
+							_List_Nil);
+					},
+					resistancesList)));
 	});
 var $elm$html$Html$Attributes$boolProperty = F2(
 	function (key, bool) {
@@ -10007,7 +9990,6 @@ var $elm$html$Html$b = _VirtualDom_node('b');
 var $elm$html$Html$dd = _VirtualDom_node('dd');
 var $elm$html$Html$dl = _VirtualDom_node('dl');
 var $elm$html$Html$dt = _VirtualDom_node('dt');
-var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
 var $elm$core$String$toUpper = _String_toUpper;
 var $author$project$PlayAids$topicToStringPretty = function (topic) {
 	var stringified = $author$project$PlayAids$topicToString(topic);

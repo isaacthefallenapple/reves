@@ -1,0 +1,8 @@
+.resistances {
+    & > :first-child {
+        display: grid;
+        grid-template-columns: repeat(6, 12ch);
+        grid-template-rows: 2rem 2rem;
+        column-gap: 1ch;
+    }
+}

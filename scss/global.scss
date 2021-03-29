@@ -12,6 +12,7 @@
 
 // Blocks
 @import "blocks/character";
+@import "blocks/resistances";
 
 // Global CSS starts
 body {
@@ -42,10 +43,6 @@ h3 {
 
 a {
     color: currentColor;
-}
-
-table {
-    border-collapse: collapse;
 }
 
 :focus {
