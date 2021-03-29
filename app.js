@@ -9295,6 +9295,14 @@ var $author$project$Character$UpdatedResistances = function (a) {
 var $author$project$Character$UpdatedSkills = function (a) {
 	return {$: 'UpdatedSkills', a: a};
 };
+var $elm$virtual_dom$VirtualDom$attribute = F2(
+	function (key, value) {
+		return A2(
+			_VirtualDom_attribute,
+			_VirtualDom_noOnOrFormAction(key),
+			_VirtualDom_noJavaScriptOrHtmlUri(value));
+	});
+var $elm$html$Html$Attributes$attribute = $elm$virtual_dom$VirtualDom$attribute;
 var $elm$html$Html$input = _VirtualDom_node('input');
 var $elm$html$Html$label = _VirtualDom_node('label');
 var $elm$html$Html$main_ = _VirtualDom_node('main');
@@ -9457,6 +9465,14 @@ var $author$project$TypedDict$unwrap = function (_v0) {
 };
 var $author$project$Character$viewBoolDict = F3(
 	function (toMsg, labeller, dict) {
+		var list = $author$project$TypedDict$unwrap(dict);
+		var labelId = A2(
+			$elm$core$Basics$composeR,
+			labeller,
+			A2(
+				$elm$core$Basics$composeR,
+				$elm$core$String$toLower,
+				$elm$core$Basics$append('cb-')));
 		var viewItem = function (_v0) {
 			var k = _v0.a;
 			var isChecked = _v0.b;
@@ -9466,32 +9482,41 @@ var $author$project$Character$viewBoolDict = F3(
 				_List_fromArray(
 					[
 						A2(
-						$elm$html$Html$label,
-						_List_Nil,
+						$elm$html$Html$input,
 						_List_fromArray(
 							[
-								A2(
-								$elm$html$Html$input,
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$type_('checkbox'),
-										$elm$html$Html$Attributes$checked(isChecked),
-										$elm$html$Html$Events$onCheck(
-										function (b) {
-											return toMsg(
-												A3($author$project$TypedDict$set, k, b, dict));
-										})
-									]),
-								_List_Nil),
+								$elm$html$Html$Attributes$id(
+								labelId(k)),
+								$elm$html$Html$Attributes$type_('checkbox'),
+								$elm$html$Html$Attributes$checked(isChecked),
+								$elm$html$Html$Events$onCheck(
+								function (b) {
+									return toMsg(
+										A3($author$project$TypedDict$set, k, b, dict));
+								})
+							]),
+						_List_Nil),
+						A2(
+						$elm$html$Html$label,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$for(
+								labelId(k))
+							]),
+						_List_fromArray(
+							[
 								$elm$html$Html$text(
 								labeller(k))
 							]))
 					]));
 		};
-		var list = $author$project$TypedDict$unwrap(dict);
 		return A2(
 			$elm$html$Html$ul,
-			_List_Nil,
+			_List_fromArray(
+				[
+					A2($elm$html$Html$Attributes$attribute, 'role', 'list'),
+					$elm$html$Html$Attributes$class('checkbox-list')
+				]),
 			A2($elm$core$List$map, viewItem, list));
 	});
 var $elm$html$Html$br = _VirtualDom_node('br');
@@ -9732,6 +9757,7 @@ var $author$project$Character$view = function (character) {
 						$elm$html$Html$section,
 						_List_fromArray(
 							[
+								$elm$html$Html$Attributes$class('flow'),
 								$elm$html$Html$Attributes$class('abilities')
 							]),
 						_List_fromArray(
@@ -9759,8 +9785,9 @@ var $author$project$Character$view = function (character) {
 								$elm$html$Html$ul,
 								_List_fromArray(
 									[
-										$elm$html$Html$Attributes$class('flow'),
-										$elm$html$Html$Attributes$class('abilities-list')
+										$elm$html$Html$Attributes$class('flow gap-top-500'),
+										$elm$html$Html$Attributes$class('abilities-list'),
+										A2($elm$html$Html$Attributes$attribute, 'role', 'list')
 									]),
 								A2(
 									$elm$core$List$map,

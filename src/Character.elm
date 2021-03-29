@@ -293,7 +293,9 @@ view character =
                     ]
                 ]
             , section
-                [ class "abilities" ]
+                [ class "flow"
+                , class "abilities"
+                ]
                 [ h2
                     []
                     [ a
@@ -301,8 +303,9 @@ view character =
                         [ text "Abilities" ]
                     ]
                 , ul
-                    [ class "flow"
+                    [ class "flow gap-top-500"
                     , class "abilities-list"
+                    , attribute "role" "list"
                     ]
                     (List.map
                         (\ability ->
@@ -392,19 +395,26 @@ viewBoolDict toMsg labeller dict =
         list =
             TypedDict.unwrap dict
 
+        labelId =
+            labeller >> String.toLower >> (++) "cb-"
+
         viewItem ( k, isChecked ) =
             li []
-                [ label []
-                    [ input
-                        [ type_ "checkbox"
-                        , checked isChecked
-                        , onCheck (\b -> TypedDict.set k b dict |> toMsg)
-                        ]
-                        []
-                    , text (labeller k)
+                [ input
+                    [ id (labelId k)
+                    , type_ "checkbox"
+                    , checked isChecked
+                    , onCheck (\b -> TypedDict.set k b dict |> toMsg)
+                    ]
+                    []
+                , label
+                    [ for (labelId k) ]
+                    [ text (labeller k)
                     ]
                 ]
     in
     ul
-        []
+        [ attribute "role" "list"
+        , class "checkbox-list"
+        ]
         (List.map viewItem list)
