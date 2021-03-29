@@ -5526,6 +5526,7 @@ var $author$project$Main$Character = function (a) {
 var $author$project$Main$Landing = function (a) {
 	return {$: 'Landing', a: a};
 };
+var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $author$project$Main$Abilities = function (a) {
 	return {$: 'Abilities', a: a};
 };
@@ -5551,7 +5552,6 @@ var $author$project$Abilities$GotMetadata = function (a) {
 	return {$: 'GotMetadata', a: a};
 };
 var $author$project$Abilities$Loading = {$: 'Loading'};
-var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Dict$RBEmpty_elm_builtin = {$: 'RBEmpty_elm_builtin'};
 var $elm$core$Dict$empty = $elm$core$Dict$RBEmpty_elm_builtin;
 var $elm$json$Json$Decode$decodeString = _Json_runOnString;
@@ -7035,6 +7035,14 @@ var $author$project$Session$loadLocal = F2(
 					{changes: $author$project$Session$SavedLocally, character: _char}));
 		}
 	});
+var $elm$core$Tuple$mapSecond = F2(
+	function (func, _v0) {
+		var x = _v0.a;
+		var y = _v0.b;
+		return _Utils_Tuple2(
+			x,
+			func(y));
+	});
 var $author$project$Session$NoCharacter = function (a) {
 	return {$: 'NoCharacter', a: a};
 };
@@ -7378,24 +7386,40 @@ var $author$project$Route$parse = function (url) {
 		$author$project$Route$Root,
 		A2($elm$url$Url$Parser$parse, $author$project$Route$parser, url));
 };
+var $elm$json$Json$Encode$null = _Json_encodeNull;
+var $author$project$Ports$updatedCharacter = _Platform_outgoingPort(
+	'updatedCharacter',
+	function ($) {
+		return $elm$json$Json$Encode$null;
+	});
 var $author$project$Main$init = F3(
 	function (flags, url, navKey) {
 		return A2(
-			$author$project$Main$changeRoute,
-			$author$project$Route$parse(url),
-			function () {
-				if (flags.$ === 'Nothing') {
-					return $author$project$Main$Landing(
-						$author$project$Session$new(navKey));
-				} else {
-					var json = flags.a;
-					return $author$project$Main$Character(
-						A2(
-							$author$project$Session$loadLocal,
-							$author$project$Character$decodeLocalCharacter(json),
-							$author$project$Session$new(navKey)));
-				}
-			}());
+			$elm$core$Tuple$mapSecond,
+			function (cmd) {
+				return $elm$core$Platform$Cmd$batch(
+					_List_fromArray(
+						[
+							cmd,
+							$author$project$Ports$updatedCharacter(_Utils_Tuple0)
+						]));
+			},
+			A2(
+				$author$project$Main$changeRoute,
+				$author$project$Route$parse(url),
+				function () {
+					if (flags.$ === 'Nothing') {
+						return $author$project$Main$Landing(
+							$author$project$Session$new(navKey));
+					} else {
+						var json = flags.a;
+						return $author$project$Main$Character(
+							A2(
+								$author$project$Session$loadLocal,
+								$author$project$Character$decodeLocalCharacter(json),
+								$author$project$Session$new(navKey)));
+					}
+				}()));
 	});
 var $author$project$Main$SavedChanges = {$: 'SavedChanges'};
 var $author$project$Ports$confirmLocalStorage = _Platform_incomingPort(
@@ -7766,7 +7790,6 @@ var $author$project$Boon$encode = function (boon) {
 			}
 		}());
 };
-var $elm$json$Json$Encode$null = _Json_encodeNull;
 var $author$project$Ability$encode = function (ability) {
 	return $elm$json$Json$Encode$object(
 		_List_fromArray(
@@ -8430,11 +8453,6 @@ var $author$project$Main$updateSession = F2(
 				var aid = model.b;
 				return A2($author$project$Main$PlayAid, session, aid);
 		}
-	});
-var $author$project$Ports$updatedCharacter = _Platform_outgoingPort(
-	'updatedCharacter',
-	function ($) {
-		return $elm$json$Json$Encode$null;
 	});
 var $author$project$Main$update = F2(
 	function (msg, model) {

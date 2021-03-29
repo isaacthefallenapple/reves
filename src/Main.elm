@@ -418,13 +418,16 @@ update msg model =
 
 init : Maybe String -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
 init flags url navKey =
-    changeRoute (Route.parse url)
-        (case flags of
-            Nothing ->
-                Landing (Session.new navKey)
+    Tuple.mapSecond (\cmd -> Cmd.batch [ cmd, Ports.updatedCharacter () ])
+        (changeRoute
+            (Route.parse url)
+            (case flags of
+                Nothing ->
+                    Landing (Session.new navKey)
 
-            Just json ->
-                Character <| Session.loadLocal (Character.decodeLocalCharacter json) (Session.new navKey)
+                Just json ->
+                    Character <| Session.loadLocal (Character.decodeLocalCharacter json) (Session.new navKey)
+            )
         )
 
 
