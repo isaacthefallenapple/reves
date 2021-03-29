@@ -9582,7 +9582,7 @@ var $author$project$Character$view = function (character) {
 								_List_fromArray(
 									[
 										A2(
-										$elm$html$Html$h2,
+										$elm$html$Html$h1,
 										_List_Nil,
 										_List_fromArray(
 											[

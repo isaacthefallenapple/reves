@@ -408,15 +408,19 @@ h1,
 h2,
 h3 {
   line-height: 1.2;
+  font-family: "Staatliches", cursive;
 }
 
 h1 {
   font-size: 2.4rem;
 }
 
-h2,
-h3 {
+h2 {
   font-size: 1.77rem;
+}
+
+h3 {
+  font-size: 1.33rem;
 }
 
 a {

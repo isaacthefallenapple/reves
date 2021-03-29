@@ -240,7 +240,7 @@ view character =
                 [ class "name" ]
                 [ label
                     []
-                    [ h2
+                    [ h1
                         []
                         [ text "Name" ]
                     , input [ type_ "text", value character.name, onInput UpdatedName ]

@@ -32,15 +32,20 @@ h1,
 h2,
 h3 {
     line-height: 1.2;
+
+    @include apply-utility("font", "display");
 }
 
 h1 {
     font-size: get-size("700");
 }
 
-h2,
-h3 {
+h2 {
     font-size: get-size("600");
+}
+
+h3 {
+    font-size: get-size("500");
 }
 
 a {
