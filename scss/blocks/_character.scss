@@ -12,51 +12,51 @@
         ". notes notes";
     gap: get-size("600");
 
-    & .name {
+    .name {
         grid-area: name_;
     }
 
-    & .class {
+    .class {
         grid-area: class;
     }
 
-    & .assignment {
+    .assignment {
         grid-area: assignment;
     }
 
-    & .resistances {
+    .resistances {
         grid-area: resistances;
     }
 
-    & .skills-and-domains {
+    .skills-and-domains {
         grid-area: skills-and-domains;
     }
 
-    & .abilities {
+    .abilities {
         grid-area: abilities;
     }
 
-    & .equipment {
+    .equipment {
         grid-area: equipment;
     }
 
-    & .knacks {
+    .knacks {
         grid-area: knacks;
     }
 
-    & .bonds {
+    .bonds {
         grid-area: bonds;
     }
 
-    & .refresh {
+    .refresh {
         grid-area: refresh;
     }
 
-    & .fallout {
+    .fallout {
         grid-area: fallout;
     }
 
-    & .notes {
+    .notes {
         grid-area: notes;
     }
 }

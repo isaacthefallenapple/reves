@@ -3,7 +3,7 @@
 
     max-width: 40ch;
 
-    & > summary {
+    > summary {
         list-style: none;
         position: relative;
 
@@ -28,7 +28,7 @@
     }
 
     &[open] {
-        & > summary {
+        > summary {
             &::before {
                 content: "-";
             }
