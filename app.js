@@ -5526,6 +5526,7 @@ var $author$project$Main$Character = function (a) {
 var $author$project$Main$Landing = function (a) {
 	return {$: 'Landing', a: a};
 };
+var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $author$project$Main$Abilities = function (a) {
 	return {$: 'Abilities', a: a};
 };
@@ -5551,7 +5552,6 @@ var $author$project$Abilities$GotMetadata = function (a) {
 	return {$: 'GotMetadata', a: a};
 };
 var $author$project$Abilities$Loading = {$: 'Loading'};
-var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Dict$RBEmpty_elm_builtin = {$: 'RBEmpty_elm_builtin'};
 var $elm$core$Dict$empty = $elm$core$Dict$RBEmpty_elm_builtin;
 var $elm$json$Json$Decode$decodeString = _Json_runOnString;
@@ -6575,35 +6575,85 @@ var $author$project$Boon$Domain$HighSociety = {$: 'HighSociety'};
 var $author$project$Boon$Domain$LowSociety = {$: 'LowSociety'};
 var $author$project$Boon$Domain$Science = {$: 'Science'};
 var $author$project$Boon$Domain$Weirdness = {$: 'Weirdness'};
-var $author$project$TypedDict$TypedDict = function (a) {
-	return {$: 'TypedDict', a: a};
+var $author$project$TypeDict$Dict = function (a) {
+	return {$: 'Dict', a: a};
 };
-var $author$project$TypedDict$fromListWithDefault = F2(
-	function (defaultVal, keys) {
-		return $author$project$TypedDict$TypedDict(
-			A2(
-				$elm$core$List$map,
-				function (k) {
-					return _Utils_Tuple2(k, defaultVal);
-				},
-				keys));
+var $author$project$TypeDict$fromList = F2(
+	function (hasher, list) {
+		return $author$project$TypeDict$Dict(
+			{
+				hasher: hasher,
+				inner: $elm$core$Dict$fromList(
+					A2(
+						$elm$core$List$map,
+						function (_v0) {
+							var k = _v0.a;
+							var v = _v0.b;
+							return _Utils_Tuple2(
+								hasher(k),
+								_Utils_Tuple2(k, v));
+						},
+						list))
+			});
 	});
+var $author$project$Boon$Domain$toString = function (domain) {
+	switch (domain.$) {
+		case 'Criminal':
+			return 'Criminal';
+		case 'HighSociety':
+			return 'High Society';
+		case 'LowSociety':
+			return 'Low Society';
+		case 'Weirdness':
+			return 'Weirdness';
+		case 'Hegemony':
+			return 'Hegemony';
+		default:
+			return 'Science';
+	}
+};
 var $author$project$Boon$Domain$new = A2(
-	$author$project$TypedDict$fromListWithDefault,
-	false,
-	_List_fromArray(
-		[$author$project$Boon$Domain$Criminal, $author$project$Boon$Domain$HighSociety, $author$project$Boon$Domain$LowSociety, $author$project$Boon$Domain$Weirdness, $author$project$Boon$Domain$Hegemony, $author$project$Boon$Domain$Science]));
+	$author$project$TypeDict$fromList,
+	$author$project$Boon$Domain$toString,
+	A2(
+		$elm$core$List$map,
+		function (d) {
+			return _Utils_Tuple2(d, false);
+		},
+		_List_fromArray(
+			[$author$project$Boon$Domain$Criminal, $author$project$Boon$Domain$HighSociety, $author$project$Boon$Domain$LowSociety, $author$project$Boon$Domain$Weirdness, $author$project$Boon$Domain$Hegemony, $author$project$Boon$Domain$Science])));
 var $author$project$Boon$Resistance$Armor = {$: 'Armor'};
 var $author$project$Boon$Resistance$Body = {$: 'Body'};
 var $author$project$Boon$Resistance$Reputation = {$: 'Reputation'};
 var $author$project$Boon$Resistance$Resolve = {$: 'Resolve'};
 var $author$project$Boon$Resistance$Resources = {$: 'Resources'};
 var $author$project$Boon$Resistance$Shadow = {$: 'Shadow'};
+var $author$project$Boon$Resistance$toString = function (resistance) {
+	switch (resistance.$) {
+		case 'Body':
+			return 'Body';
+		case 'Resolve':
+			return 'Resolve';
+		case 'Resources':
+			return 'Resources';
+		case 'Shadow':
+			return 'Shadow';
+		case 'Reputation':
+			return 'Reputation';
+		default:
+			return 'Armour';
+	}
+};
 var $author$project$Boon$Resistance$new = A2(
-	$author$project$TypedDict$fromListWithDefault,
-	0,
-	_List_fromArray(
-		[$author$project$Boon$Resistance$Body, $author$project$Boon$Resistance$Resolve, $author$project$Boon$Resistance$Resources, $author$project$Boon$Resistance$Shadow, $author$project$Boon$Resistance$Reputation, $author$project$Boon$Resistance$Armor]));
+	$author$project$TypeDict$fromList,
+	$author$project$Boon$Resistance$toString,
+	A2(
+		$elm$core$List$map,
+		function (r) {
+			return _Utils_Tuple2(r, 0);
+		},
+		_List_fromArray(
+			[$author$project$Boon$Resistance$Body, $author$project$Boon$Resistance$Resolve, $author$project$Boon$Resistance$Resources, $author$project$Boon$Resistance$Shadow, $author$project$Boon$Resistance$Reputation, $author$project$Boon$Resistance$Armor])));
 var $author$project$Boon$Skill$Compel = {$: 'Compel'};
 var $author$project$Boon$Skill$Deceive = {$: 'Deceive'};
 var $author$project$Boon$Skill$Hack = {$: 'Hack'};
@@ -6614,11 +6664,40 @@ var $author$project$Boon$Skill$Scramble = {$: 'Scramble'};
 var $author$project$Boon$Skill$Scrap = {$: 'Scrap'};
 var $author$project$Boon$Skill$Skulk = {$: 'Skulk'};
 var $author$project$Boon$Skill$Steal = {$: 'Steal'};
+var $author$project$Boon$Skill$toString = function (skill) {
+	switch (skill.$) {
+		case 'Compel':
+			return 'Compel';
+		case 'Deceive':
+			return 'Deceive';
+		case 'Hack':
+			return 'Hack';
+		case 'Patch':
+			return 'Patch';
+		case 'Scramble':
+			return 'Scramble';
+		case 'Scrap':
+			return 'Scrap';
+		case 'Skulk':
+			return 'Skulk';
+		case 'Investigate':
+			return 'Investigate';
+		case 'Steal':
+			return 'Steal';
+		default:
+			return 'Resist';
+	}
+};
 var $author$project$Boon$Skill$new = A2(
-	$author$project$TypedDict$fromListWithDefault,
-	false,
-	_List_fromArray(
-		[$author$project$Boon$Skill$Compel, $author$project$Boon$Skill$Deceive, $author$project$Boon$Skill$Hack, $author$project$Boon$Skill$Patch, $author$project$Boon$Skill$Scramble, $author$project$Boon$Skill$Scrap, $author$project$Boon$Skill$Skulk, $author$project$Boon$Skill$Investigate, $author$project$Boon$Skill$Steal, $author$project$Boon$Skill$Resist]));
+	$author$project$TypeDict$fromList,
+	$author$project$Boon$Skill$toString,
+	A2(
+		$elm$core$List$map,
+		function (s) {
+			return _Utils_Tuple2(s, false);
+		},
+		_List_fromArray(
+			[$author$project$Boon$Skill$Compel, $author$project$Boon$Skill$Deceive, $author$project$Boon$Skill$Hack, $author$project$Boon$Skill$Patch, $author$project$Boon$Skill$Scramble, $author$project$Boon$Skill$Scrap, $author$project$Boon$Skill$Skulk, $author$project$Boon$Skill$Investigate, $author$project$Boon$Skill$Steal, $author$project$Boon$Skill$Resist])));
 var $author$project$Character$blank = {abilities: $elm$core$Dict$empty, assignment: '', bonds: '', _class: '', domains: $author$project$Boon$Domain$new, equipment: '', fallout: '', knacks: '', name: '', notes: '', refresh: '', resistances: $author$project$Boon$Resistance$new, skills: $author$project$Boon$Skill$new};
 var $author$project$Character$Stats = function (name) {
 	return function (_class) {
@@ -6847,49 +6926,39 @@ var $author$project$Ability$decoder = A5(
 		$elm$json$Json$Decode$list($author$project$Boon$decoder)),
 	A2($elm$json$Json$Decode$field, 'text', $elm$json$Json$Decode$string));
 var $elm$json$Json$Decode$bool = _Json_decodeBool;
-var $author$project$TypedDict$from = function (list) {
-	return $author$project$TypedDict$TypedDict(list);
-};
-var $elm$core$Tuple$mapFirst = F2(
-	function (func, _v0) {
-		var x = _v0.a;
-		var y = _v0.b;
-		return _Utils_Tuple2(
-			func(x),
-			y);
+var $elm$core$Tuple$pair = F2(
+	function (a, b) {
+		return _Utils_Tuple2(a, b);
 	});
-var $author$project$TypedDict$decoder = F2(
-	function (fromString, valueDecoder) {
+var $author$project$TypeDict$Json$Decode$decodeKVPair = F2(
+	function (keyDecoder, valDecoder) {
+		return A3(
+			$elm$json$Json$Decode$map2,
+			$elm$core$Tuple$pair,
+			A2($elm$json$Json$Decode$field, 'key', keyDecoder),
+			A2($elm$json$Json$Decode$field, 'val', valDecoder));
+	});
+var $elm$core$Tuple$second = function (_v0) {
+	var y = _v0.b;
+	return y;
+};
+var $author$project$TypeDict$Json$Decode$decoder = F3(
+	function (hasher, keyDecoder, valDecoder) {
 		return A2(
 			$elm$json$Json$Decode$map,
 			A2(
 				$elm$core$Basics$composeR,
-				$elm$core$List$map(
-					$elm$core$Tuple$mapFirst(fromString)),
-				$author$project$TypedDict$from),
-			$elm$json$Json$Decode$keyValuePairs(valueDecoder));
+				$elm$core$Dict$toList,
+				A2(
+					$elm$core$Basics$composeR,
+					$elm$core$List$map($elm$core$Tuple$second),
+					$author$project$TypeDict$fromList(hasher))),
+			$elm$json$Json$Decode$dict(
+				A2($author$project$TypeDict$Json$Decode$decodeKVPair, keyDecoder, valDecoder)));
 	});
-var $author$project$Boon$Domain$decoder = A2(
-	$author$project$TypedDict$decoder,
-	A2(
-		$elm$core$Basics$composeR,
-		$author$project$Boon$Domain$fromString,
-		$elm$core$Maybe$withDefault($author$project$Boon$Domain$LowSociety)),
-	$elm$json$Json$Decode$bool);
-var $author$project$Boon$Resistance$decoder = A2(
-	$author$project$TypedDict$decoder,
-	A2(
-		$elm$core$Basics$composeR,
-		$author$project$Boon$Resistance$fromString,
-		$elm$core$Maybe$withDefault($author$project$Boon$Resistance$Body)),
-	$elm$json$Json$Decode$int);
-var $author$project$Boon$Skill$decoder = A2(
-	$author$project$TypedDict$decoder,
-	A2(
-		$elm$core$Basics$composeR,
-		$author$project$Boon$Skill$fromString,
-		$elm$core$Maybe$withDefault($author$project$Boon$Skill$Compel)),
-	$elm$json$Json$Decode$bool);
+var $author$project$Boon$Domain$decoder = A3($author$project$TypeDict$Json$Decode$decoder, $author$project$Boon$Domain$toString, $author$project$Boon$Domain$domainDecoder, $elm$json$Json$Decode$bool);
+var $author$project$Boon$Resistance$decoder = A3($author$project$TypeDict$Json$Decode$decoder, $author$project$Boon$Resistance$toString, $author$project$Boon$Resistance$resistanceDecoder, $elm$json$Json$Decode$int);
+var $author$project$Boon$Skill$decoder = A3($author$project$TypeDict$Json$Decode$decoder, $author$project$Boon$Skill$toString, $author$project$Boon$Skill$skillDecoder, $elm$json$Json$Decode$bool);
 var $NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$custom = $elm$json$Json$Decode$map2($elm$core$Basics$apR);
 var $elm$json$Json$Decode$decodeValue = _Json_run;
 var $elm$json$Json$Decode$value = _Json_decodeValue;
@@ -7034,6 +7103,14 @@ var $author$project$Session$loadLocal = F2(
 					val,
 					{changes: $author$project$Session$SavedLocally, character: _char}));
 		}
+	});
+var $elm$core$Tuple$mapSecond = F2(
+	function (func, _v0) {
+		var x = _v0.a;
+		var y = _v0.b;
+		return _Utils_Tuple2(
+			x,
+			func(y));
 	});
 var $author$project$Session$NoCharacter = function (a) {
 	return {$: 'NoCharacter', a: a};
@@ -7378,24 +7455,40 @@ var $author$project$Route$parse = function (url) {
 		$author$project$Route$Root,
 		A2($elm$url$Url$Parser$parse, $author$project$Route$parser, url));
 };
+var $elm$json$Json$Encode$null = _Json_encodeNull;
+var $author$project$Ports$updatedCharacter = _Platform_outgoingPort(
+	'updatedCharacter',
+	function ($) {
+		return $elm$json$Json$Encode$null;
+	});
 var $author$project$Main$init = F3(
 	function (flags, url, navKey) {
 		return A2(
-			$author$project$Main$changeRoute,
-			$author$project$Route$parse(url),
-			function () {
-				if (flags.$ === 'Nothing') {
-					return $author$project$Main$Landing(
-						$author$project$Session$new(navKey));
-				} else {
-					var json = flags.a;
-					return $author$project$Main$Character(
-						A2(
-							$author$project$Session$loadLocal,
-							$author$project$Character$decodeLocalCharacter(json),
-							$author$project$Session$new(navKey)));
-				}
-			}());
+			$elm$core$Tuple$mapSecond,
+			function (cmd) {
+				return $elm$core$Platform$Cmd$batch(
+					_List_fromArray(
+						[
+							cmd,
+							$author$project$Ports$updatedCharacter(_Utils_Tuple0)
+						]));
+			},
+			A2(
+				$author$project$Main$changeRoute,
+				$author$project$Route$parse(url),
+				function () {
+					if (flags.$ === 'Nothing') {
+						return $author$project$Main$Landing(
+							$author$project$Session$new(navKey));
+					} else {
+						var json = flags.a;
+						return $author$project$Main$Character(
+							A2(
+								$author$project$Session$loadLocal,
+								$author$project$Character$decodeLocalCharacter(json),
+								$author$project$Session$new(navKey)));
+					}
+				}()));
 	});
 var $author$project$Main$SavedChanges = {$: 'SavedChanges'};
 var $author$project$Ports$confirmLocalStorage = _Platform_incomingPort(
@@ -7428,45 +7521,58 @@ var $elm$core$Basics$clamp = F3(
 	function (low, high, number) {
 		return (_Utils_cmp(number, low) < 0) ? low : ((_Utils_cmp(number, high) > 0) ? high : number);
 	});
-var $author$project$TypedDict$set = F3(
-	function (key, val, _v0) {
-		var dict = _v0.a;
-		return $author$project$TypedDict$TypedDict(
-			A2(
-				$elm$core$List$map,
-				function (_v1) {
-					var k = _v1.a;
-					var v = _v1.b;
-					return _Utils_eq(k, key) ? _Utils_Tuple2(k, val) : _Utils_Tuple2(k, v);
-				},
-				dict));
+var $author$project$TypeDict$hash = F2(
+	function (_v0, k) {
+		var hasher = _v0.a.hasher;
+		return hasher(k);
 	});
-var $author$project$TypedDict$setAll = F2(
-	function (kvPairs, dict) {
-		return A3(
-			$elm$core$List$foldl,
-			function (_v0) {
-				var k = _v0.a;
-				var v = _v0.b;
-				return A2($author$project$TypedDict$set, k, v);
-			},
-			dict,
-			kvPairs);
+var $author$project$TypeDict$mapInner = F2(
+	function (f, _v0) {
+		var inner = _v0.a.inner;
+		var hasher = _v0.a.hasher;
+		return $author$project$TypeDict$Dict(
+			{
+				hasher: hasher,
+				inner: f(inner)
+			});
 	});
-var $author$project$TypedDict$update = F3(
-	function (key, updater, _v0) {
-		var dict = _v0.a;
-		return $author$project$TypedDict$TypedDict(
+var $author$project$TypeDict$insert = F3(
+	function (key, val, dict) {
+		return A2(
+			$author$project$TypeDict$mapInner,
 			A2(
-				$elm$core$List$map,
-				function (_v1) {
-					var k = _v1.a;
-					var v = _v1.b;
-					return _Utils_eq(k, key) ? _Utils_Tuple2(
-						k,
-						updater(v)) : _Utils_Tuple2(k, v);
-				},
-				dict));
+				$elm$core$Dict$insert,
+				A2($author$project$TypeDict$hash, dict, key),
+				_Utils_Tuple2(key, val)),
+			dict);
+	});
+var $elm$core$Maybe$andThen = F2(
+	function (callback, maybeValue) {
+		if (maybeValue.$ === 'Just') {
+			var value = maybeValue.a;
+			return callback(value);
+		} else {
+			return $elm$core$Maybe$Nothing;
+		}
+	});
+var $author$project$TypeDict$update = F3(
+	function (key, f, dict) {
+		return A2(
+			$author$project$TypeDict$mapInner,
+			A2(
+				$elm$core$Dict$update,
+				A2($author$project$TypeDict$hash, dict, key),
+				$elm$core$Maybe$andThen(
+					function (_v0) {
+						var k = _v0.a;
+						var v = _v0.b;
+						return A2(
+							$elm$core$Maybe$map,
+							$elm$core$Tuple$pair(k),
+							f(
+								$elm$core$Maybe$Just(v)));
+					})),
+			dict);
 	});
 var $author$project$Character$applyBoon = F2(
 	function (boon, character) {
@@ -7478,12 +7584,13 @@ var $author$project$Character$applyBoon = F2(
 					character,
 					{
 						resistances: A3(
-							$author$project$TypedDict$update,
+							$author$project$TypeDict$update,
 							resistance,
-							A2(
-								$elm$core$Basics$composeR,
-								$elm$core$Basics$add(bonus),
-								A2($elm$core$Basics$clamp, 0, 5)),
+							$elm$core$Maybe$map(
+								A2(
+									$elm$core$Basics$composeR,
+									$elm$core$Basics$add(bonus),
+									A2($elm$core$Basics$clamp, 0, 5))),
 							character.resistances)
 					});
 			case 'GainDomains':
@@ -7491,30 +7598,28 @@ var $author$project$Character$applyBoon = F2(
 				return _Utils_update(
 					character,
 					{
-						domains: A2(
-							$author$project$TypedDict$setAll,
-							A2(
-								$elm$core$List$map,
-								function (d) {
-									return _Utils_Tuple2(d, true);
-								},
-								domains),
-							character.domains)
+						domains: A3(
+							$elm$core$List$foldl,
+							F2(
+								function (k, doms) {
+									return A3($author$project$TypeDict$insert, k, true, doms);
+								}),
+							character.domains,
+							domains)
 					});
 			case 'GainSkills':
 				var skills = boon.a;
 				return _Utils_update(
 					character,
 					{
-						skills: A2(
-							$author$project$TypedDict$setAll,
-							A2(
-								$elm$core$List$map,
-								function (s) {
-									return _Utils_Tuple2(s, true);
-								},
-								skills),
-							character.skills)
+						skills: A3(
+							$elm$core$List$foldl,
+							F2(
+								function (k, s) {
+									return A3($author$project$TypeDict$insert, k, true, s);
+								}),
+							character.skills,
+							skills)
 					});
 			case 'GainEquipment':
 				var equipment = boon.a;
@@ -7624,69 +7729,13 @@ var $elm$json$Json$Encode$dict = F3(
 				dictionary));
 	});
 var $elm$json$Json$Encode$string = _Json_wrap;
-var $author$project$Boon$Domain$toString = function (domain) {
-	switch (domain.$) {
-		case 'Criminal':
-			return 'Criminal';
-		case 'HighSociety':
-			return 'High Society';
-		case 'LowSociety':
-			return 'Low Society';
-		case 'Weirdness':
-			return 'Weirdness';
-		case 'Hegemony':
-			return 'Hegemony';
-		default:
-			return 'Science';
-	}
-};
 var $author$project$Boon$Domain$encodeDomain = function (domain) {
 	return $elm$json$Json$Encode$string(
 		$author$project$Boon$Domain$toString(domain));
 };
-var $author$project$Boon$Resistance$toString = function (resistance) {
-	switch (resistance.$) {
-		case 'Body':
-			return 'Body';
-		case 'Resolve':
-			return 'Resolve';
-		case 'Resources':
-			return 'Resources';
-		case 'Shadow':
-			return 'Shadow';
-		case 'Reputation':
-			return 'Reputation';
-		default:
-			return 'Armour';
-	}
-};
 var $author$project$Boon$Resistance$encodeResistance = function (resistance) {
 	return $elm$json$Json$Encode$string(
 		$author$project$Boon$Resistance$toString(resistance));
-};
-var $author$project$Boon$Skill$toString = function (skill) {
-	switch (skill.$) {
-		case 'Compel':
-			return 'Compel';
-		case 'Deceive':
-			return 'Deceive';
-		case 'Hack':
-			return 'Hack';
-		case 'Patch':
-			return 'Patch';
-		case 'Scramble':
-			return 'Scramble';
-		case 'Scrap':
-			return 'Scrap';
-		case 'Skulk':
-			return 'Skulk';
-		case 'Investigate':
-			return 'Investigate';
-		case 'Steal':
-			return 'Steal';
-		default:
-			return 'Resist';
-	}
 };
 var $author$project$Boon$Skill$encodeSkill = function (skill) {
 	return $elm$json$Json$Encode$string(
@@ -7766,7 +7815,6 @@ var $author$project$Boon$encode = function (boon) {
 			}
 		}());
 };
-var $elm$json$Json$Encode$null = _Json_encodeNull;
 var $author$project$Ability$encode = function (ability) {
 	return $elm$json$Json$Encode$object(
 		_List_fromArray(
@@ -7789,26 +7837,37 @@ var $author$project$Ability$encode = function (ability) {
 			]));
 };
 var $elm$json$Json$Encode$bool = _Json_wrap;
-var $elm$core$Tuple$mapBoth = F3(
-	function (funcA, funcB, _v0) {
-		var x = _v0.a;
-		var y = _v0.b;
-		return _Utils_Tuple2(
-			funcA(x),
-			funcB(y));
-	});
-var $author$project$TypedDict$encode = F3(
-	function (toString, valueEncoder, _v0) {
-		var dict = _v0.a;
+var $author$project$TypeDict$Json$Encode$encodeKVPair = F3(
+	function (keyEncoder, valEncoder, _v0) {
+		var k = _v0.a;
+		var v = _v0.b;
 		return $elm$json$Json$Encode$object(
-			A2(
-				$elm$core$List$map,
-				A2($elm$core$Tuple$mapBoth, toString, valueEncoder),
-				dict));
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					'key',
+					keyEncoder(k)),
+					_Utils_Tuple2(
+					'val',
+					valEncoder(v))
+				]));
 	});
-var $author$project$Boon$Domain$encode = A2($author$project$TypedDict$encode, $author$project$Boon$Domain$toString, $elm$json$Json$Encode$bool);
-var $author$project$Boon$Resistance$encode = A2($author$project$TypedDict$encode, $author$project$Boon$Resistance$toString, $elm$json$Json$Encode$int);
-var $author$project$Boon$Skill$encode = A2($author$project$TypedDict$encode, $author$project$Boon$Skill$toString, $elm$json$Json$Encode$bool);
+var $author$project$TypeDict$toInner = function (_v0) {
+	var inner = _v0.a.inner;
+	return inner;
+};
+var $author$project$TypeDict$Json$Encode$encoder = F4(
+	function (toKey, keyEncoder, valEncoder, dict) {
+		return A3(
+			$elm$json$Json$Encode$dict,
+			toKey,
+			A2($author$project$TypeDict$Json$Encode$encodeKVPair, keyEncoder, valEncoder),
+			$author$project$TypeDict$toInner(dict));
+	});
+var $author$project$TypeDict$Json$Encode$string = $author$project$TypeDict$Json$Encode$encoder($elm$core$Basics$identity);
+var $author$project$Boon$Domain$encode = A2($author$project$TypeDict$Json$Encode$string, $author$project$Boon$Domain$encodeDomain, $elm$json$Json$Encode$bool);
+var $author$project$Boon$Resistance$encode = A2($author$project$TypeDict$Json$Encode$string, $author$project$Boon$Resistance$encodeResistance, $elm$json$Json$Encode$int);
+var $author$project$Boon$Skill$encode = A2($author$project$TypeDict$Json$Encode$string, $author$project$Boon$Skill$encodeSkill, $elm$json$Json$Encode$bool);
 var $author$project$Character$encode = function (character) {
 	return $elm$json$Json$Encode$object(
 		_List_fromArray(
@@ -7880,6 +7939,14 @@ var $author$project$Session$load = F2(
 					val,
 					{changes: $author$project$Session$Saved, character: _char}));
 		}
+	});
+var $elm$core$Tuple$mapBoth = F3(
+	function (funcA, funcB, _v0) {
+		var x = _v0.a;
+		var y = _v0.b;
+		return _Utils_Tuple2(
+			funcA(x),
+			funcB(y));
 	});
 var $author$project$Session$navKey = function (session) {
 	if (session.$ === 'Character') {
@@ -8431,11 +8498,6 @@ var $author$project$Main$updateSession = F2(
 				return A2($author$project$Main$PlayAid, session, aid);
 		}
 	});
-var $author$project$Ports$updatedCharacter = _Platform_outgoingPort(
-	'updatedCharacter',
-	function ($) {
-		return $elm$json$Json$Encode$null;
-	});
 var $author$project$Main$update = F2(
 	function (msg, model) {
 		var _v0 = _Utils_Tuple2(model, msg);
@@ -8938,10 +9000,6 @@ var $elm$html$Html$p = _VirtualDom_node('p');
 var $elm$html$Html$span = _VirtualDom_node('span');
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
-var $elm$core$Tuple$second = function (_v0) {
-	var y = _v0.b;
-	return y;
-};
 var $elm$html$Html$Attributes$classList = function (classes) {
 	return $elm$html$Html$Attributes$class(
 		A2(
@@ -9342,29 +9400,21 @@ var $elm$html$Html$textarea = _VirtualDom_node('textarea');
 var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
 var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
 var $elm$html$Html$Attributes$for = $elm$html$Html$Attributes$stringProperty('htmlFor');
-var $elm$core$List$head = function (list) {
-	if (list.b) {
-		var x = list.a;
-		var xs = list.b;
-		return $elm$core$Maybe$Just(x);
-	} else {
-		return $elm$core$Maybe$Nothing;
-	}
-};
-var $author$project$TypedDict$get = F2(
-	function (key, _v0) {
-		var dict = _v0.a;
+var $author$project$TypeDict$delegate = F2(
+	function (method, dict) {
+		return method(
+			$author$project$TypeDict$toInner(dict));
+	});
+var $author$project$TypeDict$get = F2(
+	function (key, dict) {
 		return A2(
-			$elm$core$Maybe$map,
-			$elm$core$Tuple$second,
-			$elm$core$List$head(
-				A2(
-					$elm$core$List$filter,
-					A2(
-						$elm$core$Basics$composeR,
-						$elm$core$Tuple$first,
-						$elm$core$Basics$eq(key)),
-					dict)));
+			$author$project$TypeDict$delegate,
+			A2(
+				$elm$core$Basics$composeR,
+				$elm$core$Dict$get(
+					A2($author$project$TypeDict$hash, dict, key)),
+				$elm$core$Maybe$map($elm$core$Tuple$second)),
+			dict);
 	});
 var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
 var $elm$html$Html$strong = _VirtualDom_node('strong');
@@ -9425,12 +9475,12 @@ var $author$project$Boon$Resistance$view = F2(
 										A2(
 											$elm$core$Maybe$withDefault,
 											0,
-											A2($author$project$TypedDict$get, r, resistances)))),
+											A2($author$project$TypeDict$get, r, resistances)))),
 									$elm$html$Html$Events$onInput(
 									function (s) {
 										return toMsg(
 											A3(
-												$author$project$TypedDict$set,
+												$author$project$TypeDict$insert,
 												r,
 												A3(
 													$elm$core$Basics$clamp,
@@ -9466,13 +9516,28 @@ var $elm$html$Html$Events$onCheck = function (tagger) {
 		'change',
 		A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetChecked));
 };
-var $author$project$TypedDict$unwrap = function (_v0) {
-	var list = _v0.a;
-	return list;
+var $author$project$TypeDict$keys = $author$project$TypeDict$delegate(
+	A2(
+		$elm$core$Basics$composeR,
+		$elm$core$Dict$values,
+		$elm$core$List$map($elm$core$Tuple$first)));
+var $author$project$TypeDict$toList = function (dict) {
+	return A2(
+		$elm$core$List$filterMap,
+		$elm$core$Basics$identity,
+		A2(
+			$elm$core$List$map,
+			function (key) {
+				return A2(
+					$elm$core$Maybe$map,
+					$elm$core$Tuple$pair(key),
+					A2($author$project$TypeDict$get, key, dict));
+			},
+			$author$project$TypeDict$keys(dict)));
 };
 var $author$project$Character$viewBoolDict = F3(
 	function (toMsg, labeller, dict) {
-		var list = $author$project$TypedDict$unwrap(dict);
+		var list = $author$project$TypeDict$toList(dict);
 		var labelId = A2(
 			$elm$core$Basics$composeR,
 			labeller,
@@ -9499,7 +9564,7 @@ var $author$project$Character$viewBoolDict = F3(
 								$elm$html$Html$Events$onCheck(
 								function (b) {
 									return toMsg(
-										A3($author$project$TypedDict$set, k, b, dict));
+										A3($author$project$TypeDict$insert, k, b, dict));
 								})
 							]),
 						_List_Nil),

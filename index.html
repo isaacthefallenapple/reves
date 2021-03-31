@@ -24,6 +24,8 @@
 	</script>
 
 	<script>
+		let isBeforeUnloadListenerAdded = false;
+
 		const beforeUnload = (e) => {
 			e.preventDefault();
 			e.returnValue = '';
@@ -36,12 +38,16 @@
 
 		app.ports.savedCharacter.subscribe((_) => {
 			window.removeEventListener('beforeunload', beforeUnload);
-			// console.log('removed eventlistener');
+			isBeforeUnloadListenerAdded = false;
+			console.log('removed eventlistener');
 		})
 
 		app.ports.updatedCharacter.subscribe((_) => {
-			window.addEventListener('beforeunload', beforeUnload);
-			// console.log('attached eventlistener');
+			if (!isBeforeUnloadListenerAdded) {
+				window.addEventListener('beforeunload', beforeUnload);
+				isBeforeUnloadListenerAdded = true;
+			}
+			console.log('added eventlistener');
 		})
 	</script>
 </body>

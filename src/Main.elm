@@ -1,8 +1,6 @@
 module Main exposing (main)
 
 import Abilities exposing (Abilities)
-import Ability exposing (Ability)
-import Array exposing (push)
 import Boon
 import Browser
 import Browser.Navigation as Nav
@@ -418,13 +416,16 @@ update msg model =
 
 init : Maybe String -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
 init flags url navKey =
-    changeRoute (Route.parse url)
-        (case flags of
-            Nothing ->
-                Landing (Session.new navKey)
+    Tuple.mapSecond (\cmd -> Cmd.batch [ cmd, Ports.updatedCharacter () ])
+        (changeRoute
+            (Route.parse url)
+            (case flags of
+                Nothing ->
+                    Landing (Session.new navKey)
 
-            Just json ->
-                Character <| Session.loadLocal (Character.decodeLocalCharacter json) (Session.new navKey)
+                Just json ->
+                    Character <| Session.loadLocal (Character.decodeLocalCharacter json) (Session.new navKey)
+            )
         )
 
 
