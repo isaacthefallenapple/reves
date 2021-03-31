@@ -1,8 +1,6 @@
 module Main exposing (main)
 
 import Abilities exposing (Abilities)
-import Ability exposing (Ability)
-import Array exposing (push)
 import Boon
 import Browser
 import Browser.Navigation as Nav

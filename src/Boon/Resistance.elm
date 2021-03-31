@@ -1,27 +1,34 @@
 module Boon.Resistance exposing (Resistance(..), Resistances, decoder, encode, encodeResistance, fromString, new, resistanceDecoder, toString, view)
 
+-- import Dict
+
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Json.Decode as Decode
-import Json.Encode as Encode
-import TypedDict exposing (TypedDict)
+import Json.Decode as JD exposing (Decoder)
+import Json.Encode as JE exposing (Value)
+import TypeDict as Dict exposing (Dict)
+import TypeDict.Json.Decode as Decode
+import TypeDict.Json.Encode as Encode
 
 
 type alias Resistances =
-    TypedDict Resistance Int
+    Dict String Resistance Int
 
 
 new : Resistances
 new =
-    TypedDict.fromListWithDefault 0
-        [ Body
-        , Resolve
-        , Resources
-        , Shadow
-        , Reputation
-        , Armor
-        ]
+    Dict.fromList
+        toString
+        (List.map (\r -> ( r, 0 ))
+            [ Body
+            , Resolve
+            , Resources
+            , Shadow
+            , Reputation
+            , Armor
+            ]
+        )
 
 
 type Resistance
@@ -112,12 +119,12 @@ view toMsg resistances =
                                 [ type_ "number"
                                 , value
                                     (String.fromInt
-                                        (Maybe.withDefault 0 (TypedDict.get r resistances))
+                                        (Maybe.withDefault 0 (Dict.get r resistances))
                                     )
                                 , onInput
                                     (\s ->
                                         toMsg
-                                            (TypedDict.set r
+                                            (Dict.insert r
                                                 (s
                                                     |> String.toInt
                                                     |> Maybe.withDefault 0
@@ -140,30 +147,30 @@ view toMsg resistances =
 -- ENCODE
 
 
-encode : Resistances -> Encode.Value
+encode : Resistances -> JE.Value
 encode =
-    TypedDict.encode toString Encode.int
+    Encode.string encodeResistance JE.int
 
 
-encodeResistance : Resistance -> Encode.Value
+encodeResistance : Resistance -> Value
 encodeResistance resistance =
-    Encode.string (toString resistance)
+    JE.string (toString resistance)
 
 
 
 -- DECODER
 
 
-decoder : Decode.Decoder Resistances
+decoder : Decoder Resistances
 decoder =
-    TypedDict.decoder (fromString >> Maybe.withDefault Body) Decode.int
+    Decode.decoder toString resistanceDecoder JD.int
 
 
-resistanceDecoder : Decode.Decoder Resistance
+resistanceDecoder : Decoder Resistance
 resistanceDecoder =
-    Decode.string
-        |> Decode.andThen
+    JD.string
+        |> JD.andThen
             (fromString
-                >> Maybe.map Decode.succeed
-                >> Maybe.withDefault (Decode.fail "error")
+                >> Maybe.map JD.succeed
+                >> Maybe.withDefault (JD.fail "error")
             )

@@ -1,8 +1,10 @@
 module Boon.Skill exposing (..)
 
-import Json.Decode as Decode
-import Json.Encode as Encode
-import TypedDict exposing (TypedDict)
+import Json.Decode as JD exposing (Decoder)
+import Json.Encode as JE exposing (Value)
+import TypeDict as Dict exposing (Dict)
+import TypeDict.Json.Decode as Decode
+import TypeDict.Json.Encode as Encode
 
 
 type Skill
@@ -19,23 +21,26 @@ type Skill
 
 
 type alias Skills =
-    TypedDict Skill Bool
+    Dict String Skill Bool
 
 
 new : Skills
 new =
-    TypedDict.fromListWithDefault False
-        [ Compel
-        , Deceive
-        , Hack
-        , Patch
-        , Scramble
-        , Scrap
-        , Skulk
-        , Investigate
-        , Steal
-        , Resist
-        ]
+    Dict.fromList toString
+        (List.map
+            (\s -> ( s, False ))
+            [ Compel
+            , Deceive
+            , Hack
+            , Patch
+            , Scramble
+            , Scrap
+            , Skulk
+            , Investigate
+            , Steal
+            , Resist
+            ]
+        )
 
 
 toString : Skill -> String
@@ -113,30 +118,30 @@ fromString s =
 -- ENCODE
 
 
-encode : Skills -> Encode.Value
+encode : Skills -> Value
 encode =
-    TypedDict.encode toString Encode.bool
+    Encode.string encodeSkill JE.bool
 
 
-encodeSkill : Skill -> Encode.Value
+encodeSkill : Skill -> Value
 encodeSkill skill =
-    Encode.string (toString skill)
+    JE.string (toString skill)
 
 
 
 -- DECODER
 
 
-decoder : Decode.Decoder Skills
+decoder : Decoder Skills
 decoder =
-    TypedDict.decoder (fromString >> Maybe.withDefault Compel) Decode.bool
+    Decode.decoder toString skillDecoder JD.bool
 
 
-skillDecoder : Decode.Decoder Skill
+skillDecoder : Decoder Skill
 skillDecoder =
-    Decode.string
-        |> Decode.andThen
+    JD.string
+        |> JD.andThen
             (fromString
-                >> Maybe.map Decode.succeed
-                >> Maybe.withDefault (Decode.fail "error")
+                >> Maybe.map JD.succeed
+                >> Maybe.withDefault (JD.fail "error")
             )

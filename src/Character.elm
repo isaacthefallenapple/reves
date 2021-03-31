@@ -19,7 +19,7 @@ import Json.Encode as Encode
 import PlayAids
 import Ports
 import Route
-import TypedDict exposing (TypedDict)
+import TypeDict
 
 
 type alias Stats =
@@ -81,13 +81,13 @@ applyBoon : Boon -> Stats -> Stats
 applyBoon boon character =
     case boon of
         GainResistance resistance bonus ->
-            { character | resistances = TypedDict.update resistance ((+) bonus >> clamp 0 5) character.resistances }
+            { character | resistances = TypeDict.update resistance (Maybe.map ((+) bonus >> clamp 0 5)) character.resistances }
 
         GainDomains domains ->
-            { character | domains = TypedDict.setAll (List.map (\d -> ( d, True )) domains) character.domains }
+            { character | domains = List.foldl (\k doms -> TypeDict.insert k True doms) character.domains domains }
 
         GainSkills skills ->
-            { character | skills = TypedDict.setAll (List.map (\s -> ( s, True )) skills) character.skills }
+            { character | skills = List.foldl (\k s -> TypeDict.insert k True s) character.skills skills }
 
         GainEquipment equipment ->
             { character | equipment = character.equipment ++ String.join "\n\n" equipment ++ "\n\n" }
@@ -382,11 +382,11 @@ view character =
     }
 
 
-viewBoolDict : (TypedDict k Bool -> msg) -> (k -> String) -> TypedDict k Bool -> Html msg
+viewBoolDict : (TypeDict.Dict String k Bool -> msg) -> (k -> String) -> TypeDict.Dict String k Bool -> Html msg
 viewBoolDict toMsg labeller dict =
     let
         list =
-            TypedDict.unwrap dict
+            TypeDict.toList dict
 
         viewItem ( k, isChecked ) =
             li []
@@ -394,7 +394,7 @@ viewBoolDict toMsg labeller dict =
                     [ input
                         [ type_ "checkbox"
                         , checked isChecked
-                        , onCheck (\b -> TypedDict.set k b dict |> toMsg)
+                        , onCheck (\b -> TypeDict.insert k b dict |> toMsg)
                         ]
                         []
                     , text (labeller k)

@@ -1,8 +1,11 @@
 module Boon.Domain exposing (..)
 
-import Json.Decode as Decode
-import Json.Encode as Encode
-import TypedDict exposing (TypedDict)
+import Debug exposing (toString)
+import Json.Decode as JD exposing (Decoder)
+import Json.Encode as JE exposing (Value)
+import TypeDict exposing (Dict)
+import TypeDict.Json.Decode as Decode
+import TypeDict.Json.Encode as Encode
 
 
 type Domain
@@ -15,19 +18,21 @@ type Domain
 
 
 type alias Domains =
-    TypedDict Domain Bool
+    Dict String Domain Bool
 
 
 new : Domains
 new =
-    TypedDict.fromListWithDefault False
-        [ Criminal
-        , HighSociety
-        , LowSociety
-        , Weirdness
-        , Hegemony
-        , Science
-        ]
+    TypeDict.fromList toString
+        (List.map (\d -> ( d, False ))
+            [ Criminal
+            , HighSociety
+            , LowSociety
+            , Weirdness
+            , Hegemony
+            , Science
+            ]
+        )
 
 
 toString : Domain -> String
@@ -81,18 +86,18 @@ fromString s =
 -- DECODER
 
 
-decoder : Decode.Decoder Domains
+decoder : Decoder Domains
 decoder =
-    TypedDict.decoder (fromString >> Maybe.withDefault LowSociety) Decode.bool
+    Decode.decoder toString domainDecoder JD.bool
 
 
-domainDecoder : Decode.Decoder Domain
+domainDecoder : Decoder Domain
 domainDecoder =
-    Decode.string
-        |> Decode.andThen
+    JD.string
+        |> JD.andThen
             (fromString
-                >> Maybe.map Decode.succeed
-                >> Maybe.withDefault (Decode.fail "error")
+                >> Maybe.map JD.succeed
+                >> Maybe.withDefault (JD.fail "error")
             )
 
 
@@ -100,11 +105,11 @@ domainDecoder =
 -- ENCODE
 
 
-encodeDomain : Domain -> Encode.Value
+encodeDomain : Domain -> Value
 encodeDomain domain =
-    Encode.string (toString domain)
+    JE.string (toString domain)
 
 
-encode : Domains -> Encode.Value
+encode : Domains -> Value
 encode =
-    TypedDict.encode toString Encode.bool
+    Encode.string encodeDomain JE.bool
