@@ -210,7 +210,9 @@ view model =
                                         [ text (Session.changesToString (Session.changes session))
                                         ]
                                     , button
-                                        [ onClick ClickedSave ]
+                                        [ onClick ClickedSave
+                                        , class "button"
+                                        ]
                                         [ text "Save" ]
                                     ]
                                ]

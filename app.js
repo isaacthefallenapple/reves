@@ -9219,7 +9219,8 @@ var $author$project$Abilities$viewAdvances = F4(
 								$elm$html$Html$button,
 								_List_fromArray(
 									[
-										$elm$html$Html$Events$onClick($author$project$Abilities$ApplyChosen)
+										$elm$html$Html$Events$onClick($author$project$Abilities$ApplyChosen),
+										$elm$html$Html$Attributes$class('button')
 									]),
 								_List_fromArray(
 									[
@@ -10418,7 +10419,8 @@ var $author$project$Main$view = function (model) {
 										$elm$html$Html$button,
 										_List_fromArray(
 											[
-												$elm$html$Html$Events$onClick($author$project$Main$ClickedSave)
+												$elm$html$Html$Events$onClick($author$project$Main$ClickedSave),
+												$elm$html$Html$Attributes$class('button')
 											]),
 										_List_fromArray(
 											[

@@ -565,6 +565,20 @@ select {
   background: #c4c4c4;
 }
 
+.button {
+  all: unset;
+  padding: 0.5em 1em;
+  border: 2px solid black;
+  color: #231651;
+  background: #eeeeee;
+}
+
+.button:hover {
+  border-color: #eeeeee;
+  color: #fafafa;
+  background: #231651;
+}
+
 body {
   line-height: 1.5;
   overflow-x: hidden;

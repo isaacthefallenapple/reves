@@ -326,7 +326,9 @@ viewAdvances name selectedAbilities advances isSelected =
                     [ text "High" ]
                 , viewAdvanceList selectedAbilities high
                 , button
-                    [ onClick ApplyChosen ]
+                    [ onClick ApplyChosen
+                    , class "button"
+                    ]
                     [ text "Apply" ]
                 ]
         )
