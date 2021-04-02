@@ -562,6 +562,8 @@ select {
 }
 
 .tab-bar li.selected {
+  -webkit-box-shadow: 0 0 10px 0 #c4c4c4;
+          box-shadow: 0 0 10px 0 #c4c4c4;
   background: #c4c4c4;
 }
 

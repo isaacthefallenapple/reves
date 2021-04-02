@@ -15,6 +15,7 @@
         @include apply-utility("radius", "200");
 
         &.selected {
+            box-shadow: 0 0 10px 0 get-color("grey");
             @include apply-utility("bg", "grey");
         }
     }
