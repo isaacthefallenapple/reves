@@ -397,7 +397,7 @@ update msg model =
                     ( model, Nav.load href )
 
         ( _, UrlChanged url ) ->
-            changeRoute (Route.parse url) model
+            changeRoute (Debug.log "UrlChanged" (Route.parse url)) model
 
         ( _, SavedChanges ) ->
             ( updateSession

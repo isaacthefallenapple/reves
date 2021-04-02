@@ -7940,6 +7940,7 @@ var $author$project$Session$load = F2(
 					{changes: $author$project$Session$Saved, character: _char}));
 		}
 	});
+var $elm$core$Debug$log = _Debug_log;
 var $elm$core$Tuple$mapBoth = F3(
 	function (funcA, funcB, _v0) {
 		var x = _v0.a;
@@ -8153,7 +8154,6 @@ var $author$project$Abilities$fetchFromList = function (metadata) {
 			},
 			$elm$core$Dict$toList(metadata)));
 };
-var $elm$core$Debug$log = _Debug_log;
 var $elm$core$Dict$map = F2(
 	function (func, dict) {
 		if (dict.$ === 'RBEmpty_elm_builtin') {
@@ -8709,7 +8709,10 @@ var $author$project$Main$update = F2(
 					var url = _v0.b.a;
 					return A2(
 						$author$project$Main$changeRoute,
-						$author$project$Route$parse(url),
+						A2(
+							$elm$core$Debug$log,
+							'UrlChanged',
+							$author$project$Route$parse(url)),
 						model);
 				case 'SavedChanges':
 					var _v13 = _v0.b;
@@ -9000,6 +9003,14 @@ var $elm$html$Html$p = _VirtualDom_node('p');
 var $elm$html$Html$span = _VirtualDom_node('span');
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
+var $elm$virtual_dom$VirtualDom$attribute = F2(
+	function (key, value) {
+		return A2(
+			_VirtualDom_attribute,
+			_VirtualDom_noOnOrFormAction(key),
+			_VirtualDom_noJavaScriptOrHtmlUri(value));
+	});
+var $elm$html$Html$Attributes$attribute = $elm$virtual_dom$VirtualDom$attribute;
 var $elm$html$Html$Attributes$classList = function (classes) {
 	return $elm$html$Html$Attributes$class(
 		A2(
@@ -9253,7 +9264,10 @@ var $author$project$Abilities$view = function (abilities) {
 			$elm$core$List$cons,
 			A2(
 				$elm$html$Html$nav,
-				_List_Nil,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('tab-bar')
+					]),
 				_List_fromArray(
 					[
 						A2(
@@ -9271,7 +9285,7 @@ var $author$project$Abilities$view = function (abilities) {
 						$elm$html$Html$ul,
 						_List_fromArray(
 							[
-								$elm$html$Html$Attributes$class('tab-bar')
+								A2($elm$html$Html$Attributes$attribute, 'role', 'list')
 							]),
 						A2(
 							$elm$core$List$map,
@@ -9286,8 +9300,7 @@ var $author$project$Abilities$view = function (abilities) {
 												[
 													_Utils_Tuple2(
 													'selected',
-													_Utils_eq(name, selected)),
-													_Utils_Tuple2('tab', true)
+													_Utils_eq(name, selected))
 												]))
 										]),
 									_List_fromArray(
@@ -9353,14 +9366,6 @@ var $author$project$Character$UpdatedResistances = function (a) {
 var $author$project$Character$UpdatedSkills = function (a) {
 	return {$: 'UpdatedSkills', a: a};
 };
-var $elm$virtual_dom$VirtualDom$attribute = F2(
-	function (key, value) {
-		return A2(
-			_VirtualDom_attribute,
-			_VirtualDom_noOnOrFormAction(key),
-			_VirtualDom_noJavaScriptOrHtmlUri(value));
-	});
-var $elm$html$Html$Attributes$attribute = $elm$virtual_dom$VirtualDom$attribute;
 var $elm$html$Html$input = _VirtualDom_node('input');
 var $elm$html$Html$label = _VirtualDom_node('label');
 var $elm$html$Html$main_ = _VirtualDom_node('main');
@@ -10081,113 +10086,143 @@ var $author$project$PlayAids$view = function (playAid) {
 		body: _List_fromArray(
 			[
 				A2(
-				$elm$html$Html$nav,
-				_List_Nil,
+				$elm$html$Html$div,
 				_List_fromArray(
 					[
-						A2(
-						$elm$html$Html$ul,
-						_List_Nil,
-						A2(
-							$elm$core$List$map,
-							function (topic) {
-								return A2(
-									$elm$html$Html$a,
-									_List_fromArray(
-										[
-											$elm$html$Html$Attributes$href(
-											A2(
-												$elm$url$Url$Builder$absolute,
-												_List_fromArray(
-													[
-														'reves',
-														'play-aid',
-														$author$project$PlayAids$topicToString(topic)
-													]),
-												_List_Nil))
-										]),
-									_List_fromArray(
-										[
-											$elm$html$Html$text(
-											$author$project$PlayAids$topicToStringPretty(topic))
-										]));
-							},
-							_List_fromArray(
-								[$author$project$PlayAids$Weapons, $author$project$PlayAids$Armor, $author$project$PlayAids$Skills, $author$project$PlayAids$Domains])))
-					])),
-				A2(
-				$elm$html$Html$article,
-				_List_fromArray(
-					[
-						$elm$html$Html$Attributes$class('play-aid')
+						$elm$html$Html$Attributes$class('wrapper')
 					]),
 				_List_fromArray(
 					[
 						A2(
-						$elm$html$Html$a,
+						$elm$html$Html$nav,
 						_List_fromArray(
 							[
-								$elm$html$Html$Attributes$href('/reves/')
+								$elm$html$Html$Attributes$class('tab-bar')
 							]),
 						_List_fromArray(
 							[
-								$elm$html$Html$text('< Back')
+								A2(
+								$elm$html$Html$a,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$href('/reves/')
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('< Back')
+									])),
+								A2(
+								$elm$html$Html$ul,
+								_List_fromArray(
+									[
+										A2($elm$html$Html$Attributes$attribute, 'role', 'list')
+									]),
+								A2(
+									$elm$core$List$map,
+									function (topic) {
+										return A2(
+											$elm$html$Html$li,
+											_List_fromArray(
+												[
+													$elm$html$Html$Attributes$classList(
+													_List_fromArray(
+														[
+															_Utils_Tuple2(
+															'selected',
+															_Utils_eq(topic, playAid.topic))
+														]))
+												]),
+											_List_fromArray(
+												[
+													A2(
+													$elm$html$Html$a,
+													_List_fromArray(
+														[
+															$elm$html$Html$Attributes$href(
+															A2(
+																$elm$url$Url$Builder$absolute,
+																_List_fromArray(
+																	[
+																		'reves',
+																		'play-aid',
+																		$author$project$PlayAids$topicToString(topic)
+																	]),
+																_List_Nil))
+														]),
+													_List_fromArray(
+														[
+															$elm$html$Html$text(
+															$author$project$PlayAids$topicToStringPretty(topic))
+														]))
+												]));
+									},
+									_List_fromArray(
+										[$author$project$PlayAids$Weapons, $author$project$PlayAids$Armor, $author$project$PlayAids$Skills, $author$project$PlayAids$Domains])))
 							])),
 						A2(
-						$elm$html$Html$h1,
-						_List_Nil,
+						$elm$html$Html$article,
 						_List_fromArray(
 							[
-								$elm$html$Html$text(stringifiedTopic)
-							])),
-						function () {
-						var _v0 = playAid.aids;
-						switch (_v0.$) {
-							case 'Failed':
-								return $elm$html$Html$text('Error :(');
-							case 'Loading':
-								return $elm$html$Html$text('Loading...');
-							default:
-								var aids = _v0.a;
-								return A2(
-									$elm$html$Html$dl,
-									_List_Nil,
-									$elm$core$List$concat(
-										A2(
-											$elm$core$List$map,
-											function (_v1) {
-												var name = _v1.a;
-												var rules = _v1.b;
-												return _List_fromArray(
-													[
-														A2(
-														$elm$html$Html$dt,
-														_List_fromArray(
-															[
-																$elm$html$Html$Attributes$id(name)
-															]),
-														_List_fromArray(
+								$elm$html$Html$Attributes$class('play-aid')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$h1,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text(stringifiedTopic)
+									])),
+								function () {
+								var _v0 = playAid.aids;
+								switch (_v0.$) {
+									case 'Failed':
+										return $elm$html$Html$text('Error :(');
+									case 'Loading':
+										return $elm$html$Html$text('Loading...');
+									default:
+										var aids = _v0.a;
+										return A2(
+											$elm$html$Html$dl,
+											_List_Nil,
+											$elm$core$List$concat(
+												A2(
+													$elm$core$List$map,
+													function (_v1) {
+														var name = _v1.a;
+														var rules = _v1.b;
+														return _List_fromArray(
 															[
 																A2(
-																$elm$html$Html$b,
+																$elm$html$Html$dt,
+																_List_fromArray(
+																	[
+																		$elm$html$Html$Attributes$id(name)
+																	]),
+																_List_fromArray(
+																	[
+																		A2(
+																		$elm$html$Html$b,
+																		_List_Nil,
+																		_List_fromArray(
+																			[
+																				$elm$html$Html$text(name)
+																			]))
+																	])),
+																A2(
+																$elm$html$Html$dd,
 																_List_Nil,
 																_List_fromArray(
 																	[
-																		$elm$html$Html$text(name)
+																		$elm$html$Html$text(rules)
 																	]))
-															])),
-														A2(
-														$elm$html$Html$dd,
-														_List_Nil,
-														_List_fromArray(
-															[
-																$elm$html$Html$text(rules)
-															]))
-													]);
-											},
-											$elm$core$Dict$toList(aids))));
-						}
-					}()
+															]);
+													},
+													$elm$core$Dict$toList(aids))));
+								}
+							}()
+							]))
 					]))
 			]),
 		title: stringifiedTopic

@@ -102,8 +102,16 @@
   font-family: "Staatliches", cursive;
 }
 
+.gap-top-100 {
+  margin-top: 0.42rem;
+}
+
+.gap-top-200 {
+  margin-top: 0.56rem;
+}
+
 .gap-top-300 {
-  margin-top: 0.8rem;
+  margin-top: 0.75rem;
 }
 
 .gap-top-400 {
@@ -122,8 +130,16 @@
   margin-top: 2.4rem;
 }
 
+.pad-top-100 {
+  padding-top: 0.42rem;
+}
+
+.pad-top-200 {
+  padding-top: 0.56rem;
+}
+
 .pad-top-300 {
-  padding-top: 0.8rem;
+  padding-top: 0.75rem;
 }
 
 .pad-top-400 {
@@ -142,8 +158,16 @@
   padding-top: 2.4rem;
 }
 
+.text-100 {
+  font-size: 0.42rem;
+}
+
+.text-200 {
+  font-size: 0.56rem;
+}
+
 .text-300 {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
 }
 
 .text-400 {
@@ -170,9 +194,71 @@
   font-weight: 700;
 }
 
+.gap-100 {
+  gap: 0.42rem;
+}
+
+.gap-200 {
+  gap: 0.56rem;
+}
+
+.gap-300 {
+  gap: 0.75rem;
+}
+
+.gap-400 {
+  gap: 1rem;
+}
+
+.gap-500 {
+  gap: 1.33rem;
+}
+
+.gap-600 {
+  gap: 1.77rem;
+}
+
+.gap-700 {
+  gap: 2.4rem;
+}
+
+.radius-100 {
+  border-radius: 0.42rem;
+}
+
+.radius-200 {
+  border-radius: 0.56rem;
+}
+
+.radius-300 {
+  border-radius: 0.75rem;
+}
+
+.radius-400 {
+  border-radius: 1rem;
+}
+
+.radius-500 {
+  border-radius: 1.33rem;
+}
+
+.radius-600 {
+  border-radius: 1.77rem;
+}
+
+.radius-700 {
+  border-radius: 2.4rem;
+}
+
 @media screen and (min-width: 48em) {
+  .md\:text-100 {
+    font-size: 0.42rem;
+  }
+  .md\:text-200 {
+    font-size: 0.56rem;
+  }
   .md\:text-300 {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
   }
   .md\:text-400 {
     font-size: 1rem;
@@ -214,6 +300,7 @@ dd {
 ul[role="list"],
 ol[role="list"] {
   list-style: none;
+  padding: 0;
 }
 
 ul[class],
@@ -280,7 +367,7 @@ select {
 .textbox {
   width: 100%;
   min-height: 8em;
-  padding: 0.8rem 1rem;
+  padding: 0.75rem 1rem;
   resize: none;
 }
 
@@ -290,6 +377,16 @@ select {
 
 .flow > * + *, section > * + * {
   margin-top: var(--flow-space, 1em);
+}
+
+.flex {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.radius {
+  border-radius: 0.5rem;
 }
 
 .character {
@@ -449,6 +546,23 @@ select {
 
 .assignment {
   --flow-space: get-size("300");
+}
+
+.tab-bar ul {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  background: #eeeeee;
+  border-radius: 0.56rem;
+}
+
+.tab-bar li {
+  padding: 0.5em 1em;
+  border-radius: 0.56rem;
+}
+
+.tab-bar li.selected {
+  background: #c4c4c4;
 }
 
 body {

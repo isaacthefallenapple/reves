@@ -1,0 +1,21 @@
+.tab-bar {
+    ul {
+        // padding: 0.5em 1em;
+        display: flex;
+        // gap: 1em;
+        // flex: 1 1 100%;
+
+        @include apply-utility("bg", "light-shade");
+        @include apply-utility("radius", "200");
+    }
+
+    li {
+        padding: 0.5em 1em;
+
+        @include apply-utility("radius", "200");
+
+        &.selected {
+            @include apply-utility("bg", "grey");
+        }
+    }
+}

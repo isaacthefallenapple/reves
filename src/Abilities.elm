@@ -268,16 +268,17 @@ view abilities =
     div
         [ class "wrapper" ]
         (nav
-            []
+            [ class "tab-bar" ]
             [ a
                 [ href (Route.toString Route.Root) ]
                 [ text "< Back" ]
             , ul
-                [ class "tab-bar" ]
+                [ attribute "role" "list"
+                ]
                 (List.map
                     (\( name, _ ) ->
                         li
-                            [ classList [ ( "selected", name == selected ), ( "tab", True ) ] ]
+                            [ classList [ ( "selected", name == selected ) ] ]
                             [ a
                                 [ href (Route.toString (Route.Abilities (Just name))) ]
                                 [ text name ]

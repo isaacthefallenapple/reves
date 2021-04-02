@@ -14,7 +14,9 @@ $gorko-base-size: 1rem;
 	* your whole project.
 	*/
 $gorko-size-scale: (
-    "300": $gorko-base-size * 0.8,
+    "100": $gorko-base-size * 0.42,
+    "200": $gorko-base-size * 0.56,
+    "300": $gorko-base-size * 0.75,
     "400": $gorko-base-size,
     "500": $gorko-base-size * 1.33,
     "600": $gorko-base-size * 1.77,
@@ -84,6 +86,16 @@ $gorko-config: (
         ),
         "output": "standard",
         "property": "font-weight",
+    ),
+    "gap": (
+        "items": $gorko-size-scale,
+        "output": "standard",
+        "property": "gap",
+    ),
+    "radius": (
+        "items": $gorko-size-scale,
+        "output": "standard",
+        "property": "border-radius",
     ),
     "breakpoints": (
         "md": "(min-width: 48em)",

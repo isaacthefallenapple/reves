@@ -12,6 +12,8 @@
 @import "utilities/textbox";
 @import "utilities/hidden";
 @import "utilities/flow";
+@import "utilities/flex";
+@import "utilities/radius";
 
 // Blocks
 @import "blocks/character";
@@ -21,6 +23,7 @@
 @import "blocks/checkbox-list";
 @import "blocks/class";
 @import "blocks/assignment";
+@import "blocks/tab-bar";
 
 // Global CSS starts
 body {
