@@ -82,3 +82,22 @@ section {
     outline: 2px solid;
     outline-offset: 0.25rem;
 }
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --primary: #adadad;
+        --secondary: #231651;
+        --secondary-shade: #ff5151;
+        --tertiary: #2c988c;
+        --tertiary-glare: #d6fff6;
+        --quaternary: #2374ab;
+        --light: #1a103d;
+        --light-shade: #eeeeee;
+        --grey: #c4c4c4;
+    }
+
+    input,
+    textarea {
+        @include apply-utility("bg", "light-shade");
+    }
+}

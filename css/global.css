@@ -23,75 +23,75 @@
 	* to enabling/disabling pre-built components/utilities.
 	*/
 .bg-primary {
-  background: #231651;
+  background: var(--primary);
 }
 
 .bg-secondary {
-  background: #ff8484;
+  background: var(--secondary);
 }
 
 .bg-secondary-shade {
-  background: #ff5151;
+  background: var(--secondary-shade);
 }
 
 .bg-tertiary {
-  background: #2c988c;
+  background: var(--tertiary);
 }
 
 .bg-tertiary-glare {
-  background: #d6fff6;
+  background: var(--tertiary-glare);
 }
 
 .bg-quaternary {
-  background: #2374ab;
+  background: var(--quaternary);
 }
 
 .bg-light {
-  background: #fafafa;
+  background: var(--light);
 }
 
 .bg-light-shade {
-  background: #eeeeee;
+  background: var(--light-shade);
 }
 
 .bg-grey {
-  background: #c4c4c4;
+  background: var(--grey);
 }
 
 .color-primary {
-  color: #231651;
+  color: var(--primary);
 }
 
 .color-secondary {
-  color: #ff8484;
+  color: var(--secondary);
 }
 
 .color-secondary-shade {
-  color: #ff5151;
+  color: var(--secondary-shade);
 }
 
 .color-tertiary {
-  color: #2c988c;
+  color: var(--tertiary);
 }
 
 .color-tertiary-glare {
-  color: #d6fff6;
+  color: var(--tertiary-glare);
 }
 
 .color-quaternary {
-  color: #2374ab;
+  color: var(--quaternary);
 }
 
 .color-light {
-  color: #fafafa;
+  color: var(--light);
 }
 
 .color-light-shade {
-  color: #eeeeee;
+  color: var(--light-shade);
 }
 
 .color-grey {
-  color: #c4c4c4;
+  color: var(--grey);
 }
 
 .font-base {
@@ -552,7 +552,7 @@ select {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  background: #eeeeee;
+  background: var(--light-shade);
   border-radius: 0.56rem;
 }
 
@@ -562,23 +562,35 @@ select {
 }
 
 .tab-bar li.selected {
-  -webkit-box-shadow: 0 0 10px 0 #c4c4c4;
-          box-shadow: 0 0 10px 0 #c4c4c4;
-  background: #c4c4c4;
+  -webkit-box-shadow: 0 0 10px 0 var(--grey);
+          box-shadow: 0 0 10px 0 var(--grey);
+  background: var(--grey);
 }
 
 .button {
   all: unset;
   padding: 0.5em 1em;
   border: 2px solid black;
-  color: #231651;
-  background: #eeeeee;
+  color: var(--primary);
+  background: var(--light-shade);
 }
 
 .button:hover {
-  border-color: #eeeeee;
-  color: #fafafa;
-  background: #231651;
+  border-color: var(--light-shade);
+  color: var(--light);
+  background: var(--primary);
+}
+
+:root {
+  --primary: #231651;
+  --secondary: #ff8484;
+  --secondary-shade: #ff5151;
+  --tertiary: #2c988c;
+  --tertiary-glare: #d6fff6;
+  --quaternary: #2374ab;
+  --light: #fafafa;
+  --light-shade: #eeeeee;
+  --grey: #c4c4c4;
 }
 
 body {
@@ -587,8 +599,8 @@ body {
   padding-bottom: 1.77rem;
   font-weight: 500;
   font-family: "Source Code Pro", monospace;
-  background: #fafafa;
-  color: #231651;
+  background: var(--light);
+  color: var(--primary);
 }
 
 h1,
@@ -617,5 +629,23 @@ a {
 :focus {
   outline: 2px solid;
   outline-offset: 0.25rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --primary: #adadad;
+    --secondary: #231651;
+    --secondary-shade: #ff5151;
+    --tertiary: #2c988c;
+    --tertiary-glare: #d6fff6;
+    --quaternary: #2374ab;
+    --light: #1a103d;
+    --light-shade: #eeeeee;
+    --grey: #c4c4c4;
+  }
+  input,
+  textarea {
+    background: var(--light-shade);
+  }
 }
 /*# sourceMappingURL=global.css.map */
