@@ -511,6 +511,10 @@ select {
   background: var(--light-shade);
   border-radius: 0.56rem;
 }
+.tab-bar ul a {
+  text-decoration: none;
+  font-weight: bold;
+}
 .tab-bar li {
   padding: 0.5em 1em;
   border-radius: 0.56rem;
