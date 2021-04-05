@@ -10403,7 +10403,11 @@ var $author$project$Main$view = function (model) {
 							[
 								A2(
 								$elm$html$Html$footer,
-								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('footer'),
+										$elm$html$Html$Attributes$class('bg-light-shade')
+									]),
 								_List_fromArray(
 									[
 										A2(

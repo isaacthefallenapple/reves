@@ -1,3 +1,5 @@
+@use "./footer";
+
 .character {
     display: grid;
     grid-template-columns: repeat(3, auto);
@@ -11,6 +13,7 @@
         "skills-and-domains refresh fallout"
         ". notes notes";
     gap: get-size("600");
+    margin-bottom: footer.$height;
 
     .name {
         grid-area: name_;

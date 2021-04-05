@@ -204,7 +204,9 @@ view model =
                     , body =
                         List.map (Html.map CharacterMsg) characterView.body
                             ++ [ footer
-                                    []
+                                    [ class "footer"
+                                    , class "bg-light-shade"
+                                    ]
                                     [ span
                                         []
                                         [ text (Session.changesToString (Session.changes session))
