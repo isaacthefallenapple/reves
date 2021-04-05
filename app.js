@@ -7116,6 +7116,18 @@ var $author$project$Session$decoder = function (key) {
 				$author$project$Session$Character,
 				$author$project$Session$decodeCharacterSession(key))));
 };
+var $author$project$Session$changes = function (session) {
+	if (session.$ === 'Character') {
+		var val = session.a;
+		return val.changes;
+	} else {
+		return $author$project$Session$Saved;
+	}
+};
+var $author$project$Session$isSaved = A2(
+	$elm$core$Basics$composeR,
+	$author$project$Session$changes,
+	$elm$core$Basics$eq($author$project$Session$Saved));
 var $elm$core$Tuple$mapSecond = F2(
 	function (func, _v0) {
 		var x = _v0.a;
@@ -7464,6 +7476,10 @@ var $author$project$Route$parse = function (url) {
 		$author$project$Route$Root,
 		A2($elm$url$Url$Parser$parse, $author$project$Route$parser, url));
 };
+var $elm$core$List$singleton = function (value) {
+	return _List_fromArray(
+		[value]);
+};
 var $elm$json$Json$Encode$null = _Json_encodeNull;
 var $author$project$Ports$updatedCharacter = _Platform_outgoingPort(
 	'updatedCharacter',
@@ -7481,35 +7497,37 @@ var $elm$core$Result$withDefault = F2(
 	});
 var $author$project$Main$init = F3(
 	function (flags, url, navKey) {
+		var model = function () {
+			if (flags.$ === 'Nothing') {
+				return $author$project$Main$Landing(
+					$author$project$Session$new(navKey));
+			} else {
+				var json = flags.a;
+				return $author$project$Main$Character(
+					A2(
+						$elm$core$Result$withDefault,
+						$author$project$Session$new(navKey),
+						A2(
+							$elm$json$Json$Decode$decodeString,
+							$author$project$Session$decoder(navKey),
+							json)));
+			}
+		}();
+		var cmd = $author$project$Session$isSaved(
+			$author$project$Main$toSession(model)) ? $elm$core$Platform$Cmd$none : $author$project$Ports$updatedCharacter(_Utils_Tuple0);
 		return A2(
 			$elm$core$Tuple$mapSecond,
-			function (cmd) {
-				return $elm$core$Platform$Cmd$batch(
-					_List_fromArray(
-						[
-							cmd,
-							$author$project$Ports$updatedCharacter(_Utils_Tuple0)
-						]));
-			},
+			A2(
+				$elm$core$Basics$composeR,
+				$elm$core$List$singleton,
+				A2(
+					$elm$core$Basics$composeR,
+					$elm$core$List$cons(cmd),
+					$elm$core$Platform$Cmd$batch)),
 			A2(
 				$author$project$Main$changeRoute,
 				$author$project$Route$parse(url),
-				function () {
-					if (flags.$ === 'Nothing') {
-						return $author$project$Main$Landing(
-							$author$project$Session$new(navKey));
-					} else {
-						var json = flags.a;
-						return $author$project$Main$Character(
-							A2(
-								$elm$core$Result$withDefault,
-								$author$project$Session$new(navKey),
-								A2(
-									$elm$json$Json$Decode$decodeString,
-									$author$project$Session$decoder(navKey),
-									json)));
-					}
-				}()));
+				model));
 	});
 var $author$project$Main$SavedChanges = {$: 'SavedChanges'};
 var $author$project$Ports$confirmLocalStorage = _Platform_incomingPort(
@@ -8923,14 +8941,6 @@ var $author$project$Boon$testSubject = {
 var $author$project$Boon$assignments = _List_fromArray(
 	[$author$project$Boon$labour, $author$project$Boon$personalAssistant, $author$project$Boon$dogsbody, $author$project$Boon$security, $author$project$Boon$spy, $author$project$Boon$testSubject, $author$project$Boon$pleasure, $author$project$Boon$searchAndRescue, $author$project$Boon$escapee]);
 var $elm$html$Html$button = _VirtualDom_node('button');
-var $author$project$Session$changes = function (session) {
-	if (session.$ === 'Character') {
-		var val = session.a;
-		return val.changes;
-	} else {
-		return $author$project$Session$Saved;
-	}
-};
 var $author$project$Session$changesToString = function (val) {
 	switch (val.$) {
 		case 'Unsaved':

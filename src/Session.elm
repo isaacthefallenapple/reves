@@ -1,4 +1,4 @@
-module Session exposing (Session, changes, changesToString, character, decoder, fromDisk, navKey, new, save, savedChanges, savedChangesLocally, setCharacter)
+module Session exposing (Session, changes, changesToString, character, decoder, fromDisk, isSaved, isSavedLocally, isUnsaved, navKey, new, save, savedChanges, savedChangesLocally, setCharacter)
 
 import Browser.Navigation as Nav
 import Character
@@ -20,6 +20,21 @@ type Changes
     = Unsaved
     | Saved
     | SavedLocally
+
+
+isSaved : Session -> Bool
+isSaved =
+    changes >> (==) Saved
+
+
+isSavedLocally : Session -> Bool
+isSavedLocally =
+    changes >> (==) SavedLocally
+
+
+isUnsaved : Session -> Bool
+isUnsaved =
+    changes >> (==) Unsaved
 
 
 changesToString : Changes -> String

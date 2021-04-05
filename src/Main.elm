@@ -434,10 +434,9 @@ update msg model =
 
 init : Maybe String -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
 init flags url navKey =
-    Tuple.mapSecond (\cmd -> Cmd.batch [ cmd, Ports.updatedCharacter () ])
-        (changeRoute
-            (Route.parse url)
-            (case flags of
+    let
+        model =
+            case flags of
                 Nothing ->
                     Landing (Session.new navKey)
 
@@ -445,8 +444,18 @@ init flags url navKey =
                     Decode.decodeString (Session.decoder navKey) json
                         |> Result.withDefault (Session.new navKey)
                         |> Character
-            )
-        )
+
+        cmd =
+            if Session.isSaved (toSession model) then
+                Cmd.none
+
+            else
+                Ports.updatedCharacter ()
+    in
+    Tuple.mapSecond (List.singleton >> (::) cmd >> Cmd.batch) <|
+        changeRoute
+            (Route.parse url)
+            model
 
 
 
