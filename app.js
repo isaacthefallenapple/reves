@@ -10329,34 +10329,43 @@ var $author$project$Main$view = function (model) {
 				body: _List_fromArray(
 					[
 						A2(
-						$elm$html$Html$h1,
-						_List_Nil,
+						$elm$html$Html$div,
 						_List_fromArray(
 							[
-								$elm$html$Html$text('Something went wrong :(')
-							])),
-						A2(
-						$elm$html$Html$p,
-						_List_Nil,
-						_List_fromArray(
-							[
-								$elm$html$Html$text(
-								$elm$json$Json$Decode$errorToString(err))
-							])),
-						A2(
-						$elm$html$Html$p,
-						_List_Nil,
+								$elm$html$Html$Attributes$class('wrapper gap-top-700 flow')
+							]),
 						_List_fromArray(
 							[
 								A2(
-								$elm$html$Html$button,
+								$elm$html$Html$h1,
+								_List_Nil,
 								_List_fromArray(
 									[
-										$elm$html$Html$Events$onClick($author$project$Main$ClickedOpenFile)
-									]),
+										$elm$html$Html$text('Something went wrong :(')
+									])),
+								A2(
+								$elm$html$Html$p,
+								_List_Nil,
 								_List_fromArray(
 									[
-										$elm$html$Html$text('Try a different file')
+										$elm$html$Html$text(
+										$elm$json$Json$Decode$errorToString(err))
+									])),
+								A2(
+								$elm$html$Html$p,
+								_List_Nil,
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$button,
+										_List_fromArray(
+											[
+												$elm$html$Html$Events$onClick($author$project$Main$ClickedOpenFile)
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('Try a different file')
+											]))
 									]))
 							]))
 					]),
@@ -10367,37 +10376,46 @@ var $author$project$Main$view = function (model) {
 				body: _List_fromArray(
 					[
 						A2(
-						$elm$html$Html$h1,
-						_List_Nil,
-						_List_fromArray(
-							[
-								$elm$html$Html$text('Welcome')
-							])),
-						A2(
 						$elm$html$Html$div,
-						_List_Nil,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('wrapper gap-top-700 flow')
+							]),
 						_List_fromArray(
 							[
 								A2(
-								$elm$html$Html$button,
+								$elm$html$Html$h1,
+								_List_Nil,
 								_List_fromArray(
 									[
-										$elm$html$Html$Events$onClick($author$project$Main$ClickedOpenFile)
-									]),
-								_List_fromArray(
-									[
-										$elm$html$Html$text('Open a character')
+										$elm$html$Html$text('Welcome')
 									])),
-								$elm$html$Html$text(' or '),
 								A2(
-								$elm$html$Html$button,
+								$elm$html$Html$div,
+								_List_Nil,
 								_List_fromArray(
 									[
-										$elm$html$Html$Events$onClick($author$project$Main$ClickedNewCharacter)
-									]),
-								_List_fromArray(
-									[
-										$elm$html$Html$text('Create a new one?')
+										A2(
+										$elm$html$Html$button,
+										_List_fromArray(
+											[
+												$elm$html$Html$Events$onClick($author$project$Main$ClickedOpenFile)
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('Open a character')
+											])),
+										$elm$html$Html$text(' or '),
+										A2(
+										$elm$html$Html$button,
+										_List_fromArray(
+											[
+												$elm$html$Html$Events$onClick($author$project$Main$ClickedNewCharacter)
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('Create a new one?')
+											]))
 									]))
 							]))
 					]),
@@ -10411,7 +10429,8 @@ var $author$project$Main$view = function (model) {
 						$elm$html$Html$div,
 						_List_fromArray(
 							[
-								$elm$html$Html$Attributes$class('class-picker')
+								$elm$html$Html$Attributes$class('class-picker'),
+								$elm$html$Html$Attributes$class('wrapper gap-top-700 flow')
 							]),
 						A2(
 							$elm$core$List$cons,
@@ -10449,7 +10468,8 @@ var $author$project$Main$view = function (model) {
 						$elm$html$Html$div,
 						_List_fromArray(
 							[
-								$elm$html$Html$Attributes$class('assignment-picker')
+								$elm$html$Html$Attributes$class('assignment-picker'),
+								$elm$html$Html$Attributes$class('wrapper gap-top-700 flow')
 							]),
 						A2(
 							$elm$core$List$cons,

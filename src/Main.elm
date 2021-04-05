@@ -120,18 +120,21 @@ view model =
         DecodeErr _ err ->
             { title = "Error"
             , body =
-                [ h1
-                    []
-                    [ text "Something went wrong :("
-                    ]
-                , p
-                    []
-                    [ text (Decode.errorToString err) ]
-                , p
-                    []
-                    [ button
-                        [ onClick ClickedOpenFile ]
-                        [ text "Try a different file" ]
+                [ div
+                    [ class "wrapper gap-top-700 flow" ]
+                    [ h1
+                        []
+                        [ text "Something went wrong :("
+                        ]
+                    , p
+                        []
+                        [ text (Decode.errorToString err) ]
+                    , p
+                        []
+                        [ button
+                            [ onClick ClickedOpenFile ]
+                            [ text "Try a different file" ]
+                        ]
                     ]
                 ]
             }
@@ -139,18 +142,21 @@ view model =
         Landing _ ->
             { title = "Welcome!"
             , body =
-                [ h1
-                    []
-                    [ text "Welcome" ]
-                , div
-                    []
-                    [ button
-                        [ onClick ClickedOpenFile ]
-                        [ text "Open a character" ]
-                    , text " or "
-                    , button
-                        [ onClick ClickedNewCharacter ]
-                        [ text "Create a new one?" ]
+                [ div
+                    [ class "wrapper gap-top-700 flow" ]
+                    [ h1
+                        []
+                        [ text "Welcome" ]
+                    , div
+                        []
+                        [ button
+                            [ onClick ClickedOpenFile ]
+                            [ text "Open a character" ]
+                        , text " or "
+                        , button
+                            [ onClick ClickedNewCharacter ]
+                            [ text "Create a new one?" ]
+                        ]
                     ]
                 ]
             }
@@ -159,7 +165,9 @@ view model =
             { title = "Pick a class"
             , body =
                 [ div
-                    [ class "class-picker" ]
+                    [ class "class-picker"
+                    , class "wrapper gap-top-700 flow"
+                    ]
                     (h1
                         []
                         [ text "Pick your class" ]
@@ -178,7 +186,9 @@ view model =
             { title = "Pick an assignment"
             , body =
                 [ div
-                    [ class "assignment-picker" ]
+                    [ class "assignment-picker"
+                    , class "wrapper gap-top-700 flow"
+                    ]
                     (h1
                         []
                         [ text "Pick your assignment" ]
