@@ -29,15 +29,15 @@ $gorko-size-scale: (
 	* You can also use them to power borders, fills or shadows, for example.
 	*/
 $gorko-colors: (
-    "primary": #231651,
-    "secondary": #ff8484,
-    "secondary-shade": #ff5151,
-    "tertiary": #2c988c,
-    "tertiary-glare": #d6fff6,
-    "quaternary": #2374ab,
-    "light": #fafafa,
-    "light-shade": #eeeeee,
-    "grey": #c4c4c4,
+    "primary": var(--primary),
+    "secondary": var(--secondary),
+    "secondary-shade": var(--secondary-shade),
+    "tertiary": var(--tertiary),
+    "tertiary-glare": var(--tertiary-glare),
+    "quaternary": var(--quaternary),
+    "light": var(--light),
+    "light-shade": var(--light-shade),
+    "grey": var(--grey),
 );
 
 /**

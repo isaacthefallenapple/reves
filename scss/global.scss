@@ -27,6 +27,18 @@
 @import "blocks/button";
 
 // Global CSS starts
+:root {
+    --primary: #231651;
+    --secondary: #ff8484;
+    --secondary-shade: #ff5151;
+    --tertiary: #2c988c;
+    --tertiary-glare: #d6fff6;
+    --quaternary: #2374ab;
+    --light: #fafafa;
+    --light-shade: #eeeeee;
+    --grey: #c4c4c4;
+}
+
 body {
     line-height: 1.5;
     overflow-x: hidden;
