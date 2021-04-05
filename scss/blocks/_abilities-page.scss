@@ -1,0 +1,21 @@
+.abilities-page {
+    .abilities-page__list {
+        padding-left: 1em;
+
+        max-width: 72ch;
+    }
+
+    .chosen {
+        position: relative;
+
+        &::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: -1rem;
+            width: 0.5rem;
+            background-color: get-color("primary");
+        }
+    }
+}

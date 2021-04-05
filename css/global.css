@@ -555,6 +555,23 @@ select {
   padding-left: 1em;
 }
 
+.abilities-page .abilities-page__list {
+  padding-left: 1em;
+  max-width: 72ch;
+}
+.abilities-page .chosen {
+  position: relative;
+}
+.abilities-page .chosen::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -1rem;
+  width: 0.5rem;
+  background-color: var(--primary);
+}
+
 :root {
   --primary: #231651;
   --secondary: #ff8484;

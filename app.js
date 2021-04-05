@@ -9125,7 +9125,12 @@ var $author$project$Abilities$viewAdvanceList = F2(
 	function (selectedAbilities, abilities) {
 		return A2(
 			$elm$html$Html$ul,
-			_List_Nil,
+			_List_fromArray(
+				[
+					A2($elm$html$Html$Attributes$attribute, 'role', 'list'),
+					$elm$html$Html$Attributes$class('abilities-page__list'),
+					$elm$html$Html$Attributes$class('flow')
+				]),
 			A2(
 				$elm$core$List$map,
 				function (ability) {
@@ -9259,6 +9264,7 @@ var $author$project$Abilities$view = function (abilities) {
 		$elm$html$Html$div,
 		_List_fromArray(
 			[
+				$elm$html$Html$Attributes$class('abilities-page'),
 				$elm$html$Html$Attributes$class('wrapper')
 			]),
 		A2(

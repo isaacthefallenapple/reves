@@ -266,7 +266,9 @@ view abilities =
                 |> Maybe.withDefault (Dict.toList tabs)
     in
     div
-        [ class "wrapper" ]
+        [ class "abilities-page"
+        , class "wrapper"
+        ]
         (nav
             [ class "tab-bar" ]
             [ a
@@ -337,7 +339,10 @@ viewAdvances name selectedAbilities advances isSelected =
 viewAdvanceList : Dict String Ability -> List Ability -> Html Msg
 viewAdvanceList selectedAbilities abilities =
     ul
-        []
+        [ attribute "role" "list"
+        , class "abilities-page__list"
+        , class "flow"
+        ]
         (List.map
             (\ability ->
                 let
