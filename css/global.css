@@ -547,6 +547,14 @@ select {
   margin-left: auto;
 }
 
+.play-aid > dl > dt {
+  margin-top: var(--flow-space, 1em);
+}
+.play-aid > dl > dd {
+  max-width: 72ch;
+  padding-left: 1em;
+}
+
 :root {
   --primary: #231651;
   --secondary: #ff8484;

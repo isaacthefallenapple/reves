@@ -37,14 +37,14 @@
 		});
 
 		app.ports.savedCharacter.subscribe((_) => {
-			window.removeEventListener('beforeunload', beforeUnload);
+			// window.removeEventListener('beforeunload', beforeUnload);
 			isBeforeUnloadListenerAdded = false;
 			console.log('removed eventlistener');
 		})
 
 		app.ports.updatedCharacter.subscribe((_) => {
 			if (!isBeforeUnloadListenerAdded) {
-				window.addEventListener('beforeunload', beforeUnload);
+				// window.addEventListener('beforeunload', beforeUnload);
 				isBeforeUnloadListenerAdded = true;
 			}
 			console.log('added eventlistener');
