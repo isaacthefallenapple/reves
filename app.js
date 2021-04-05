@@ -8167,39 +8167,25 @@ var $elm$core$Basics$always = F2(
 	function (a, _v0) {
 		return a;
 	});
-var $elm$core$List$filter = F2(
-	function (isGood, list) {
+var $elm$core$Dict$diff = F2(
+	function (t1, t2) {
 		return A3(
-			$elm$core$List$foldr,
-			F2(
-				function (x, xs) {
-					return isGood(x) ? A2($elm$core$List$cons, x, xs) : xs;
+			$elm$core$Dict$foldl,
+			F3(
+				function (k, v, t) {
+					return A2($elm$core$Dict$remove, k, t);
 				}),
-			_List_Nil,
-			list);
+			t1,
+			t2);
 	});
-var $elm$core$Dict$member = F2(
-	function (key, dict) {
-		var _v0 = A2($elm$core$Dict$get, key, dict);
-		if (_v0.$ === 'Just') {
-			return true;
-		} else {
-			return false;
-		}
-	});
-var $elm$core$Basics$not = _Basics_not;
 var $author$project$Abilities$dedup = F2(
 	function (abilities, advances) {
-		var innerDedup = $elm$core$List$filter(
-			function (ability) {
-				return !A2($elm$core$Dict$member, ability.name, abilities);
-			});
 		return _Utils_update(
 			advances,
 			{
-				high: innerDedup(advances.high),
-				low: innerDedup(advances.low),
-				medium: innerDedup(advances.medium)
+				high: A2($elm$core$Dict$diff, advances.high, abilities),
+				low: A2($elm$core$Dict$diff, advances.low, abilities),
+				medium: A2($elm$core$Dict$diff, advances.medium, abilities)
 			});
 	});
 var $author$project$Abilities$GotAdvances = F2(
@@ -8211,21 +8197,38 @@ var $author$project$Abilities$Advances = F3(
 		return {high: high, low: low, medium: medium};
 	});
 var $elm$json$Json$Decode$map3 = _Json_map3;
-var $author$project$Abilities$decoder = A4(
-	$elm$json$Json$Decode$map3,
-	$author$project$Abilities$Advances,
-	A2(
-		$elm$json$Json$Decode$field,
-		'low',
-		$elm$json$Json$Decode$list($author$project$Ability$decoder)),
-	A2(
-		$elm$json$Json$Decode$field,
-		'medium',
-		$elm$json$Json$Decode$list($author$project$Ability$decoder)),
-	A2(
-		$elm$json$Json$Decode$field,
-		'high',
-		$elm$json$Json$Decode$list($author$project$Ability$decoder)));
+var $author$project$Abilities$decoder = function () {
+	var listToDict = A2(
+		$elm$core$List$foldl,
+		function (ability) {
+			return A2($elm$core$Dict$insert, ability.name, ability);
+		},
+		$elm$core$Dict$empty);
+	return A4(
+		$elm$json$Json$Decode$map3,
+		$author$project$Abilities$Advances,
+		A2(
+			$elm$json$Json$Decode$map,
+			listToDict,
+			A2(
+				$elm$json$Json$Decode$field,
+				'low',
+				$elm$json$Json$Decode$list($author$project$Ability$decoder))),
+		A2(
+			$elm$json$Json$Decode$map,
+			listToDict,
+			A2(
+				$elm$json$Json$Decode$field,
+				'medium',
+				$elm$json$Json$Decode$list($author$project$Ability$decoder))),
+		A2(
+			$elm$json$Json$Decode$map,
+			listToDict,
+			A2(
+				$elm$json$Json$Decode$field,
+				'high',
+				$elm$json$Json$Decode$list($author$project$Ability$decoder))));
+}();
 var $author$project$Abilities$fetchFromList = function (metadata) {
 	return $elm$core$Platform$Cmd$batch(
 		A2(
@@ -8274,6 +8277,20 @@ var $elm$core$Result$map = F2(
 			return $elm$core$Result$Err(e);
 		}
 	});
+var $author$project$Abilities$mapStatus = F2(
+	function (f, status) {
+		switch (status.$) {
+			case 'Loaded':
+				var inner = status.a;
+				return $author$project$Abilities$Loaded(
+					f(inner));
+			case 'Loading':
+				return $author$project$Abilities$Loading;
+			default:
+				var err = status.a;
+				return $author$project$Abilities$Failed(err);
+		}
+	});
 var $author$project$Abilities$statusFromResult = function (result) {
 	if (result.$ === 'Ok') {
 		var ok = result.a;
@@ -8281,82 +8298,6 @@ var $author$project$Abilities$statusFromResult = function (result) {
 	} else {
 		var err = result.a;
 		return $author$project$Abilities$Failed(err);
-	}
-};
-var $elm$url$Url$Builder$Absolute = {$: 'Absolute'};
-var $elm$url$Url$Builder$rootToPrePath = function (root) {
-	switch (root.$) {
-		case 'Absolute':
-			return '/';
-		case 'Relative':
-			return '';
-		default:
-			var prePath = root.a;
-			return prePath + '/';
-	}
-};
-var $elm$url$Url$Builder$toQueryPair = function (_v0) {
-	var key = _v0.a;
-	var value = _v0.b;
-	return key + ('=' + value);
-};
-var $elm$url$Url$Builder$toQuery = function (parameters) {
-	if (!parameters.b) {
-		return '';
-	} else {
-		return '?' + A2(
-			$elm$core$String$join,
-			'&',
-			A2($elm$core$List$map, $elm$url$Url$Builder$toQueryPair, parameters));
-	}
-};
-var $elm$url$Url$Builder$custom = F4(
-	function (root, pathSegments, parameters, maybeFragment) {
-		var fragmentless = _Utils_ap(
-			$elm$url$Url$Builder$rootToPrePath(root),
-			_Utils_ap(
-				A2($elm$core$String$join, '/', pathSegments),
-				$elm$url$Url$Builder$toQuery(parameters)));
-		if (maybeFragment.$ === 'Nothing') {
-			return fragmentless;
-		} else {
-			var fragment = maybeFragment.a;
-			return fragmentless + ('#' + fragment);
-		}
-	});
-var $author$project$Route$toString = function (route) {
-	var absolute = F3(
-		function (path, query, frag) {
-			return A4(
-				$elm$url$Url$Builder$custom,
-				$elm$url$Url$Builder$Absolute,
-				A2($elm$core$List$cons, 'reves', path),
-				query,
-				frag);
-		});
-	switch (route.$) {
-		case 'Root':
-			return A3(absolute, _List_Nil, _List_Nil, $elm$core$Maybe$Nothing);
-		case 'Abilities':
-			var selected = route.a;
-			return A3(
-				absolute,
-				_List_fromArray(
-					['abilities']),
-				_List_Nil,
-				selected);
-		default:
-			var topic = route.a;
-			var selected = route.b;
-			return A3(
-				absolute,
-				_List_fromArray(
-					[
-						'play-aid',
-						$author$project$PlayAids$topicToString(topic)
-					]),
-				_List_Nil,
-				selected);
 	}
 };
 var $elm$core$Dict$values = function (dict) {
@@ -8446,18 +8387,6 @@ var $author$project$Abilities$update = F2(
 								abilities.tabs)
 						}),
 					$elm$core$Platform$Cmd$none);
-			case 'ClickedTab':
-				var selected = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						abilities,
-						{selected: selected}),
-					A2(
-						$elm$browser$Browser$Navigation$pushUrl,
-						$author$project$Session$navKey(abilities.session),
-						$author$project$Route$toString(
-							$author$project$Route$Abilities(
-								$elm$core$Maybe$Just(selected)))));
 			default:
 				var _v2 = A2(
 					$elm$core$Maybe$map,
@@ -8474,7 +8403,16 @@ var $author$project$Abilities$update = F2(
 						function (s) {
 							return _Utils_update(
 								abilities,
-								{session: s});
+								{
+									session: s,
+									tabs: A2(
+										$elm$core$Dict$map,
+										function (_v3) {
+											return $author$project$Abilities$mapStatus(
+												$author$project$Abilities$dedup(updatedCharacter.abilities));
+										},
+										abilities.tabs)
+								});
 						},
 						$author$project$Session$save(session));
 				}
@@ -9108,6 +9046,17 @@ var $elm$virtual_dom$VirtualDom$attribute = F2(
 			_VirtualDom_noJavaScriptOrHtmlUri(value));
 	});
 var $elm$html$Html$Attributes$attribute = $elm$virtual_dom$VirtualDom$attribute;
+var $elm$core$List$filter = F2(
+	function (isGood, list) {
+		return A3(
+			$elm$core$List$foldr,
+			F2(
+				function (x, xs) {
+					return isGood(x) ? A2($elm$core$List$cons, x, xs) : xs;
+				}),
+			_List_Nil,
+			list);
+	});
 var $elm$html$Html$Attributes$classList = function (classes) {
 	return $elm$html$Html$Attributes$class(
 		A2(
@@ -9120,14 +9069,100 @@ var $elm$html$Html$Attributes$classList = function (classes) {
 };
 var $elm$html$Html$li = _VirtualDom_node('li');
 var $elm$html$Html$nav = _VirtualDom_node('nav');
+var $elm$url$Url$Builder$Absolute = {$: 'Absolute'};
+var $elm$url$Url$Builder$rootToPrePath = function (root) {
+	switch (root.$) {
+		case 'Absolute':
+			return '/';
+		case 'Relative':
+			return '';
+		default:
+			var prePath = root.a;
+			return prePath + '/';
+	}
+};
+var $elm$url$Url$Builder$toQueryPair = function (_v0) {
+	var key = _v0.a;
+	var value = _v0.b;
+	return key + ('=' + value);
+};
+var $elm$url$Url$Builder$toQuery = function (parameters) {
+	if (!parameters.b) {
+		return '';
+	} else {
+		return '?' + A2(
+			$elm$core$String$join,
+			'&',
+			A2($elm$core$List$map, $elm$url$Url$Builder$toQueryPair, parameters));
+	}
+};
+var $elm$url$Url$Builder$custom = F4(
+	function (root, pathSegments, parameters, maybeFragment) {
+		var fragmentless = _Utils_ap(
+			$elm$url$Url$Builder$rootToPrePath(root),
+			_Utils_ap(
+				A2($elm$core$String$join, '/', pathSegments),
+				$elm$url$Url$Builder$toQuery(parameters)));
+		if (maybeFragment.$ === 'Nothing') {
+			return fragmentless;
+		} else {
+			var fragment = maybeFragment.a;
+			return fragmentless + ('#' + fragment);
+		}
+	});
+var $author$project$Route$toString = function (route) {
+	var absolute = F3(
+		function (path, query, frag) {
+			return A4(
+				$elm$url$Url$Builder$custom,
+				$elm$url$Url$Builder$Absolute,
+				A2($elm$core$List$cons, 'reves', path),
+				query,
+				frag);
+		});
+	switch (route.$) {
+		case 'Root':
+			return A3(absolute, _List_Nil, _List_Nil, $elm$core$Maybe$Nothing);
+		case 'Abilities':
+			var selected = route.a;
+			return A3(
+				absolute,
+				_List_fromArray(
+					['abilities']),
+				_List_Nil,
+				selected);
+		default:
+			var topic = route.a;
+			var selected = route.b;
+			return A3(
+				absolute,
+				_List_fromArray(
+					[
+						'play-aid',
+						$author$project$PlayAids$topicToString(topic)
+					]),
+				_List_Nil,
+				selected);
+	}
+};
 var $elm$html$Html$ul = _VirtualDom_node('ul');
 var $elm$html$Html$h2 = _VirtualDom_node('h2');
+var $elm$core$Basics$not = _Basics_not;
 var $author$project$Abilities$ChoseAbility = function (a) {
 	return {$: 'ChoseAbility', a: a};
 };
 var $author$project$Abilities$UnchoseAbility = function (a) {
 	return {$: 'UnchoseAbility', a: a};
 };
+var $elm$core$Dict$member = F2(
+	function (key, dict) {
+		var _v0 = A2($elm$core$Dict$get, key, dict);
+		if (_v0.$ === 'Just') {
+			return true;
+		} else {
+			return false;
+		}
+	});
 var $elm$html$Html$h3 = _VirtualDom_node('h3');
 var $elm$html$Html$i = _VirtualDom_node('i');
 var $elm$core$List$isEmpty = function (xs) {
@@ -9248,7 +9283,7 @@ var $author$project$Abilities$viewAdvanceList = F2(
 								$author$project$Ability$view(ability)
 							]));
 				},
-				abilities));
+				$elm$core$Dict$values(abilities)));
 	});
 var $author$project$Abilities$viewAdvances = F4(
 	function (name, selectedAbilities, advances, isSelected) {
@@ -9320,9 +9355,11 @@ var $author$project$Abilities$viewAdvances = F4(
 				}
 			}());
 	});
-var $author$project$Abilities$view = function (abilities) {
-	var tabs = abilities.tabs;
-	var selected = abilities.selected;
+var $author$project$Abilities$view = function (_v0) {
+	var session = _v0.session;
+	var selected = _v0.selected;
+	var tabs = _v0.tabs;
+	var chosen = _v0.chosen;
 	var primary = A2(
 		$elm$core$Maybe$withDefault,
 		'',
@@ -9331,7 +9368,7 @@ var $author$project$Abilities$view = function (abilities) {
 			function ($) {
 				return $._class;
 			},
-			$author$project$Session$character(abilities.session)));
+			$author$project$Session$character(session)));
 	var primaryFirst = A2(
 		$elm$core$Maybe$withDefault,
 		$elm$core$Dict$toList(tabs),
@@ -9381,8 +9418,8 @@ var $author$project$Abilities$view = function (abilities) {
 							]),
 						A2(
 							$elm$core$List$map,
-							function (_v0) {
-								var name = _v0.a;
+							function (_v1) {
+								var name = _v1.a;
 								return A2(
 									$elm$html$Html$li,
 									_List_fromArray(
@@ -9427,13 +9464,13 @@ var $author$project$Abilities$view = function (abilities) {
 						_List_Nil,
 						A2(
 							$elm$core$List$map,
-							function (_v1) {
-								var name = _v1.a;
-								var advances = _v1.b;
+							function (_v2) {
+								var name = _v2.a;
+								var advances = _v2.b;
 								return A4(
 									$author$project$Abilities$viewAdvances,
 									name,
-									abilities.chosen,
+									chosen,
 									advances,
 									_Utils_eq(name, selected));
 							},

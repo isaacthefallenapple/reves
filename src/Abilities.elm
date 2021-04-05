@@ -28,22 +28,18 @@ metadataLocation =
 
 
 type alias Advances =
-    { low : List Ability
-    , medium : List Ability
-    , high : List Ability
+    { low : Dict String Ability
+    , medium : Dict String Ability
+    , high : Dict String Ability
     }
 
 
 dedup : Dict String a -> Advances -> Advances
 dedup abilities advances =
-    let
-        innerDedup =
-            List.filter (\ability -> not (Dict.member ability.name abilities))
-    in
     { advances
-        | low = innerDedup advances.low
-        , medium = innerDedup advances.medium
-        , high = innerDedup advances.high
+        | low = Dict.diff advances.low abilities
+        , medium = Dict.diff advances.medium abilities
+        , high = Dict.diff advances.high abilities
     }
 
 
@@ -100,6 +96,19 @@ type Status a
     | Failed Http.Error
 
 
+mapStatus : (a -> b) -> Status a -> Status b
+mapStatus f status =
+    case status of
+        Loaded inner ->
+            Loaded (f inner)
+
+        Loading ->
+            Loading
+
+        Failed err ->
+            Failed err
+
+
 statusFromResult : Result Http.Error a -> Status a
 statusFromResult result =
     case result of
@@ -114,9 +123,10 @@ statusFromResult result =
 -- MSG
 
 
-type Msg
-    = ClickedTab String
-    | GotMetadata (Result Http.Error Metadata)
+type
+    Msg
+    -- = ClickedTab String
+    = GotMetadata (Result Http.Error Metadata)
     | GotAdvances String (Result Http.Error Advances)
     | ChoseAbility Ability
     | UnchoseAbility String
@@ -200,11 +210,10 @@ update msg abilities =
             , Cmd.none
             )
 
-        ClickedTab selected ->
-            ( { abilities | selected = selected }
-            , Nav.pushUrl (Session.navKey abilities.session) (Route.toString (Route.Abilities (Just selected)))
-            )
-
+        -- ClickedTab selected ->
+        --     ( { abilities | selected = selected }
+        --     , Nav.pushUrl (Session.navKey abilities.session) (Route.toString (Route.Abilities (Just selected)))
+        --     )
         ApplyChosen ->
             -- let
             --     updatedCharacter =
@@ -219,7 +228,13 @@ update msg abilities =
                         session =
                             Session.setCharacter updatedCharacter abilities.session
                     in
-                    Tuple.mapFirst (\s -> { abilities | session = s })
+                    Tuple.mapFirst
+                        (\s ->
+                            { abilities
+                                | session = s
+                                , tabs = Dict.map (\_ -> mapStatus (dedup updatedCharacter.abilities)) abilities.tabs
+                            }
+                        )
                         (Session.save session)
 
 
@@ -242,18 +257,12 @@ fetchFromList metadata =
 
 
 view : Abilities -> Html Msg
-view abilities =
+view { session, selected, tabs, chosen } =
     let
         primary =
-            Session.character abilities.session
+            Session.character session
                 |> Maybe.map .class
                 |> Maybe.withDefault ""
-
-        selected =
-            abilities.selected
-
-        tabs =
-            abilities.tabs
 
         primaryFirst =
             Dict.get primary tabs
@@ -295,7 +304,7 @@ view abilities =
               <|
                 List.map
                     (\( name, advances ) ->
-                        viewAdvances name abilities.chosen advances (name == selected)
+                        viewAdvances name chosen advances (name == selected)
                     )
                     primaryFirst
             , button
@@ -341,7 +350,7 @@ viewAdvances name selectedAbilities advances isSelected =
         )
 
 
-viewAdvanceList : Dict String Ability -> List Ability -> Html Msg
+viewAdvanceList : Dict String Ability -> Dict String Ability -> Html Msg
 viewAdvanceList selectedAbilities abilities =
     ul
         [ attribute "role" "list"
@@ -366,7 +375,8 @@ viewAdvanceList selectedAbilities abilities =
                     ]
                     [ Ability.view ability ]
             )
-            abilities
+         <|
+            Dict.values abilities
         )
 
 
@@ -376,10 +386,14 @@ viewAdvanceList selectedAbilities abilities =
 
 decoder : Decoder Advances
 decoder =
+    let
+        listToDict =
+            List.foldl (\ability -> Dict.insert ability.name ability) Dict.empty
+    in
     Decode.map3 Advances
-        (Decode.field "low" (Decode.list Ability.decoder))
-        (Decode.field "medium" (Decode.list Ability.decoder))
-        (Decode.field "high" (Decode.list Ability.decoder))
+        (Decode.map listToDict (Decode.field "low" (Decode.list Ability.decoder)))
+        (Decode.map listToDict (Decode.field "medium" (Decode.list Ability.decoder)))
+        (Decode.map listToDict (Decode.field "high" (Decode.list Ability.decoder)))
 
 
 metadataDecoder : Decoder Metadata
