@@ -1,8 +1,9 @@
-module Session exposing (Session, changes, changesToString, character, load, loadLocal, navKey, new, save, savedChanges, savedChangesLocally, setCharacter)
+module Session exposing (Session, changes, changesToString, character, decoder, fromDisk, navKey, new, save, savedChanges, savedChangesLocally, setCharacter)
 
 import Browser.Navigation as Nav
 import Character
-import Json.Encode as Encode
+import Json.Decode as Decode exposing (Decoder)
+import Json.Encode as Encode exposing (Value)
 import Ports
 
 
@@ -37,42 +38,6 @@ changesToString val =
 new : Nav.Key -> Session
 new key =
     NoCharacter key
-
-
-load : Character.Stats -> Session -> Session
-load char session =
-    case session of
-        NoCharacter key ->
-            Character
-                { navKey = key
-                , character = char
-                , changes = Saved
-                }
-
-        Character val ->
-            Character
-                { val
-                    | character = char
-                    , changes = Saved
-                }
-
-
-loadLocal : Character.Stats -> Session -> Session
-loadLocal char session =
-    case session of
-        NoCharacter key ->
-            Character
-                { navKey = key
-                , character = char
-                , changes = SavedLocally
-                }
-
-        Character val ->
-            Character
-                { val
-                    | character = char
-                    , changes = SavedLocally
-                }
 
 
 navKey : Session -> Nav.Key
@@ -113,6 +78,24 @@ setCharacter newCharacter session =
                 }
 
 
+fromDisk : Character.Stats -> Session -> Session
+fromDisk newCharacter session =
+    case session of
+        NoCharacter key ->
+            Character
+                { navKey = key
+                , character = newCharacter
+                , changes = Saved
+                }
+
+        Character val ->
+            Character
+                { val
+                    | character = newCharacter
+                    , changes = Saved
+                }
+
+
 changes : Session -> Changes
 changes session =
     case session of
@@ -140,15 +123,115 @@ savedChangesLocally session =
             session
 
         Character val ->
-            Character { val | changes = SavedLocally }
+            Character
+                { val
+                    | changes =
+                        case val.changes of
+                            Unsaved ->
+                                SavedLocally
+
+                            SavedLocally ->
+                                SavedLocally
+
+                            Saved ->
+                                Saved
+                }
 
 
-save : Session -> Cmd msg
+save : Session -> ( Session, Cmd msg )
 save session =
     case session of
         NoCharacter _ ->
-            Cmd.none
+            ( session, Cmd.none )
+
+        Character _ ->
+            let
+                updatedSession =
+                    savedChangesLocally session
+            in
+            ( savedChangesLocally updatedSession
+            , Encode.encode 2 (encoder updatedSession)
+                |> Ports.storeCharacter
+            )
+
+
+
+-- ENCODER
+
+
+encoder : Session -> Value
+encoder session =
+    case session of
+        NoCharacter _ ->
+            Encode.null
 
         Character val ->
-            Encode.encode 2 (Character.encode val.character)
-                |> Ports.storeCharacter
+            Encode.object
+                [ ( "character", Character.encode val.character )
+                , ( "changes", encodeChanges val.changes )
+                ]
+
+
+encodeChanges : Changes -> Value
+encodeChanges cs =
+    Encode.int <|
+        case cs of
+            Unsaved ->
+                0
+
+            SavedLocally ->
+                1
+
+            Saved ->
+                2
+
+
+
+-- DECODER
+
+
+decoder : Nav.Key -> Decoder Session
+decoder key =
+    Decode.map
+        (Maybe.withDefault (NoCharacter key))
+        (Decode.nullable (Decode.map Character (decodeCharacterSession key)))
+
+
+decodeCharacterSession :
+    Nav.Key
+    ->
+        Decoder
+            { navKey : Nav.Key
+            , character : Character.Stats
+            , changes : Changes
+            }
+decodeCharacterSession key =
+    Decode.map2
+        (\char cs ->
+            { navKey = key
+            , character = char
+            , changes = cs
+            }
+        )
+        (Decode.field "character" Character.decoder)
+        (Decode.field "changes" changesDecoder)
+
+
+changesDecoder : Decoder Changes
+changesDecoder =
+    Decode.andThen
+        (\n ->
+            case n of
+                0 ->
+                    Decode.succeed Unsaved
+
+                1 ->
+                    Decode.succeed SavedLocally
+
+                2 ->
+                    Decode.succeed Saved
+
+                _ ->
+                    Decode.fail <| "Invalid changes value: " ++ String.fromInt n
+        )
+        Decode.int

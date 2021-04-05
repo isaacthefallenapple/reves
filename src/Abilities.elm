@@ -219,9 +219,8 @@ update msg abilities =
                         session =
                             Session.setCharacter updatedCharacter abilities.session
                     in
-                    ( { abilities | session = session }
-                    , Session.save session
-                    )
+                    Tuple.mapFirst (\s -> { abilities | session = s })
+                        (Session.save session)
 
 
 fetchFromList : Metadata -> Cmd Msg

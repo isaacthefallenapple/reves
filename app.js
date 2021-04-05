@@ -6569,136 +6569,34 @@ var $author$project$Main$changeRoute = F2(
 		}
 		return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 	});
-var $author$project$Boon$Domain$Criminal = {$: 'Criminal'};
-var $author$project$Boon$Domain$Hegemony = {$: 'Hegemony'};
-var $author$project$Boon$Domain$HighSociety = {$: 'HighSociety'};
-var $author$project$Boon$Domain$LowSociety = {$: 'LowSociety'};
-var $author$project$Boon$Domain$Science = {$: 'Science'};
-var $author$project$Boon$Domain$Weirdness = {$: 'Weirdness'};
-var $author$project$TypeDict$Dict = function (a) {
-	return {$: 'Dict', a: a};
+var $author$project$Session$Character = function (a) {
+	return {$: 'Character', a: a};
 };
-var $author$project$TypeDict$fromList = F2(
-	function (hasher, list) {
-		return $author$project$TypeDict$Dict(
-			{
-				hasher: hasher,
-				inner: $elm$core$Dict$fromList(
-					A2(
-						$elm$core$List$map,
-						function (_v0) {
-							var k = _v0.a;
-							var v = _v0.b;
-							return _Utils_Tuple2(
-								hasher(k),
-								_Utils_Tuple2(k, v));
-						},
-						list))
-			});
-	});
-var $author$project$Boon$Domain$toString = function (domain) {
-	switch (domain.$) {
-		case 'Criminal':
-			return 'Criminal';
-		case 'HighSociety':
-			return 'High Society';
-		case 'LowSociety':
-			return 'Low Society';
-		case 'Weirdness':
-			return 'Weirdness';
-		case 'Hegemony':
-			return 'Hegemony';
-		default:
-			return 'Science';
-	}
+var $author$project$Session$NoCharacter = function (a) {
+	return {$: 'NoCharacter', a: a};
 };
-var $author$project$Boon$Domain$new = A2(
-	$author$project$TypeDict$fromList,
-	$author$project$Boon$Domain$toString,
-	A2(
-		$elm$core$List$map,
-		function (d) {
-			return _Utils_Tuple2(d, false);
-		},
-		_List_fromArray(
-			[$author$project$Boon$Domain$Criminal, $author$project$Boon$Domain$HighSociety, $author$project$Boon$Domain$LowSociety, $author$project$Boon$Domain$Weirdness, $author$project$Boon$Domain$Hegemony, $author$project$Boon$Domain$Science])));
-var $author$project$Boon$Resistance$Armor = {$: 'Armor'};
-var $author$project$Boon$Resistance$Body = {$: 'Body'};
-var $author$project$Boon$Resistance$Reputation = {$: 'Reputation'};
-var $author$project$Boon$Resistance$Resolve = {$: 'Resolve'};
-var $author$project$Boon$Resistance$Resources = {$: 'Resources'};
-var $author$project$Boon$Resistance$Shadow = {$: 'Shadow'};
-var $author$project$Boon$Resistance$toString = function (resistance) {
-	switch (resistance.$) {
-		case 'Body':
-			return 'Body';
-		case 'Resolve':
-			return 'Resolve';
-		case 'Resources':
-			return 'Resources';
-		case 'Shadow':
-			return 'Shadow';
-		case 'Reputation':
-			return 'Reputation';
-		default:
-			return 'Armour';
-	}
-};
-var $author$project$Boon$Resistance$new = A2(
-	$author$project$TypeDict$fromList,
-	$author$project$Boon$Resistance$toString,
-	A2(
-		$elm$core$List$map,
-		function (r) {
-			return _Utils_Tuple2(r, 0);
-		},
-		_List_fromArray(
-			[$author$project$Boon$Resistance$Body, $author$project$Boon$Resistance$Resolve, $author$project$Boon$Resistance$Resources, $author$project$Boon$Resistance$Shadow, $author$project$Boon$Resistance$Reputation, $author$project$Boon$Resistance$Armor])));
-var $author$project$Boon$Skill$Compel = {$: 'Compel'};
-var $author$project$Boon$Skill$Deceive = {$: 'Deceive'};
-var $author$project$Boon$Skill$Hack = {$: 'Hack'};
-var $author$project$Boon$Skill$Investigate = {$: 'Investigate'};
-var $author$project$Boon$Skill$Patch = {$: 'Patch'};
-var $author$project$Boon$Skill$Resist = {$: 'Resist'};
-var $author$project$Boon$Skill$Scramble = {$: 'Scramble'};
-var $author$project$Boon$Skill$Scrap = {$: 'Scrap'};
-var $author$project$Boon$Skill$Skulk = {$: 'Skulk'};
-var $author$project$Boon$Skill$Steal = {$: 'Steal'};
-var $author$project$Boon$Skill$toString = function (skill) {
-	switch (skill.$) {
-		case 'Compel':
-			return 'Compel';
-		case 'Deceive':
-			return 'Deceive';
-		case 'Hack':
-			return 'Hack';
-		case 'Patch':
-			return 'Patch';
-		case 'Scramble':
-			return 'Scramble';
-		case 'Scrap':
-			return 'Scrap';
-		case 'Skulk':
-			return 'Skulk';
-		case 'Investigate':
-			return 'Investigate';
-		case 'Steal':
-			return 'Steal';
-		default:
-			return 'Resist';
-	}
-};
-var $author$project$Boon$Skill$new = A2(
-	$author$project$TypeDict$fromList,
-	$author$project$Boon$Skill$toString,
-	A2(
-		$elm$core$List$map,
-		function (s) {
-			return _Utils_Tuple2(s, false);
-		},
-		_List_fromArray(
-			[$author$project$Boon$Skill$Compel, $author$project$Boon$Skill$Deceive, $author$project$Boon$Skill$Hack, $author$project$Boon$Skill$Patch, $author$project$Boon$Skill$Scramble, $author$project$Boon$Skill$Scrap, $author$project$Boon$Skill$Skulk, $author$project$Boon$Skill$Investigate, $author$project$Boon$Skill$Steal, $author$project$Boon$Skill$Resist])));
-var $author$project$Character$blank = {abilities: $elm$core$Dict$empty, assignment: '', bonds: '', _class: '', domains: $author$project$Boon$Domain$new, equipment: '', fallout: '', knacks: '', name: '', notes: '', refresh: '', resistances: $author$project$Boon$Resistance$new, skills: $author$project$Boon$Skill$new};
+var $author$project$Session$Saved = {$: 'Saved'};
+var $author$project$Session$SavedLocally = {$: 'SavedLocally'};
+var $author$project$Session$Unsaved = {$: 'Unsaved'};
+var $elm$json$Json$Decode$andThen = _Json_andThen;
+var $elm$json$Json$Decode$fail = _Json_fail;
+var $elm$json$Json$Decode$int = _Json_decodeInt;
+var $author$project$Session$changesDecoder = A2(
+	$elm$json$Json$Decode$andThen,
+	function (n) {
+		switch (n) {
+			case 0:
+				return $elm$json$Json$Decode$succeed($author$project$Session$Unsaved);
+			case 1:
+				return $elm$json$Json$Decode$succeed($author$project$Session$SavedLocally);
+			case 2:
+				return $elm$json$Json$Decode$succeed($author$project$Session$Saved);
+			default:
+				return $elm$json$Json$Decode$fail(
+					'Invalid changes value: ' + $elm$core$String$fromInt(n));
+		}
+	},
+	$elm$json$Json$Decode$int);
 var $author$project$Character$Stats = function (name) {
 	return function (_class) {
 		return function (assignment) {
@@ -6733,8 +6631,12 @@ var $author$project$Ability$Ability = F4(
 var $author$project$Boon$GainDomains = function (a) {
 	return {$: 'GainDomains', a: a};
 };
-var $elm$json$Json$Decode$andThen = _Json_andThen;
-var $elm$json$Json$Decode$fail = _Json_fail;
+var $author$project$Boon$Domain$Criminal = {$: 'Criminal'};
+var $author$project$Boon$Domain$Hegemony = {$: 'Hegemony'};
+var $author$project$Boon$Domain$HighSociety = {$: 'HighSociety'};
+var $author$project$Boon$Domain$LowSociety = {$: 'LowSociety'};
+var $author$project$Boon$Domain$Science = {$: 'Science'};
+var $author$project$Boon$Domain$Weirdness = {$: 'Weirdness'};
 var $author$project$Boon$Domain$fromString = function (s) {
 	switch (s) {
 		case 'Criminal':
@@ -6815,6 +6717,16 @@ var $author$project$Boon$newRefreshDecoder = A2(
 var $author$project$Boon$GainSkills = function (a) {
 	return {$: 'GainSkills', a: a};
 };
+var $author$project$Boon$Skill$Compel = {$: 'Compel'};
+var $author$project$Boon$Skill$Deceive = {$: 'Deceive'};
+var $author$project$Boon$Skill$Hack = {$: 'Hack'};
+var $author$project$Boon$Skill$Investigate = {$: 'Investigate'};
+var $author$project$Boon$Skill$Patch = {$: 'Patch'};
+var $author$project$Boon$Skill$Resist = {$: 'Resist'};
+var $author$project$Boon$Skill$Scramble = {$: 'Scramble'};
+var $author$project$Boon$Skill$Scrap = {$: 'Scrap'};
+var $author$project$Boon$Skill$Skulk = {$: 'Skulk'};
+var $author$project$Boon$Skill$Steal = {$: 'Steal'};
 var $author$project$Boon$Skill$fromString = function (s) {
 	switch (s) {
 		case 'Compel':
@@ -6864,7 +6776,12 @@ var $author$project$Boon$GainResistance = F2(
 	function (a, b) {
 		return {$: 'GainResistance', a: a, b: b};
 	});
-var $elm$json$Json$Decode$int = _Json_decodeInt;
+var $author$project$Boon$Resistance$Armor = {$: 'Armor'};
+var $author$project$Boon$Resistance$Body = {$: 'Body'};
+var $author$project$Boon$Resistance$Reputation = {$: 'Reputation'};
+var $author$project$Boon$Resistance$Resolve = {$: 'Resolve'};
+var $author$project$Boon$Resistance$Resources = {$: 'Resources'};
+var $author$project$Boon$Resistance$Shadow = {$: 'Shadow'};
 var $author$project$Boon$Resistance$fromString = function (s) {
 	switch (s) {
 		case 'Body':
@@ -6938,6 +6855,27 @@ var $author$project$TypeDict$Json$Decode$decodeKVPair = F2(
 			A2($elm$json$Json$Decode$field, 'key', keyDecoder),
 			A2($elm$json$Json$Decode$field, 'val', valDecoder));
 	});
+var $author$project$TypeDict$Dict = function (a) {
+	return {$: 'Dict', a: a};
+};
+var $author$project$TypeDict$fromList = F2(
+	function (hasher, list) {
+		return $author$project$TypeDict$Dict(
+			{
+				hasher: hasher,
+				inner: $elm$core$Dict$fromList(
+					A2(
+						$elm$core$List$map,
+						function (_v0) {
+							var k = _v0.a;
+							var v = _v0.b;
+							return _Utils_Tuple2(
+								hasher(k),
+								_Utils_Tuple2(k, v));
+						},
+						list))
+			});
+	});
 var $elm$core$Tuple$second = function (_v0) {
 	var y = _v0.b;
 	return y;
@@ -6956,9 +6894,95 @@ var $author$project$TypeDict$Json$Decode$decoder = F3(
 			$elm$json$Json$Decode$dict(
 				A2($author$project$TypeDict$Json$Decode$decodeKVPair, keyDecoder, valDecoder)));
 	});
+var $author$project$Boon$Domain$toString = function (domain) {
+	switch (domain.$) {
+		case 'Criminal':
+			return 'Criminal';
+		case 'HighSociety':
+			return 'High Society';
+		case 'LowSociety':
+			return 'Low Society';
+		case 'Weirdness':
+			return 'Weirdness';
+		case 'Hegemony':
+			return 'Hegemony';
+		default:
+			return 'Science';
+	}
+};
 var $author$project$Boon$Domain$decoder = A3($author$project$TypeDict$Json$Decode$decoder, $author$project$Boon$Domain$toString, $author$project$Boon$Domain$domainDecoder, $elm$json$Json$Decode$bool);
+var $author$project$Boon$Resistance$toString = function (resistance) {
+	switch (resistance.$) {
+		case 'Body':
+			return 'Body';
+		case 'Resolve':
+			return 'Resolve';
+		case 'Resources':
+			return 'Resources';
+		case 'Shadow':
+			return 'Shadow';
+		case 'Reputation':
+			return 'Reputation';
+		default:
+			return 'Armour';
+	}
+};
 var $author$project$Boon$Resistance$decoder = A3($author$project$TypeDict$Json$Decode$decoder, $author$project$Boon$Resistance$toString, $author$project$Boon$Resistance$resistanceDecoder, $elm$json$Json$Decode$int);
+var $author$project$Boon$Skill$toString = function (skill) {
+	switch (skill.$) {
+		case 'Compel':
+			return 'Compel';
+		case 'Deceive':
+			return 'Deceive';
+		case 'Hack':
+			return 'Hack';
+		case 'Patch':
+			return 'Patch';
+		case 'Scramble':
+			return 'Scramble';
+		case 'Scrap':
+			return 'Scrap';
+		case 'Skulk':
+			return 'Skulk';
+		case 'Investigate':
+			return 'Investigate';
+		case 'Steal':
+			return 'Steal';
+		default:
+			return 'Resist';
+	}
+};
 var $author$project$Boon$Skill$decoder = A3($author$project$TypeDict$Json$Decode$decoder, $author$project$Boon$Skill$toString, $author$project$Boon$Skill$skillDecoder, $elm$json$Json$Decode$bool);
+var $author$project$Boon$Domain$new = A2(
+	$author$project$TypeDict$fromList,
+	$author$project$Boon$Domain$toString,
+	A2(
+		$elm$core$List$map,
+		function (d) {
+			return _Utils_Tuple2(d, false);
+		},
+		_List_fromArray(
+			[$author$project$Boon$Domain$Criminal, $author$project$Boon$Domain$HighSociety, $author$project$Boon$Domain$LowSociety, $author$project$Boon$Domain$Weirdness, $author$project$Boon$Domain$Hegemony, $author$project$Boon$Domain$Science])));
+var $author$project$Boon$Resistance$new = A2(
+	$author$project$TypeDict$fromList,
+	$author$project$Boon$Resistance$toString,
+	A2(
+		$elm$core$List$map,
+		function (r) {
+			return _Utils_Tuple2(r, 0);
+		},
+		_List_fromArray(
+			[$author$project$Boon$Resistance$Body, $author$project$Boon$Resistance$Resolve, $author$project$Boon$Resistance$Resources, $author$project$Boon$Resistance$Shadow, $author$project$Boon$Resistance$Reputation, $author$project$Boon$Resistance$Armor])));
+var $author$project$Boon$Skill$new = A2(
+	$author$project$TypeDict$fromList,
+	$author$project$Boon$Skill$toString,
+	A2(
+		$elm$core$List$map,
+		function (s) {
+			return _Utils_Tuple2(s, false);
+		},
+		_List_fromArray(
+			[$author$project$Boon$Skill$Compel, $author$project$Boon$Skill$Deceive, $author$project$Boon$Skill$Hack, $author$project$Boon$Skill$Patch, $author$project$Boon$Skill$Scramble, $author$project$Boon$Skill$Scrap, $author$project$Boon$Skill$Skulk, $author$project$Boon$Skill$Investigate, $author$project$Boon$Skill$Steal, $author$project$Boon$Skill$Resist])));
 var $NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$custom = $elm$json$Json$Decode$map2($elm$core$Basics$apR);
 var $elm$json$Json$Decode$decodeValue = _Json_run;
 var $elm$json$Json$Decode$value = _Json_decodeValue;
@@ -7071,39 +7095,27 @@ var $author$project$Character$decoder = A4(
 													$elm$json$Json$Decode$string,
 													'',
 													$elm$json$Json$Decode$succeed($author$project$Character$Stats))))))))))))));
-var $elm$core$Result$withDefault = F2(
-	function (def, result) {
-		if (result.$ === 'Ok') {
-			var a = result.a;
-			return a;
-		} else {
-			return def;
-		}
-	});
-var $author$project$Character$decodeLocalCharacter = function (storedState) {
+var $author$project$Session$decodeCharacterSession = function (key) {
+	return A3(
+		$elm$json$Json$Decode$map2,
+		F2(
+			function (_char, cs) {
+				return {changes: cs, character: _char, navKey: key};
+			}),
+		A2($elm$json$Json$Decode$field, 'character', $author$project$Character$decoder),
+		A2($elm$json$Json$Decode$field, 'changes', $author$project$Session$changesDecoder));
+};
+var $author$project$Session$decoder = function (key) {
 	return A2(
-		$elm$core$Result$withDefault,
-		$author$project$Character$blank,
-		A2($elm$json$Json$Decode$decodeString, $author$project$Character$decoder, storedState));
+		$elm$json$Json$Decode$map,
+		$elm$core$Maybe$withDefault(
+			$author$project$Session$NoCharacter(key)),
+		$elm$json$Json$Decode$nullable(
+			A2(
+				$elm$json$Json$Decode$map,
+				$author$project$Session$Character,
+				$author$project$Session$decodeCharacterSession(key))));
 };
-var $author$project$Session$Character = function (a) {
-	return {$: 'Character', a: a};
-};
-var $author$project$Session$SavedLocally = {$: 'SavedLocally'};
-var $author$project$Session$loadLocal = F2(
-	function (_char, session) {
-		if (session.$ === 'NoCharacter') {
-			var key = session.a;
-			return $author$project$Session$Character(
-				{changes: $author$project$Session$SavedLocally, character: _char, navKey: key});
-		} else {
-			var val = session.a;
-			return $author$project$Session$Character(
-				_Utils_update(
-					val,
-					{changes: $author$project$Session$SavedLocally, character: _char}));
-		}
-	});
 var $elm$core$Tuple$mapSecond = F2(
 	function (func, _v0) {
 		var x = _v0.a;
@@ -7112,9 +7124,6 @@ var $elm$core$Tuple$mapSecond = F2(
 			x,
 			func(y));
 	});
-var $author$project$Session$NoCharacter = function (a) {
-	return {$: 'NoCharacter', a: a};
-};
 var $author$project$Session$new = function (key) {
 	return $author$project$Session$NoCharacter(key);
 };
@@ -7461,6 +7470,15 @@ var $author$project$Ports$updatedCharacter = _Platform_outgoingPort(
 	function ($) {
 		return $elm$json$Json$Encode$null;
 	});
+var $elm$core$Result$withDefault = F2(
+	function (def, result) {
+		if (result.$ === 'Ok') {
+			var a = result.a;
+			return a;
+		} else {
+			return def;
+		}
+	});
 var $author$project$Main$init = F3(
 	function (flags, url, navKey) {
 		return A2(
@@ -7484,9 +7502,12 @@ var $author$project$Main$init = F3(
 						var json = flags.a;
 						return $author$project$Main$Character(
 							A2(
-								$author$project$Session$loadLocal,
-								$author$project$Character$decodeLocalCharacter(json),
-								$author$project$Session$new(navKey)));
+								$elm$core$Result$withDefault,
+								$author$project$Session$new(navKey),
+								A2(
+									$elm$json$Json$Decode$decodeString,
+									$author$project$Session$decoder(navKey),
+									json)));
 					}
 				}()));
 	});
@@ -7687,6 +7708,7 @@ var $author$project$Character$applyClass = F2(
 					character,
 					{_class: name})));
 	});
+var $author$project$Character$blank = {abilities: $elm$core$Dict$empty, assignment: '', bonds: '', _class: '', domains: $author$project$Boon$Domain$new, equipment: '', fallout: '', knacks: '', name: '', notes: '', refresh: '', resistances: $author$project$Boon$Resistance$new, skills: $author$project$Boon$Skill$new};
 var $elm$core$Dict$foldl = F3(
 	function (func, acc, dict) {
 		foldl:
@@ -7924,22 +7946,21 @@ var $elm$file$File$Select$file = F2(
 			toMsg,
 			_File_uploadOne(mimes));
 	});
-var $elm$browser$Browser$Navigation$load = _Browser_load;
-var $author$project$Session$Saved = {$: 'Saved'};
-var $author$project$Session$load = F2(
-	function (_char, session) {
+var $author$project$Session$fromDisk = F2(
+	function (newCharacter, session) {
 		if (session.$ === 'NoCharacter') {
 			var key = session.a;
 			return $author$project$Session$Character(
-				{changes: $author$project$Session$Saved, character: _char, navKey: key});
+				{changes: $author$project$Session$Saved, character: newCharacter, navKey: key});
 		} else {
 			var val = session.a;
 			return $author$project$Session$Character(
 				_Utils_update(
 					val,
-					{changes: $author$project$Session$Saved, character: _char}));
+					{changes: $author$project$Session$Saved, character: newCharacter}));
 		}
 	});
+var $elm$browser$Browser$Navigation$load = _Browser_load;
 var $elm$core$Tuple$mapBoth = F3(
 	function (funcA, funcB, _v0) {
 		var x = _v0.a;
@@ -7947,6 +7968,14 @@ var $elm$core$Tuple$mapBoth = F3(
 		return _Utils_Tuple2(
 			funcA(x),
 			funcB(y));
+	});
+var $elm$core$Tuple$mapFirst = F2(
+	function (func, _v0) {
+		var x = _v0.a;
+		var y = _v0.b;
+		return _Utils_Tuple2(
+			func(x),
+			y);
 	});
 var $author$project$Session$navKey = function (session) {
 	if (session.$ === 'Character') {
@@ -7959,17 +7988,72 @@ var $author$project$Session$navKey = function (session) {
 };
 var $elm$browser$Browser$Navigation$pushUrl = _Browser_pushUrl;
 var $elm$browser$Browser$Navigation$replaceUrl = _Browser_replaceUrl;
+var $author$project$Session$encodeChanges = function (cs) {
+	return $elm$json$Json$Encode$int(
+		function () {
+			switch (cs.$) {
+				case 'Unsaved':
+					return 0;
+				case 'SavedLocally':
+					return 1;
+				default:
+					return 2;
+			}
+		}());
+};
+var $author$project$Session$encoder = function (session) {
+	if (session.$ === 'NoCharacter') {
+		return $elm$json$Json$Encode$null;
+	} else {
+		var val = session.a;
+		return $elm$json$Json$Encode$object(
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					'character',
+					$author$project$Character$encode(val.character)),
+					_Utils_Tuple2(
+					'changes',
+					$author$project$Session$encodeChanges(val.changes))
+				]));
+	}
+};
+var $author$project$Session$savedChangesLocally = function (session) {
+	if (session.$ === 'NoCharacter') {
+		return session;
+	} else {
+		var val = session.a;
+		return $author$project$Session$Character(
+			_Utils_update(
+				val,
+				{
+					changes: function () {
+						var _v1 = val.changes;
+						switch (_v1.$) {
+							case 'Unsaved':
+								return $author$project$Session$SavedLocally;
+							case 'SavedLocally':
+								return $author$project$Session$SavedLocally;
+							default:
+								return $author$project$Session$Saved;
+						}
+					}()
+				}));
+	}
+};
 var $author$project$Ports$storeCharacter = _Platform_outgoingPort('storeCharacter', $elm$json$Json$Encode$string);
 var $author$project$Session$save = function (session) {
 	if (session.$ === 'NoCharacter') {
-		return $elm$core$Platform$Cmd$none;
+		return _Utils_Tuple2(session, $elm$core$Platform$Cmd$none);
 	} else {
-		var val = session.a;
-		return $author$project$Ports$storeCharacter(
-			A2(
-				$elm$json$Json$Encode$encode,
-				2,
-				$author$project$Character$encode(val.character)));
+		var updatedSession = $author$project$Session$savedChangesLocally(session);
+		return _Utils_Tuple2(
+			$author$project$Session$savedChangesLocally(updatedSession),
+			$author$project$Ports$storeCharacter(
+				A2(
+					$elm$json$Json$Encode$encode,
+					2,
+					$author$project$Session$encoder(updatedSession))));
 	}
 };
 var $author$project$Session$savedChanges = function (session) {
@@ -7983,23 +8067,11 @@ var $author$project$Session$savedChanges = function (session) {
 				{changes: $author$project$Session$Saved}));
 	}
 };
-var $author$project$Session$savedChangesLocally = function (session) {
-	if (session.$ === 'NoCharacter') {
-		return session;
-	} else {
-		var val = session.a;
-		return $author$project$Session$Character(
-			_Utils_update(
-				val,
-				{changes: $author$project$Session$SavedLocally}));
-	}
-};
 var $author$project$Ports$savedCharacter = _Platform_outgoingPort(
 	'savedCharacter',
 	function ($) {
 		return $elm$json$Json$Encode$null;
 	});
-var $author$project$Session$Unsaved = {$: 'Unsaved'};
 var $author$project$Session$setCharacter = F2(
 	function (newCharacter, session) {
 		if (session.$ === 'NoCharacter') {
@@ -8379,10 +8451,13 @@ var $author$project$Abilities$update = F2(
 				} else {
 					var updatedCharacter = _v2.a;
 					var session = A2($author$project$Session$setCharacter, updatedCharacter, abilities.session);
-					return _Utils_Tuple2(
-						_Utils_update(
-							abilities,
-							{session: session}),
+					return A2(
+						$elm$core$Tuple$mapFirst,
+						function (s) {
+							return _Utils_update(
+								abilities,
+								{session: s});
+						},
 						$author$project$Session$save(session));
 				}
 		}
@@ -8535,8 +8610,9 @@ var $author$project$Main$update = F2(
 							assignment,
 							A2($author$project$Character$applyClass, _class, $author$project$Character$blank));
 						var updatedSession = A2($author$project$Session$setCharacter, character, session);
-						return _Utils_Tuple2(
-							$author$project$Main$Character(updatedSession),
+						return A2(
+							$elm$core$Tuple$mapFirst,
+							$author$project$Main$Character,
 							$author$project$Session$save(updatedSession));
 					} else {
 						break _v0$13;
@@ -8545,13 +8621,16 @@ var $author$project$Main$update = F2(
 					if (_v0.a.$ === 'Character') {
 						var session = _v0.a.a;
 						var _v3 = _v0.b;
+						var _v4 = $author$project$Session$save(
+							$author$project$Session$savedChanges(session));
+						var updatedSession = _v4.a;
+						var cmd = _v4.b;
 						return _Utils_Tuple2(
-							$author$project$Main$Character(
-								$author$project$Session$savedChanges(session)),
+							$author$project$Main$Character(updatedSession),
 							function () {
-								var _v4 = $author$project$Session$character(session);
-								if (_v4.$ === 'Just') {
-									var character = _v4.a;
+								var _v5 = $author$project$Session$character(session);
+								if (_v5.$ === 'Just') {
+									var character = _v5.a;
 									return $elm$core$Platform$Cmd$batch(
 										_List_fromArray(
 											[
@@ -8563,7 +8642,8 @@ var $author$project$Main$update = F2(
 													$elm$json$Json$Encode$encode,
 													2,
 													$author$project$Character$encode(character))),
-												$author$project$Ports$savedCharacter(_Utils_Tuple0)
+												$author$project$Ports$savedCharacter(_Utils_Tuple0),
+												cmd
 											]));
 								} else {
 									return $elm$core$Platform$Cmd$none;
@@ -8576,20 +8656,23 @@ var $author$project$Main$update = F2(
 					if (_v0.a.$ === 'Character') {
 						var session = _v0.a.a;
 						var subMsg = _v0.b.a;
-						var _v5 = $author$project$Session$character(session);
-						if (_v5.$ === 'Just') {
-							var character = _v5.a;
-							var updatedSession = A2(
-								$author$project$Session$setCharacter,
-								A2($author$project$Character$update, subMsg, character),
-								session);
+						var _v6 = $author$project$Session$character(session);
+						if (_v6.$ === 'Just') {
+							var character = _v6.a;
+							var _v7 = $author$project$Session$save(
+								A2(
+									$author$project$Session$setCharacter,
+									A2($author$project$Character$update, subMsg, character),
+									session));
+							var updatedSession = _v7.a;
+							var cmd = _v7.b;
 							return _Utils_Tuple2(
 								$author$project$Main$Character(updatedSession),
 								$elm$core$Platform$Cmd$batch(
 									_List_fromArray(
 										[
-											$author$project$Session$save(updatedSession),
-											$author$project$Ports$updatedCharacter(_Utils_Tuple0)
+											$author$project$Ports$updatedCharacter(_Utils_Tuple0),
+											cmd
 										])));
 						} else {
 							return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
@@ -8611,9 +8694,9 @@ var $author$project$Main$update = F2(
 					}
 				case 'GotPlayAid':
 					if (_v0.a.$ === 'PlayAid') {
-						var _v6 = _v0.a;
-						var session = _v6.a;
-						var playAid = _v6.b;
+						var _v8 = _v0.a;
+						var session = _v8.a;
+						var playAid = _v8.b;
 						var result = _v0.b.a;
 						return _Utils_Tuple2(
 							A2(
@@ -8625,7 +8708,7 @@ var $author$project$Main$update = F2(
 						break _v0$13;
 					}
 				case 'ClickedOpenFile':
-					var _v7 = _v0.b;
+					var _v9 = _v0.b;
 					return _Utils_Tuple2(
 						model,
 						A2(
@@ -8643,9 +8726,9 @@ var $author$project$Main$update = F2(
 							$elm$file$File$toString(file)));
 				case 'ReadFile':
 					var content = _v0.b.a;
-					var _v8 = A2($elm$json$Json$Decode$decodeString, $author$project$Character$decoder, content);
-					if (_v8.$ === 'Err') {
-						var err = _v8.a;
+					var _v10 = A2($elm$json$Json$Decode$decodeString, $author$project$Character$decoder, content);
+					if (_v10.$ === 'Err') {
+						var err = _v10.a;
 						return _Utils_Tuple2(
 							A2(
 								$author$project$Main$DecodeErr,
@@ -8653,14 +8736,17 @@ var $author$project$Main$update = F2(
 								err),
 							$elm$core$Platform$Cmd$none);
 					} else {
-						var character = _v8.a;
-						var session = A2(
-							$author$project$Session$load,
-							character,
-							$author$project$Main$toSession(model));
+						var character = _v10.a;
+						var _v11 = $author$project$Session$save(
+							A2(
+								$author$project$Session$fromDisk,
+								character,
+								$author$project$Main$toSession(model)));
+						var session = _v11.a;
+						var cmd = _v11.b;
 						return _Utils_Tuple2(
 							$author$project$Main$Character(session),
-							$author$project$Session$save(session));
+							cmd);
 					}
 				case 'LinkClicked':
 					var urlRequest = _v0.b.a;
@@ -8670,30 +8756,30 @@ var $author$project$Main$update = F2(
 						var route = $author$project$Route$parse(url);
 						var navKey = $author$project$Session$navKey(
 							$author$project$Main$toSession(model));
-						var _v10 = _Utils_Tuple2(model, route);
-						_v10$2:
+						var _v13 = _Utils_Tuple2(model, route);
+						_v13$2:
 						while (true) {
-							switch (_v10.a.$) {
+							switch (_v13.a.$) {
 								case 'Abilities':
-									if (_v10.b.$ === 'Abilities') {
+									if (_v13.b.$ === 'Abilities') {
 										return _Utils_Tuple2(
 											model,
 											A2($elm$browser$Browser$Navigation$replaceUrl, navKey, urlString));
 									} else {
-										break _v10$2;
+										break _v13$2;
 									}
 								case 'PlayAid':
-									if (_v10.b.$ === 'PlayAid') {
-										var _v11 = _v10.a;
-										var _v12 = _v10.b;
+									if (_v13.b.$ === 'PlayAid') {
+										var _v14 = _v13.a;
+										var _v15 = _v13.b;
 										return _Utils_Tuple2(
 											model,
 											A2($elm$browser$Browser$Navigation$replaceUrl, navKey, urlString));
 									} else {
-										break _v10$2;
+										break _v13$2;
 									}
 								default:
-									break _v10$2;
+									break _v13$2;
 							}
 						}
 						return _Utils_Tuple2(
@@ -8712,7 +8798,7 @@ var $author$project$Main$update = F2(
 						$author$project$Route$parse(url),
 						model);
 				case 'SavedChanges':
-					var _v13 = _v0.b;
+					var _v16 = _v0.b;
 					return _Utils_Tuple2(
 						A2(
 							$author$project$Main$updateSession,

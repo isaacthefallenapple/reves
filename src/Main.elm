@@ -310,12 +310,15 @@ update msg model =
                 updatedSession =
                     Session.setCharacter character session
             in
-            ( Character updatedSession
-            , Session.save updatedSession
-            )
+            Tuple.mapFirst Character
+                (Session.save updatedSession)
 
         ( Character session, ClickedSave ) ->
-            ( Character (Session.savedChanges session)
+            let
+                ( updatedSession, cmd ) =
+                    Session.save (Session.savedChanges session)
+            in
+            ( Character updatedSession
             , case Session.character session of
                 Just character ->
                     Cmd.batch
@@ -323,6 +326,7 @@ update msg model =
                             "application/json"
                             (Encode.encode 2 (Character.encode character))
                         , Ports.savedCharacter ()
+                        , cmd
                         ]
 
                 Nothing ->
@@ -333,13 +337,13 @@ update msg model =
             case Session.character session of
                 Just character ->
                     let
-                        updatedSession =
-                            Session.setCharacter (Character.update subMsg character) session
+                        ( updatedSession, cmd ) =
+                            Session.save <| Session.setCharacter (Character.update subMsg character) session
                     in
                     ( Character updatedSession
                     , Cmd.batch
-                        [ Session.save updatedSession
-                        , Ports.updatedCharacter ()
+                        [ Ports.updatedCharacter ()
+                        , cmd
                         ]
                     )
 
@@ -365,10 +369,10 @@ update msg model =
 
                 Ok character ->
                     let
-                        session =
-                            Session.load character (toSession model)
+                        ( session, cmd ) =
+                            Session.save <| Session.fromDisk character (toSession model)
                     in
-                    ( Character session, Session.save session )
+                    ( Character session, cmd )
 
         ( _, LinkClicked urlRequest ) ->
             case urlRequest of
@@ -424,7 +428,9 @@ init flags url navKey =
                     Landing (Session.new navKey)
 
                 Just json ->
-                    Character <| Session.loadLocal (Character.decodeLocalCharacter json) (Session.new navKey)
+                    Decode.decodeString (Session.decoder navKey) json
+                        |> Result.withDefault (Session.new navKey)
+                        |> Character
             )
         )
 
