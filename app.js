@@ -9099,6 +9099,7 @@ var $elm$html$Html$p = _VirtualDom_node('p');
 var $elm$html$Html$span = _VirtualDom_node('span');
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
+var $author$project$Abilities$ApplyChosen = {$: 'ApplyChosen'};
 var $elm$virtual_dom$VirtualDom$attribute = F2(
 	function (key, value) {
 		return A2(
@@ -9120,7 +9121,6 @@ var $elm$html$Html$Attributes$classList = function (classes) {
 var $elm$html$Html$li = _VirtualDom_node('li');
 var $elm$html$Html$nav = _VirtualDom_node('nav');
 var $elm$html$Html$ul = _VirtualDom_node('ul');
-var $author$project$Abilities$ApplyChosen = {$: 'ApplyChosen'};
 var $elm$html$Html$h2 = _VirtualDom_node('h2');
 var $author$project$Abilities$ChoseAbility = function (a) {
 	return {$: 'ChoseAbility', a: a};
@@ -9315,18 +9315,7 @@ var $author$project$Abilities$viewAdvances = F4(
 									[
 										$elm$html$Html$text('High')
 									])),
-								A2($author$project$Abilities$viewAdvanceList, selectedAbilities, high),
-								A2(
-								$elm$html$Html$button,
-								_List_fromArray(
-									[
-										$elm$html$Html$Events$onClick($author$project$Abilities$ApplyChosen),
-										$elm$html$Html$Attributes$class('button')
-									]),
-								_List_fromArray(
-									[
-										$elm$html$Html$text('Apply')
-									]))
+								A2($author$project$Abilities$viewAdvanceList, selectedAbilities, high)
 							]);
 				}
 			}());
@@ -9363,9 +9352,9 @@ var $author$project$Abilities$view = function (abilities) {
 				$elm$html$Html$Attributes$class('abilities-page'),
 				$elm$html$Html$Attributes$class('wrapper')
 			]),
-		A2(
-			$elm$core$List$cons,
-			A2(
+		_List_fromArray(
+			[
+				A2(
 				$elm$html$Html$nav,
 				_List_fromArray(
 					[
@@ -9425,19 +9414,43 @@ var $author$project$Abilities$view = function (abilities) {
 							},
 							primaryFirst))
 					])),
-			A2(
-				$elm$core$List$map,
-				function (_v1) {
-					var name = _v1.a;
-					var advances = _v1.b;
-					return A4(
-						$author$project$Abilities$viewAdvances,
-						name,
-						abilities.chosen,
-						advances,
-						_Utils_eq(name, selected));
-				},
-				primaryFirst)));
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('abilities-page__advances')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						_List_Nil,
+						A2(
+							$elm$core$List$map,
+							function (_v1) {
+								var name = _v1.a;
+								var advances = _v1.b;
+								return A4(
+									$author$project$Abilities$viewAdvances,
+									name,
+									abilities.chosen,
+									advances,
+									_Utils_eq(name, selected));
+							},
+							primaryFirst)),
+						A2(
+						$elm$html$Html$button,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('button'),
+								$elm$html$Html$Events$onClick($author$project$Abilities$ApplyChosen)
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Apply')
+							]))
+					]))
+			]));
 };
 var $author$project$Character$UpdatedBonds = function (a) {
 	return {$: 'UpdatedBonds', a: a};

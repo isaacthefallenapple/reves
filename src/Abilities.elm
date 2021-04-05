@@ -268,7 +268,7 @@ view abilities =
         [ class "abilities-page"
         , class "wrapper"
         ]
-        (nav
+        [ nav
             [ class "tab-bar" ]
             [ a
                 [ href (Route.toString Route.Root) ]
@@ -288,12 +288,23 @@ view abilities =
                     primaryFirst
                 )
             ]
-            :: List.map
-                (\( name, advances ) ->
-                    viewAdvances name abilities.chosen advances (name == selected)
-                )
-                primaryFirst
-        )
+        , div
+            [ class "abilities-page__advances" ]
+            [ div
+                []
+              <|
+                List.map
+                    (\( name, advances ) ->
+                        viewAdvances name abilities.chosen advances (name == selected)
+                    )
+                    primaryFirst
+            , button
+                [ class "button"
+                , onClick ApplyChosen
+                ]
+                [ text "Apply" ]
+            ]
+        ]
 
 
 viewAdvances : String -> Dict String Ability -> Status Advances -> Bool -> Html Msg
@@ -326,11 +337,6 @@ viewAdvances name selectedAbilities advances isSelected =
                     []
                     [ text "High" ]
                 , viewAdvanceList selectedAbilities high
-                , button
-                    [ onClick ApplyChosen
-                    , class "button"
-                    ]
-                    [ text "Apply" ]
                 ]
         )
 

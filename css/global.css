@@ -575,6 +575,15 @@ select {
   width: 0.5rem;
   background-color: var(--primary);
 }
+.abilities-page__advances {
+  display: flex;
+  align-items: flex-end;
+}
+.abilities-page__advances > :last-child {
+  position: sticky;
+  bottom: 2em;
+  margin-left: auto;
+}
 
 :root {
   --primary: #231651;

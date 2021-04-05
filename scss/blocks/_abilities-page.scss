@@ -18,4 +18,15 @@
             background-color: get-color("primary");
         }
     }
+
+    &__advances {
+        display: flex;
+        align-items: flex-end;
+
+        > :last-child {
+            position: sticky;
+            bottom: 2em;
+            margin-left: auto;
+        }
+    }
 }
