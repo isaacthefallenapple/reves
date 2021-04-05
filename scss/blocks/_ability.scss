@@ -1,0 +1,37 @@
+.ability {
+    $offset: 1.5ch;
+
+    max-width: 40ch;
+
+    > summary {
+        list-style: none;
+        position: relative;
+
+        &:focus {
+            outline: none;
+
+            > :first-child {
+                border-bottom: 2px solid black;
+            }
+        }
+
+        & > :first-child {
+            padding-left: $offset;
+        }
+
+        &::before {
+            content: "+";
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    }
+
+    &[open] {
+        > summary {
+            &::before {
+                content: "-";
+            }
+        }
+    }
+}

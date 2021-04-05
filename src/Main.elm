@@ -204,13 +204,17 @@ view model =
                     , body =
                         List.map (Html.map CharacterMsg) characterView.body
                             ++ [ footer
-                                    []
+                                    [ class "footer"
+                                    , class "bg-light-shade"
+                                    ]
                                     [ span
                                         []
                                         [ text (Session.changesToString (Session.changes session))
                                         ]
                                     , button
-                                        [ onClick ClickedSave ]
+                                        [ onClick ClickedSave
+                                        , class "button"
+                                        ]
                                         [ text "Save" ]
                                     ]
                                ]
@@ -401,7 +405,7 @@ update msg model =
                     ( model, Nav.load href )
 
         ( _, UrlChanged url ) ->
-            changeRoute (Route.parse url) model
+            changeRoute (Debug.log "UrlChanged" (Route.parse url)) model
 
         ( _, SavedChanges ) ->
             ( updateSession

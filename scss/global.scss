@@ -1,0 +1,106 @@
+// First up: config
+@import "config";
+
+// Next: pull in gorko for design tokens
+@import "C:/Users/timob/AppData/Roaming/npm/node_modules/gorko/gorko.scss";
+
+// Pull in modern reset
+@import "reset";
+
+// Utilities
+@import "utilities/wrapper";
+@import "utilities/textbox";
+@import "utilities/hidden";
+@import "utilities/flow";
+@import "utilities/flex";
+@import "utilities/radius";
+
+// Blocks
+@import "blocks/character";
+@import "blocks/resistances";
+@import "blocks/ability";
+@import "blocks/abilities";
+@import "blocks/checkbox-list";
+@import "blocks/class";
+@import "blocks/assignment";
+@import "blocks/tab-bar";
+@import "blocks/button";
+@import "blocks/footer";
+@import "blocks/play-aid";
+@import "blocks/abilities-page";
+
+// Global CSS starts
+:root {
+    --primary: #231651;
+    --secondary: #ff8484;
+    --secondary-shade: #ff5151;
+    --tertiary: #2c988c;
+    --tertiary-glare: #d6fff6;
+    --quaternary: #2374ab;
+    --light: #fafafa;
+    --light-shade: #eeeeee;
+    --grey: #c4c4c4;
+}
+
+body {
+    line-height: 1.5;
+    overflow-x: hidden;
+    padding-bottom: get-size("600");
+
+    @include apply-utility("weight", "medium");
+    @include apply-utility("font", "base");
+    @include apply-utility("bg", "light");
+    @include apply-utility("color", "primary");
+}
+
+h1,
+h2,
+h3 {
+    line-height: 1.2;
+
+    @include apply-utility("font", "display");
+}
+
+h1 {
+    font-size: get-size("700");
+}
+
+h2 {
+    font-size: get-size("600");
+}
+
+h3 {
+    font-size: get-size("500");
+}
+
+a {
+    color: currentColor;
+}
+
+section {
+    @extend .flow;
+}
+
+:focus {
+    outline: 2px solid;
+    outline-offset: 0.25rem;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --primary: #adadad;
+        --secondary: #231651;
+        --secondary-shade: #ff5151;
+        --tertiary: #2c988c;
+        --tertiary-glare: #d6fff6;
+        --quaternary: #2374ab;
+        --light: #1a103d;
+        --light-shade: #eeeeee;
+        --grey: #c4c4c4;
+    }
+
+    input,
+    textarea {
+        @include apply-utility("bg", "light-shade");
+    }
+}

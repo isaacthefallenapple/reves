@@ -265,18 +265,21 @@ view abilities =
                 |> Maybe.withDefault (Dict.toList tabs)
     in
     div
-        [ class "wrapper" ]
+        [ class "abilities-page"
+        , class "wrapper"
+        ]
         (nav
-            []
+            [ class "tab-bar" ]
             [ a
                 [ href (Route.toString Route.Root) ]
                 [ text "< Back" ]
             , ul
-                [ class "tab-bar" ]
+                [ attribute "role" "list"
+                ]
                 (List.map
                     (\( name, _ ) ->
                         li
-                            [ classList [ ( "selected", name == selected ), ( "tab", True ) ] ]
+                            [ classList [ ( "selected", name == selected ) ] ]
                             [ a
                                 [ href (Route.toString (Route.Abilities (Just name))) ]
                                 [ text name ]
@@ -324,7 +327,9 @@ viewAdvances name selectedAbilities advances isSelected =
                     [ text "High" ]
                 , viewAdvanceList selectedAbilities high
                 , button
-                    [ onClick ApplyChosen ]
+                    [ onClick ApplyChosen
+                    , class "button"
+                    ]
                     [ text "Apply" ]
                 ]
         )
@@ -333,7 +338,10 @@ viewAdvances name selectedAbilities advances isSelected =
 viewAdvanceList : Dict String Ability -> List Ability -> Html Msg
 viewAdvanceList selectedAbilities abilities =
     ul
-        []
+        [ attribute "role" "list"
+        , class "abilities-page__list"
+        , class "flow"
+        ]
         (List.map
             (\ability ->
                 let

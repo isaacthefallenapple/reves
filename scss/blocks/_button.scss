@@ -1,0 +1,16 @@
+.button {
+    all: unset;
+
+    padding: 0.5em 1em;
+    border: 2px solid black;
+
+    @include apply-utility("color", "primary");
+    @include apply-utility("bg", "light-shade");
+
+    &:hover {
+        border-color: get-color("light-shade");
+
+        @include apply-utility("color", "light");
+        @include apply-utility("bg", "primary");
+    }
+}

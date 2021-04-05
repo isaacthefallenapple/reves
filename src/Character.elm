@@ -233,12 +233,14 @@ view character =
     { title = character.name
     , body =
         [ main_
-            [ class "wrapper gap-top-700" ]
+            [ class "wrapper gap-top-700"
+            , class "character"
+            ]
             [ section
                 [ class "name" ]
                 [ label
                     []
-                    [ h2
+                    [ h1
                         []
                         [ text "Name" ]
                     , input [ type_ "text", value character.name, onInput UpdatedName ]
@@ -251,7 +253,7 @@ view character =
                     []
                     [ text "Class" ]
                 , div
-                    [ class "font-size-700" ]
+                    [ class "text-500" ]
                     [ text character.class ]
                 ]
             , section
@@ -260,55 +262,54 @@ view character =
                     []
                     [ text "Assignment" ]
                 , div
-                    [ class "font-size-700" ]
+                    [ class "text-500" ]
                     [ text character.assignment ]
                 ]
             , section
                 [ class "resistances" ]
-                [ Resistances.view UpdatedResistances character.resistances
+                [ h2
+                    []
+                    [ text "Resistances" ]
+                , Resistances.view UpdatedResistances character.resistances
                 ]
             , div
                 [ class "skills-and-domains" ]
                 [ section
                     [ class "skills" ]
-                    [ div
-                        [ class "flex gap-500" ]
-                        [ h2
-                            []
-                            [ text "Skills" ]
-                        , a
+                    [ h2
+                        []
+                        [ a
                             [ href (Route.toString (Route.PlayAid PlayAids.Skills Nothing)) ]
-                            [ text "?" ]
+                            [ text "Skills" ]
                         ]
                     , viewBoolDict UpdatedSkills Skills.toString character.skills
                     ]
                 , section
                     [ class "domains" ]
-                    [ div
-                        [ class "flex gap-500" ]
-                        [ h2
-                            []
-                            [ text "Domains" ]
-                        , a
+                    [ h2
+                        []
+                        [ a
                             [ href (Route.toString (Route.PlayAid PlayAids.Domains Nothing)) ]
-                            [ text "?" ]
+                            [ text "Domains" ]
                         ]
                     , viewBoolDict UpdatedDomains Domains.toString character.domains
                     ]
                 ]
             , section
-                [ class "abilities" ]
-                [ div
-                    [ class "flex gap-500" ]
-                    [ h2
-                        []
-                        [ text "Abilities" ]
-                    , a
+                [ class "flow"
+                , class "abilities"
+                ]
+                [ h2
+                    []
+                    [ a
                         [ href (Route.toString (Route.Abilities (Just character.class))) ]
-                        [ text "add more" ]
+                        [ text "Abilities" ]
                     ]
                 , ul
-                    []
+                    [ class "flow gap-top-500"
+                    , class "abilities-list"
+                    , attribute "role" "list"
+                    ]
                     (List.map
                         (\ability ->
                             li []
@@ -323,22 +324,23 @@ view character =
                     []
                     [ text "Fallout" ]
                 , textarea
-                    [ onInput UpdatedFallout ]
+                    [ class "textbox"
+                    , onInput UpdatedFallout
+                    ]
                     [ text character.fallout ]
                 ]
             , section
                 [ class "equipment" ]
-                [ div
-                    [ class "flex gap-500" ]
-                    [ h2
-                        []
-                        [ text "Equipment" ]
-                    , a
+                [ h2
+                    []
+                    [ a
                         [ href (Route.toString (Route.PlayAid PlayAids.Weapons Nothing)) ]
-                        [ text "?" ]
+                        [ text "Equipment" ]
                     ]
                 , textarea
-                    [ onInput UpdatedEquipment ]
+                    [ class "textbox"
+                    , onInput UpdatedEquipment
+                    ]
                     [ text character.equipment ]
                 ]
             , section
@@ -347,7 +349,9 @@ view character =
                     []
                     [ text "Refresh" ]
                 , textarea
-                    [ onInput UpdatedRefresh ]
+                    [ class "textbox"
+                    , onInput UpdatedRefresh
+                    ]
                     [ text character.refresh ]
                 ]
             , section
@@ -356,7 +360,9 @@ view character =
                     []
                     [ text "Bonds" ]
                 , textarea
-                    [ onInput UpdatedBonds ]
+                    [ class "textbox"
+                    , onInput UpdatedBonds
+                    ]
                     [ text character.bonds ]
                 ]
             , section
@@ -365,7 +371,9 @@ view character =
                     []
                     [ text "Knacks" ]
                 , textarea
-                    [ onInput UpdatedKnacks ]
+                    [ class "textbox"
+                    , onInput UpdatedKnacks
+                    ]
                     [ text character.knacks ]
                 ]
             , section
@@ -374,7 +382,9 @@ view character =
                     []
                     [ text "Notes" ]
                 , textarea
-                    [ onInput UpdatedNotes ]
+                    [ class "textbox"
+                    , onInput UpdatedNotes
+                    ]
                     [ text character.notes ]
                 ]
             ]
@@ -388,19 +398,26 @@ viewBoolDict toMsg labeller dict =
         list =
             TypeDict.toList dict
 
+        labelId =
+            labeller >> String.toLower >> (++) "cb-"
+
         viewItem ( k, isChecked ) =
             li []
-                [ label []
-                    [ input
-                        [ type_ "checkbox"
-                        , checked isChecked
-                        , onCheck (\b -> TypeDict.insert k b dict |> toMsg)
-                        ]
-                        []
-                    , text (labeller k)
+                [ input
+                    [ id (labelId k)
+                    , type_ "checkbox"
+                    , checked isChecked
+                    , onCheck (\b -> TypeDict.insert k b dict |> toMsg)
+                    ]
+                    []
+                , label
+                    [ for (labelId k) ]
+                    [ text (labeller k)
                     ]
                 ]
     in
     ul
-        []
+        [ attribute "role" "list"
+        , class "checkbox-list"
+        ]
         (List.map viewItem list)

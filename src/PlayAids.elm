@@ -98,54 +98,65 @@ view playAid =
     in
     { title = stringifiedTopic
     , body =
-        [ nav
-            []
-            [ ul
-                []
-              <|
-                List.map
-                    (\topic ->
-                        a
-                            [ href <| UrlBuilder.absolute [ "reves", "play-aid", topicToString topic ] [] ]
-                            [ text (topicToStringPretty topic) ]
-                    )
-                    [ Weapons, Armor, Skills, Domains ]
-            ]
-        , article
-            [ class "play-aid" ]
-            [ a
-                [ href "/reves/" ]
-                [ text "< Back" ]
-            , h1
-                []
-                [ text stringifiedTopic ]
-            , case playAid.aids of
-                Failed _ ->
-                    text "Error :("
+        [ div
+            [ class "wrapper" ]
+            [ nav
+                [ class "tab-bar" ]
+                [ a
+                    [ href "/reves/" ]
+                    [ text "< Back" ]
+                , ul
+                    [ attribute "role" "list"
 
-                Loading ->
-                    text "Loading..."
-
-                Loaded aids ->
-                    dl
-                        []
-                        (Dict.toList aids
-                            |> List.map
-                                (\( name, rules ) ->
-                                    [ dt
-                                        [ id name
-                                        ]
-                                        [ b
-                                            []
-                                            [ text name ]
-                                        ]
-                                    , dd
-                                        []
-                                        [ text rules ]
+                    -- , class "tab-bar__list"
+                    ]
+                  <|
+                    List.map
+                        (\topic ->
+                            li
+                                [ classList [ ( "selected", topic == playAid.topic ) ] ]
+                                [ a
+                                    [ href <| UrlBuilder.absolute [ "reves", "play-aid", topicToString topic ] []
                                     ]
-                                )
-                            |> List.concat
+                                    [ text (topicToStringPretty topic) ]
+                                ]
                         )
+                        [ Weapons, Armor, Skills, Domains ]
+                ]
+            , article
+                [ class "play-aid"
+                ]
+                [ h1
+                    []
+                    [ text stringifiedTopic ]
+                , case playAid.aids of
+                    Failed _ ->
+                        text "Error :("
+
+                    Loading ->
+                        text "Loading..."
+
+                    Loaded aids ->
+                        dl
+                            []
+                            (Dict.toList aids
+                                |> List.map
+                                    (\( name, rules ) ->
+                                        [ dt
+                                            [ id name
+                                            ]
+                                            [ b
+                                                []
+                                                [ text name ]
+                                            ]
+                                        , dd
+                                            []
+                                            [ text rules ]
+                                        ]
+                                    )
+                                |> List.concat
+                            )
+                ]
             ]
         ]
     }

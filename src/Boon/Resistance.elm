@@ -96,51 +96,48 @@ view toMsg resistances =
     let
         resistancesList =
             [ Body, Resolve, Resources, Shadow, Reputation, Armor ]
+
+        labelId =
+            toString >> String.toLower >> (++) "resistance--"
     in
-    table
-        []
-        [ thead
-            []
-            [ tr
-                []
-                (List.map (toString >> text >> List.singleton >> th [])
-                    resistancesList
-                )
-            ]
-        , tbody
-            []
-            [ tr
-                []
-                (List.map
-                    (\r ->
-                        td
-                            []
-                            [ input
-                                [ type_ "number"
-                                , value
-                                    (String.fromInt
-                                        (Maybe.withDefault 0 (Dict.get r resistances))
+    div
+        [ class "resistances-table" ]
+    <|
+        List.map
+            (\r ->
+                label
+                    [ for (labelId r) ]
+                    [ strong
+                        []
+                        [ text (toString r) ]
+                    ]
+            )
+            resistancesList
+            ++ List.map
+                (\r ->
+                    input
+                        [ id (labelId r)
+                        , type_ "number"
+                        , value
+                            (String.fromInt
+                                (Maybe.withDefault 0 (Dict.get r resistances))
+                            )
+                        , onInput
+                            (\s ->
+                                toMsg
+                                    (Dict.insert r
+                                        (s
+                                            |> String.toInt
+                                            |> Maybe.withDefault 0
+                                            |> clamp 0 5
+                                        )
+                                        resistances
                                     )
-                                , onInput
-                                    (\s ->
-                                        toMsg
-                                            (Dict.insert r
-                                                (s
-                                                    |> String.toInt
-                                                    |> Maybe.withDefault 0
-                                                    |> clamp 0 5
-                                                )
-                                                resistances
-                                            )
-                                    )
-                                ]
-                                []
-                            ]
-                    )
-                    resistancesList
+                            )
+                        ]
+                        []
                 )
-            ]
-        ]
+                resistancesList
 
 
 

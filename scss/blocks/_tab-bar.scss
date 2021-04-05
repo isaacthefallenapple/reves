@@ -1,0 +1,27 @@
+.tab-bar {
+    ul {
+        // padding: 0.5em 1em;
+        display: flex;
+        // gap: 1em;
+        // flex: 1 1 100%;
+
+        @include apply-utility("bg", "light-shade");
+        @include apply-utility("radius", "200");
+
+        a {
+            text-decoration: none;
+            font-weight: bold;
+        }
+    }
+
+    li {
+        padding: 0.5em 1em;
+
+        @include apply-utility("radius", "200");
+
+        &.selected {
+            box-shadow: 0 0 10px 0 get-color("grey");
+            @include apply-utility("bg", "grey");
+        }
+    }
+}
