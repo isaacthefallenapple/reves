@@ -1,5 +1,6 @@
 .abilities-page {
-    .abilities-page__list {
+    // double ampersand needed for specificity
+    & &__list {
         padding-left: 1em;
 
         max-width: 72ch;
