@@ -6,6 +6,7 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Http
 import Json.Decode as Decode
+import Status exposing (HttpStatus)
 import Url.Builder as UrlBuilder
 
 
@@ -21,14 +22,8 @@ location =
 type alias PlayAids =
     { topic : Topic
     , selected : Maybe String
-    , aids : Status
+    , aids : HttpStatus (Dict String String)
     }
-
-
-type Status
-    = Loading
-    | Loaded (Dict String String)
-    | Failed Http.Error
 
 
 
@@ -130,13 +125,13 @@ view playAid =
                     []
                     [ text stringifiedTopic ]
                 , case playAid.aids of
-                    Failed _ ->
+                    Status.Failed _ ->
                         text "Error :("
 
-                    Loading ->
+                    Status.Loading ->
                         text "Loading..."
 
-                    Loaded aids ->
+                    Status.Loaded aids ->
                         dl
                             []
                             (Dict.toList aids
@@ -170,7 +165,7 @@ init : (Result Http.Error (Dict String String) -> msg) -> Topic -> Maybe String 
 init toMsg topic maybeSelected =
     ( { topic = topic
       , selected = maybeSelected
-      , aids = Loading
+      , aids = Status.Loading
       }
     , Http.get
         { url = location ++ topicToString topic ++ ".json"
@@ -185,9 +180,4 @@ init toMsg topic maybeSelected =
 
 update : Result Http.Error (Dict String String) -> PlayAids -> PlayAids
 update result playAids =
-    case result of
-        Err err ->
-            { playAids | aids = Failed err }
-
-        Ok aids ->
-            { playAids | aids = Loaded aids }
+    { playAids | aids = Status.fromResult result }

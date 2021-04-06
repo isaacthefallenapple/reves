@@ -11,6 +11,7 @@ import Http
 import Json.Decode as Decode exposing (Decoder)
 import Route
 import Session exposing (Session)
+import Status exposing (HttpStatus)
 
 
 location : String
@@ -53,8 +54,8 @@ type alias Abilities =
     -- , character : Character.Stats
     -- , primary : String
     , selected : String
-    , metadata : Status Metadata
-    , tabs : Dict String (Status Advances)
+    , metadata : HttpStatus Metadata
+    , tabs : Dict String (HttpStatus Advances)
     , chosen : Dict String Ability
     }
 
@@ -90,35 +91,6 @@ updateSession session abilities =
     { abilities | session = session }
 
 
-type Status a
-    = Loading
-    | Loaded a
-    | Failed Http.Error
-
-
-mapStatus : (a -> b) -> Status a -> Status b
-mapStatus f status =
-    case status of
-        Loaded inner ->
-            Loaded (f inner)
-
-        Loading ->
-            Loading
-
-        Failed err ->
-            Failed err
-
-
-statusFromResult : Result Http.Error a -> Status a
-statusFromResult result =
-    case result of
-        Ok ok ->
-            Loaded ok
-
-        Err err ->
-            Failed err
-
-
 
 -- MSG
 
@@ -142,7 +114,7 @@ init session maybeSelected =
     ( setSelected maybeSelected
         { session = session
         , selected = ""
-        , metadata = Loading
+        , metadata = Status.Loading
         , tabs = Dict.empty
         , chosen = Dict.empty
         }
@@ -182,28 +154,27 @@ update msg abilities =
 
         GotMetadata (Ok metadata) ->
             ( { abilities
-                | metadata = Loaded metadata
-                , tabs = Dict.map (always (always Loading)) metadata
+                | metadata = Status.Loaded metadata
+                , tabs = Dict.map (always (always Status.Loading)) metadata
               }
             , fetchFromList metadata
             )
 
         GotMetadata (Err err) ->
-            ( { abilities | metadata = Failed err }, Cmd.none )
+            ( { abilities | metadata = Status.Failed err }, Cmd.none )
 
         GotAdvances name advances ->
             ( { abilities
                 | tabs =
                     Dict.insert name
-                        (statusFromResult
-                            (Result.map
+                        (advances
+                            |> Status.fromResult
+                            |> Status.map
                                 (maybeCharacter
                                     |> Maybe.map .abilities
                                     |> Maybe.map dedup
                                     |> Maybe.withDefault identity
                                 )
-                                advances
-                            )
                         )
                         abilities.tabs
               }
@@ -232,7 +203,7 @@ update msg abilities =
                         (\s ->
                             { abilities
                                 | session = s
-                                , tabs = Dict.map (\_ -> mapStatus (dedup updatedCharacter.abilities)) abilities.tabs
+                                , tabs = Dict.map (\_ -> Status.map (dedup updatedCharacter.abilities)) abilities.tabs
                             }
                         )
                         (Session.save session)
@@ -316,24 +287,24 @@ view { session, selected, tabs, chosen } =
         ]
 
 
-viewAdvances : String -> Dict String Ability -> Status Advances -> Bool -> Html Msg
+viewAdvances : String -> Dict String Ability -> HttpStatus Advances -> Bool -> Html Msg
 viewAdvances name selectedAbilities advances isSelected =
     div
         [ classList [ ( "hidden", not isSelected ) ] ]
         (case advances of
-            Loading ->
+            Status.Loading ->
                 [ h1
                     []
                     [ text ("Loading " ++ name) ]
                 ]
 
-            Failed _ ->
+            Status.Failed _ ->
                 [ h1
                     []
                     [ text "Error :(" ]
                 ]
 
-            Loaded { low, medium, high } ->
+            Status.Loaded { low, medium, high } ->
                 [ h2
                     []
                     [ text "Low" ]

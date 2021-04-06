@@ -5551,7 +5551,7 @@ var $author$project$Session$character = function (session) {
 var $author$project$Abilities$GotMetadata = function (a) {
 	return {$: 'GotMetadata', a: a};
 };
-var $author$project$Abilities$Loading = {$: 'Loading'};
+var $author$project$Status$Loading = {$: 'Loading'};
 var $elm$core$Dict$RBEmpty_elm_builtin = {$: 'RBEmpty_elm_builtin'};
 var $elm$core$Dict$empty = $elm$core$Dict$RBEmpty_elm_builtin;
 var $elm$json$Json$Decode$decodeString = _Json_runOnString;
@@ -6394,7 +6394,7 @@ var $author$project$Abilities$init = F2(
 			A2(
 				$author$project$Abilities$setSelected,
 				maybeSelected,
-				{chosen: $elm$core$Dict$empty, metadata: $author$project$Abilities$Loading, selected: '', session: session, tabs: $elm$core$Dict$empty}),
+				{chosen: $elm$core$Dict$empty, metadata: $author$project$Status$Loading, selected: '', session: session, tabs: $elm$core$Dict$empty}),
 			$elm$core$Platform$Cmd$batch(
 				_List_fromArray(
 					[
@@ -6405,7 +6405,6 @@ var $author$project$Abilities$init = F2(
 						})
 					])));
 	});
-var $author$project$PlayAids$Loading = {$: 'Loading'};
 var $author$project$PlayAids$location = '/reves/data/play-aids/';
 var $author$project$PlayAids$topicToString = function (topic) {
 	switch (topic.$) {
@@ -6422,7 +6421,7 @@ var $author$project$PlayAids$topicToString = function (topic) {
 var $author$project$PlayAids$init = F3(
 	function (toMsg, topic, maybeSelected) {
 		return _Utils_Tuple2(
-			{aids: $author$project$PlayAids$Loading, selected: maybeSelected, topic: topic},
+			{aids: $author$project$Status$Loading, selected: maybeSelected, topic: topic},
 			$elm$http$Http$get(
 				{
 					expect: A2(
@@ -8157,10 +8156,10 @@ var $elm$url$Url$toString = function (url) {
 					_Utils_ap(http, url.host)),
 				url.path)));
 };
-var $author$project$Abilities$Failed = function (a) {
+var $author$project$Status$Failed = function (a) {
 	return {$: 'Failed', a: a};
 };
-var $author$project$Abilities$Loaded = function (a) {
+var $author$project$Status$Loaded = function (a) {
 	return {$: 'Loaded', a: a};
 };
 var $elm$core$Basics$always = F2(
@@ -8247,6 +8246,15 @@ var $author$project$Abilities$fetchFromList = function (metadata) {
 			},
 			$elm$core$Dict$toList(metadata)));
 };
+var $author$project$Status$fromResult = function (result) {
+	if (result.$ === 'Ok') {
+		var val = result.a;
+		return $author$project$Status$Loaded(val);
+	} else {
+		var e = result.a;
+		return $author$project$Status$Failed(e);
+	}
+};
 var $elm$core$Dict$map = F2(
 	function (func, dict) {
 		if (dict.$ === 'RBEmpty_elm_builtin') {
@@ -8266,40 +8274,20 @@ var $elm$core$Dict$map = F2(
 				A2($elm$core$Dict$map, func, right));
 		}
 	});
-var $elm$core$Result$map = F2(
-	function (func, ra) {
-		if (ra.$ === 'Ok') {
-			var a = ra.a;
-			return $elm$core$Result$Ok(
-				func(a));
-		} else {
-			var e = ra.a;
-			return $elm$core$Result$Err(e);
-		}
-	});
-var $author$project$Abilities$mapStatus = F2(
+var $author$project$Status$map = F2(
 	function (f, status) {
 		switch (status.$) {
 			case 'Loaded':
-				var inner = status.a;
-				return $author$project$Abilities$Loaded(
-					f(inner));
+				var a = status.a;
+				return $author$project$Status$Loaded(
+					f(a));
 			case 'Loading':
-				return $author$project$Abilities$Loading;
+				return $author$project$Status$Loading;
 			default:
-				var err = status.a;
-				return $author$project$Abilities$Failed(err);
+				var x = status.a;
+				return $author$project$Status$Failed(x);
 		}
 	});
-var $author$project$Abilities$statusFromResult = function (result) {
-	if (result.$ === 'Ok') {
-		var ok = result.a;
-		return $author$project$Abilities$Loaded(ok);
-	} else {
-		var err = result.a;
-		return $author$project$Abilities$Failed(err);
-	}
-};
 var $elm$core$Dict$values = function (dict) {
 	return A3(
 		$elm$core$Dict$foldr,
@@ -8340,11 +8328,11 @@ var $author$project$Abilities$update = F2(
 						_Utils_update(
 							abilities,
 							{
-								metadata: $author$project$Abilities$Loaded(metadata),
+								metadata: $author$project$Status$Loaded(metadata),
 								tabs: A2(
 									$elm$core$Dict$map,
 									$elm$core$Basics$always(
-										$elm$core$Basics$always($author$project$Abilities$Loading)),
+										$elm$core$Basics$always($author$project$Status$Loading)),
 									metadata)
 							}),
 						$author$project$Abilities$fetchFromList(metadata));
@@ -8354,7 +8342,7 @@ var $author$project$Abilities$update = F2(
 						_Utils_update(
 							abilities,
 							{
-								metadata: $author$project$Abilities$Failed(err)
+								metadata: $author$project$Status$Failed(err)
 							}),
 						$elm$core$Platform$Cmd$none);
 				}
@@ -8368,22 +8356,21 @@ var $author$project$Abilities$update = F2(
 							tabs: A3(
 								$elm$core$Dict$insert,
 								name,
-								$author$project$Abilities$statusFromResult(
+								A2(
+									$author$project$Status$map,
 									A2(
-										$elm$core$Result$map,
+										$elm$core$Maybe$withDefault,
+										$elm$core$Basics$identity,
 										A2(
-											$elm$core$Maybe$withDefault,
-											$elm$core$Basics$identity,
+											$elm$core$Maybe$map,
+											$author$project$Abilities$dedup,
 											A2(
 												$elm$core$Maybe$map,
-												$author$project$Abilities$dedup,
-												A2(
-													$elm$core$Maybe$map,
-													function ($) {
-														return $.abilities;
-													},
-													maybeCharacter))),
-										advances)),
+												function ($) {
+													return $.abilities;
+												},
+												maybeCharacter))),
+									$author$project$Status$fromResult(advances)),
 								abilities.tabs)
 						}),
 					$elm$core$Platform$Cmd$none);
@@ -8408,7 +8395,7 @@ var $author$project$Abilities$update = F2(
 									tabs: A2(
 										$elm$core$Dict$map,
 										function (_v3) {
-											return $author$project$Abilities$mapStatus(
+											return $author$project$Status$map(
 												$author$project$Abilities$dedup(updatedCharacter.abilities));
 										},
 										abilities.tabs)
@@ -8475,29 +8462,13 @@ var $author$project$Character$update = F2(
 				return character;
 		}
 	});
-var $author$project$PlayAids$Failed = function (a) {
-	return {$: 'Failed', a: a};
-};
-var $author$project$PlayAids$Loaded = function (a) {
-	return {$: 'Loaded', a: a};
-};
 var $author$project$PlayAids$update = F2(
 	function (result, playAids) {
-		if (result.$ === 'Err') {
-			var err = result.a;
-			return _Utils_update(
-				playAids,
-				{
-					aids: $author$project$PlayAids$Failed(err)
-				});
-		} else {
-			var aids = result.a;
-			return _Utils_update(
-				playAids,
-				{
-					aids: $author$project$PlayAids$Loaded(aids)
-				});
-		}
+		return _Utils_update(
+			playAids,
+			{
+				aids: $author$project$Status$fromResult(result)
+			});
 	});
 var $author$project$Abilities$updateSession = F2(
 	function (session, abilities) {
