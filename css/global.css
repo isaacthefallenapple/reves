@@ -536,7 +536,15 @@ select {
   color: var(--light);
   background: var(--primary);
 }
+.button.unsaved {
+  animation: pulse 1s infinite alternate;
+}
 
+@keyframes pulse {
+  to {
+    transform: scale(1.1);
+  }
+}
 .footer {
   position: fixed;
   left: 0;

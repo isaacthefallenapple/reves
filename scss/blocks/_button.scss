@@ -13,4 +13,14 @@
         @include apply-utility("color", "light");
         @include apply-utility("bg", "primary");
     }
+
+    &.unsaved {
+        animation: pulse 1s infinite alternate;
+    }
+}
+
+@keyframes pulse {
+    to {
+        transform: scale(1.1);
+    }
 }

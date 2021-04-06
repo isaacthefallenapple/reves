@@ -224,6 +224,7 @@ view model =
                                     , button
                                         [ onClick ClickedSave
                                         , class "button"
+                                        , classList [ ( "unsaved", not (Session.isSaved session) ) ]
                                         ]
                                         [ text "Save" ]
                                     ]
