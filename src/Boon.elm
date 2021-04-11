@@ -1,7 +1,6 @@
 module Boon exposing (Assignment, Boon(..), assignments, decoder, encode, toString)
 
 import Boon.Domain as Domain exposing (Domain(..))
-import Boon.Knack as Knack
 import Boon.Resistance as Resistance exposing (Resistance(..))
 import Boon.Skill as Skill exposing (Skill(..))
 import Html exposing (..)
@@ -21,7 +20,8 @@ type Boon
     | GainSkills (List Skill)
     | GainEquipment (List String)
     | GainRefresh (List String)
-    | GainKnack Knack.Type
+    | GainSkillKnack Skill
+    | GainDomainKnack Domain
 
 
 toString : Boon -> String
@@ -66,8 +66,11 @@ toString boon =
         GainRefresh refresh ->
             "Gain " ++ String.join ", " refresh ++ " as a refresh"
 
-        GainKnack ty ->
-            "Gain a Knack in " ++ Knack.toString ty
+        GainSkillKnack skill ->
+            "Gain a Knack in the " ++ Skill.toString skill ++ " skill"
+
+        GainDomainKnack domain ->
+            "Gain a Knack in the " ++ Domain.toString domain ++ " domain"
     )
         ++ "."
 
@@ -209,8 +212,11 @@ encode boon =
             GainRefresh refresh ->
                 [ ( "refresh", Encode.list Encode.string refresh ) ]
 
-            GainKnack knack ->
-                [ ( "knack", Encode.string <| Knack.toString knack ) ]
+            GainSkillKnack skill ->
+                [ ( "knack", Encode.string <| Skill.toString skill ) ]
+
+            GainDomainKnack domain ->
+                [ ( "knack", Encode.string <| Domain.toString domain ) ]
 
 
 
@@ -256,5 +262,8 @@ decoder =
         , newDomainDecoder
         , newEquipmentDecoder
         , newRefreshDecoder
-        , Decode.map GainKnack Knack.typeDecoder
+        , Decode.oneOf
+            [ Decode.map GainSkillKnack Skill.skillDecoder
+            , Decode.map GainDomainKnack Domain.domainDecoder
+            ]
         ]

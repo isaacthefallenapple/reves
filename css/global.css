@@ -497,6 +497,20 @@ select {
 .checkbox-list label {
   margin-left: 0.5em;
 }
+.checkbox-list > li > :first-child {
+  display: flex;
+  align-items: center;
+}
+.checkbox-list > li > :first-child > :last-child {
+  margin-left: auto;
+}
+.checkbox-list .add-knack-button {
+  all: unset;
+  padding-inline: 0.5rem;
+}
+.checkbox-list .add-knack-button:hover {
+  cursor: pointer;
+}
 
 .class {
   --flow-space: get-size("300");
@@ -591,6 +605,19 @@ select {
   position: sticky;
   bottom: 2em;
   margin-left: auto;
+}
+
+.knacks__list {
+  margin-left: 2.5ch;
+}
+.knacks__list > li input {
+  width: 85%;
+}
+.knacks__list > li::marker {
+  content: "├─";
+}
+.knacks__list > li:last-of-type::marker {
+  content: "└─";
 }
 
 :root {

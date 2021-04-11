@@ -1,5 +1,6 @@
 module Boon.Knack exposing (..)
 
+import Array exposing (Array)
 import Boon.Domain as Domain
 import Boon.Skill as Skill
 import Json.Decode as JD exposing (Decoder)
@@ -9,76 +10,82 @@ import TypeDict.Json.Decode as Decode
 import TypeDict.Json.Encode as Encode
 
 
-type alias Knacks =
-    Dict String Type String
+type alias Knacks k =
+    Dict String k (Array String)
 
 
-type Type
-    = Domain Domain.Domain
-    | Skill Skill.Skill
+newSkills : Knacks Skill.Skill
+newSkills =
+    Dict.empty Skill.toString
 
 
-toString : Type -> String
-toString ty =
-    case ty of
-        Domain d ->
-            Domain.toString d
-
-        Skill s ->
-            Skill.toString s
+newDomains : Knacks Domain.Domain
+newDomains =
+    Dict.empty Domain.toString
 
 
-fromString : String -> Maybe Type
-fromString s =
-    case ( Skill.fromString s, Domain.fromString s ) of
-        ( Just skill, _ ) ->
-            Just (Skill skill)
+insert : k -> String -> Knacks k -> Knacks k
+insert key val =
+    Dict.update key
+        (\v ->
+            case v of
+                Nothing ->
+                    Just <| Array.fromList [ val ]
 
-        ( _, Just domain ) ->
-            Just (Domain domain)
-
-        _ ->
-            Nothing
-
-
-getDomain : Domain.Domain -> Knacks -> Maybe String
-getDomain =
-    Domain >> Dict.get
+                Just ks ->
+                    Just <| Array.push val ks
+        )
 
 
-getSkill : Skill.Skill -> Knacks -> Maybe String
-getSkill =
-    Skill >> Dict.get
+update : k -> Int -> String -> Knacks k -> Knacks k
+update key idx val =
+    if String.isEmpty val then
+        remove key idx
+
+    else
+        Dict.update key
+            (Maybe.map <| Array.set idx val)
+
+
+remove : k -> Int -> Knacks k -> Knacks k
+remove key idx =
+    Dict.update key
+        (Maybe.map
+            (\knacks ->
+                let
+                    start =
+                        Array.slice 0 idx knacks
+
+                    end =
+                        Array.slice (idx + 1) (Array.length knacks) knacks
+                in
+                Array.append start end
+            )
+        )
 
 
 
 -- ENCODE
 
 
-encodeType : Type -> Value
-encodeType =
-    toString >> JE.string
-
-
-encode : Knacks -> Value
-encode =
-    Encode.string (toString >> JE.string) JE.string
+encode : Knacks k -> Value
+encode knacks =
+    Encode.string (Dict.toStringer knacks >> JE.string) (JE.array JE.string) knacks
 
 
 
 -- DECODER
 
 
-typeDecoder : Decoder Type
-typeDecoder =
-    JD.oneOf
-        [ JD.map Skill Skill.skillDecoder
-        , JD.map Domain Domain.domainDecoder
-        ]
+skillsDecoder : Decoder (Knacks Skill.Skill)
+skillsDecoder =
+    Decode.decoder Skill.toString
+        Skill.skillDecoder
+        (JD.array JD.string)
 
 
-decoder : Decoder Knacks
-decoder =
-    Decode.decoder toString
-        typeDecoder
-        JD.string
+domainsDecoder : Decoder (Knacks Domain.Domain)
+domainsDecoder =
+    Decode.decoder Domain.toString
+        Domain.domainDecoder
+        (JD.array JD.string)

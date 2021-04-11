@@ -1,0 +1,17 @@
+.knacks__list {
+    margin-left: 2.5ch;
+
+    > li {
+        input {
+            width: 85%;
+        }
+
+        &::marker {
+            content: "├─";
+        }
+
+        &:last-of-type::marker {
+            content: "└─";
+        }
+    }
+}

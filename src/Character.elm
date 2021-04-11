@@ -3,8 +3,10 @@ module Character exposing (Msg(..), Stats, addAbilities, applyAssignment, applyB
 -- import Ability exposing (Ability)
 
 import Ability exposing (Ability)
+import Array exposing (Array)
 import Boon exposing (Boon(..))
 import Boon.Domain as Domains exposing (Domains)
+import Boon.Knack as Knacks exposing (Knacks)
 import Boon.Resistance as Resistances exposing (Resistances)
 import Boon.Skill as Skills exposing (Skills)
 import Browser
@@ -28,7 +30,8 @@ type alias Stats =
     , assignment : String
     , skills : Skills
     , domains : Domains
-    , knacks : String
+    , skillKnacks : Knacks Skills.Skill
+    , domainKnacks : Knacks Domains.Domain
     , equipment : String
     , refresh : String
     , abilities : Dict String Ability
@@ -46,7 +49,8 @@ blank =
     , assignment = ""
     , skills = Skills.new
     , domains = Domains.new
-    , knacks = ""
+    , skillKnacks = Knacks.newSkills
+    , domainKnacks = Knacks.newDomains
     , equipment = ""
     , refresh = ""
     , abilities = Dict.empty
@@ -95,6 +99,12 @@ applyBoon boon character =
         GainRefresh refresh ->
             { character | refresh = character.refresh ++ String.join "\n\n" refresh ++ "\n\n" }
 
+        GainSkillKnack skill ->
+            { character | skillKnacks = Knacks.insert skill "" character.skillKnacks }
+
+        GainDomainKnack domain ->
+            { character | domainKnacks = Knacks.insert domain "" character.domainKnacks }
+
 
 applyBoons : List Boon -> Stats -> Stats
 applyBoons boons character =
@@ -124,7 +134,8 @@ encode character =
         [ ( "name", Encode.string character.name )
         , ( "class", Encode.string character.class )
         , ( "assignment", Encode.string character.assignment )
-        , ( "knacks", Encode.string character.knacks )
+        , ( "skillKnacks", Knacks.encode character.skillKnacks )
+        , ( "domainKnacks", Knacks.encode character.domainKnacks )
         , ( "equipment", Encode.string character.equipment )
         , ( "abilities", Encode.dict identity Ability.encode character.abilities )
         , ( "fallout", Encode.string character.fallout )
@@ -149,7 +160,8 @@ decoder =
         |> Pipeline.optional "assignment" Decode.string ""
         |> Pipeline.optional "skills" Skills.decoder Skills.new
         |> Pipeline.optional "domains" Domains.decoder Domains.new
-        |> Pipeline.optional "knacks" Decode.string ""
+        |> Pipeline.optional "skillKnacks" Knacks.skillsDecoder Knacks.newSkills
+        |> Pipeline.optional "domainKnacks" Knacks.domainsDecoder Knacks.newDomains
         |> Pipeline.optional "equipment" Decode.string ""
         |> Pipeline.optional "refresh" Decode.string ""
         |> Pipeline.optional "abilities" (Decode.dict Ability.decoder) Dict.empty
@@ -172,7 +184,8 @@ type Msg
     = UpdatedName String
     | UpdatedSkills Skills
     | UpdatedDomains Domains
-    | UpdatedKnacks String
+    | UpdatedSkillKnacks (Knacks Skills.Skill)
+    | UpdatedDomainKnacks (Knacks Domains.Domain)
     | UpdatedRefresh String
     | UpdatedEquipment String
     | UpdatedFallout String
@@ -198,8 +211,11 @@ update msg character =
         UpdatedDomains domains ->
             { character | domains = domains }
 
-        UpdatedKnacks knacks ->
-            { character | knacks = knacks }
+        UpdatedSkillKnacks knacks ->
+            { character | skillKnacks = knacks }
+
+        UpdatedDomainKnacks knacks ->
+            { character | domainKnacks = Debug.log "new knacks" knacks }
 
         UpdatedRefresh refresh ->
             { character | refresh = refresh }
@@ -282,7 +298,11 @@ view character =
                             [ href (Route.toString (Route.PlayAid PlayAids.Skills Nothing)) ]
                             [ text "Skills" ]
                         ]
-                    , viewBoolDict UpdatedSkills Skills.toString character.skills
+                    , viewTraitList
+                        UpdatedSkills
+                        UpdatedSkillKnacks
+                        character.skills
+                        character.skillKnacks
                     ]
                 , section
                     [ class "domains" ]
@@ -292,7 +312,11 @@ view character =
                             [ href (Route.toString (Route.PlayAid PlayAids.Domains Nothing)) ]
                             [ text "Domains" ]
                         ]
-                    , viewBoolDict UpdatedDomains Domains.toString character.domains
+                    , viewTraitList
+                        UpdatedDomains
+                        UpdatedDomainKnacks
+                        character.domains
+                        character.domainKnacks
                     ]
                 ]
             , section
@@ -365,17 +389,18 @@ view character =
                     ]
                     [ text character.bonds ]
                 ]
-            , section
-                [ class "knacks" ]
-                [ h2
-                    []
-                    [ text "Knacks" ]
-                , textarea
-                    [ class "textbox"
-                    , onInput UpdatedKnacks
-                    ]
-                    [ text character.knacks ]
-                ]
+
+            -- , section
+            --     [ class "knacks" ]
+            --     [ h2
+            --         []
+            --         [ text "Knacks" ]
+            --     , textarea
+            --         [ class "textbox"
+            --         , onInput UpdatedKnacks
+            --         ]
+            --         [ text character.knacks ]
+            --     ]
             , section
                 [ class "notes" ]
                 [ h2
@@ -387,34 +412,101 @@ view character =
                     ]
                     [ text character.notes ]
                 ]
+            , let
+                domKs =
+                    Debug.log "domain knacks"
+                        (Knacks.newDomains
+                            |> Knacks.insert Domains.Criminal "Hitmen"
+                            |> Knacks.insert Domains.Weirdness "Wayward"
+                            |> Knacks.insert Domains.Science "Chemistry"
+                        )
+
+                skillKs =
+                    Knacks.newSkills
+                        |> Knacks.insert Skills.Steal "Drugs"
+                        |> Knacks.insert Skills.Steal "Weapons"
+                        |> Knacks.insert Skills.Investigate "Murder"
+                        |> Knacks.insert Skills.Scrap "Bladed weapons"
+                        |> Knacks.insert Skills.Resist "Torture"
+              in
+              button
+                [ onClick <| UpdatedDomainKnacks domKs
+                , onClick <| UpdatedSkillKnacks skillKs
+                ]
+                [ text "gain knacks" ]
             ]
         ]
     }
 
 
-viewBoolDict : (TypeDict.Dict String k Bool -> msg) -> (k -> String) -> TypeDict.Dict String k Bool -> Html msg
-viewBoolDict toMsg labeller dict =
+viewTraitList :
+    (TypeDict.Dict String k Bool -> msg)
+    -> (TypeDict.Dict String k (Array String) -> msg)
+    -> TypeDict.Dict String k Bool
+    -> TypeDict.Dict String k (Array String)
+    -> Html msg
+viewTraitList toMsg knacksToMsg dict knacks =
     let
         list =
             TypeDict.toList dict
+
+        labeller =
+            TypeDict.toHasher dict
 
         labelId =
             labeller >> String.toLower >> (++) "cb-"
 
         viewItem ( k, isChecked ) =
-            li []
-                [ input
-                    [ id (labelId k)
-                    , type_ "checkbox"
-                    , checked isChecked
-                    , onCheck (\b -> TypeDict.insert k b dict |> toMsg)
-                    ]
+            li [] <|
+                div
                     []
-                , label
-                    [ for (labelId k) ]
-                    [ text (labeller k)
+                    [ input
+                        [ id (labelId k)
+                        , type_ "checkbox"
+                        , checked isChecked
+                        , onCheck (\b -> TypeDict.insert k b dict |> toMsg)
+                        ]
+                        []
+                    , label
+                        [ for (labelId k) ]
+                        [ text (labeller k)
+                        ]
+                    , button
+                        [ class "add-knack-button"
+                        , onClick <| knacksToMsg (Knacks.insert k "" knacks)
+                        ]
+                        [ strong
+                            []
+                            [ text "+" ]
+                        ]
                     ]
-                ]
+                    :: (case TypeDict.get k knacks of
+                            Just ks ->
+                                [ ul
+                                    [ class "knacks__list"
+                                    ]
+                                  <|
+                                    Array.toList <|
+                                        Array.indexedMap
+                                            (\idx knack ->
+                                                li
+                                                    []
+                                                    [ input
+                                                        [ value knack
+                                                        , onInput
+                                                            (\newKnack ->
+                                                                knacksToMsg <| Knacks.update k idx newKnack knacks
+                                                            )
+                                                        ]
+                                                        []
+                                                    ]
+                                            )
+                                            ks
+                                ]
+
+                            Nothing ->
+                                []
+                       )
     in
     ul
         [ attribute "role" "list"

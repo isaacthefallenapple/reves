@@ -4550,6 +4550,43 @@ function _Url_percentDecode(string)
 }
 
 
+var _Bitwise_and = F2(function(a, b)
+{
+	return a & b;
+});
+
+var _Bitwise_or = F2(function(a, b)
+{
+	return a | b;
+});
+
+var _Bitwise_xor = F2(function(a, b)
+{
+	return a ^ b;
+});
+
+function _Bitwise_complement(a)
+{
+	return ~a;
+};
+
+var _Bitwise_shiftLeftBy = F2(function(offset, a)
+{
+	return a << offset;
+});
+
+var _Bitwise_shiftRightBy = F2(function(offset, a)
+{
+	return a >> offset;
+});
+
+var _Bitwise_shiftRightZfBy = F2(function(offset, a)
+{
+	return a >>> offset;
+});
+
+
+
 // DECODER
 
 var _File_decoder = _Json_decodePrim(function(value) {
@@ -6601,15 +6638,17 @@ var $author$project$Character$Stats = function (name) {
 		return function (assignment) {
 			return function (skills) {
 				return function (domains) {
-					return function (knacks) {
-						return function (equipment) {
-							return function (refresh) {
-								return function (abilities) {
-									return function (bonds) {
-										return function (fallout) {
-											return function (resistances) {
-												return function (notes) {
-													return {abilities: abilities, assignment: assignment, bonds: bonds, _class: _class, domains: domains, equipment: equipment, fallout: fallout, knacks: knacks, name: name, notes: notes, refresh: refresh, resistances: resistances, skills: skills};
+					return function (skillKnacks) {
+						return function (domainKnacks) {
+							return function (equipment) {
+								return function (refresh) {
+									return function (abilities) {
+										return function (bonds) {
+											return function (fallout) {
+												return function (resistances) {
+													return function (notes) {
+														return {abilities: abilities, assignment: assignment, bonds: bonds, _class: _class, domainKnacks: domainKnacks, domains: domains, equipment: equipment, fallout: fallout, name: name, notes: notes, refresh: refresh, resistances: resistances, skillKnacks: skillKnacks, skills: skills};
+													};
 												};
 											};
 										};
@@ -6627,8 +6666,11 @@ var $author$project$Ability$Ability = F4(
 	function (name, flavor, boons, text) {
 		return {boons: boons, flavor: flavor, name: name, text: text};
 	});
-var $author$project$Boon$GainDomains = function (a) {
-	return {$: 'GainDomains', a: a};
+var $author$project$Boon$GainDomainKnack = function (a) {
+	return {$: 'GainDomainKnack', a: a};
+};
+var $author$project$Boon$GainSkillKnack = function (a) {
+	return {$: 'GainSkillKnack', a: a};
 };
 var $author$project$Boon$Domain$Criminal = {$: 'Criminal'};
 var $author$project$Boon$Domain$Hegemony = {$: 'Hegemony'};
@@ -6684,6 +6726,9 @@ var $author$project$Boon$Domain$domainDecoder = A2(
 			$elm$core$Maybe$withDefault(
 				$elm$json$Json$Decode$fail('error')))),
 	$elm$json$Json$Decode$string);
+var $author$project$Boon$GainDomains = function (a) {
+	return {$: 'GainDomains', a: a};
+};
 var $elm$json$Json$Decode$field = _Json_decodeField;
 var $elm$json$Json$Decode$list = _Json_decodeList;
 var $author$project$Boon$newDomainDecoder = A2(
@@ -6817,7 +6862,19 @@ var $author$project$Boon$resistanceUpDecoder = A3(
 	A2($elm$json$Json$Decode$field, 'bonus', $elm$json$Json$Decode$int));
 var $author$project$Boon$decoder = $elm$json$Json$Decode$oneOf(
 	_List_fromArray(
-		[$author$project$Boon$resistanceUpDecoder, $author$project$Boon$newSkillDecoder, $author$project$Boon$newDomainDecoder, $author$project$Boon$newEquipmentDecoder, $author$project$Boon$newRefreshDecoder]));
+		[
+			$author$project$Boon$resistanceUpDecoder,
+			$author$project$Boon$newSkillDecoder,
+			$author$project$Boon$newDomainDecoder,
+			$author$project$Boon$newEquipmentDecoder,
+			$author$project$Boon$newRefreshDecoder,
+			$elm$json$Json$Decode$oneOf(
+			_List_fromArray(
+				[
+					A2($elm$json$Json$Decode$map, $author$project$Boon$GainSkillKnack, $author$project$Boon$Skill$skillDecoder),
+					A2($elm$json$Json$Decode$map, $author$project$Boon$GainDomainKnack, $author$project$Boon$Domain$domainDecoder)
+				]))
+		]));
 var $elm$json$Json$Decode$map4 = _Json_map4;
 var $elm$json$Json$Decode$null = _Json_decodeNull;
 var $elm$json$Json$Decode$nullable = function (decoder) {
@@ -6952,6 +7009,12 @@ var $author$project$Boon$Skill$toString = function (skill) {
 	}
 };
 var $author$project$Boon$Skill$decoder = A3($author$project$TypeDict$Json$Decode$decoder, $author$project$Boon$Skill$toString, $author$project$Boon$Skill$skillDecoder, $elm$json$Json$Decode$bool);
+var $elm$json$Json$Decode$array = _Json_decodeArray;
+var $author$project$Boon$Knack$domainsDecoder = A3(
+	$author$project$TypeDict$Json$Decode$decoder,
+	$author$project$Boon$Domain$toString,
+	$author$project$Boon$Domain$domainDecoder,
+	$elm$json$Json$Decode$array($elm$json$Json$Decode$string));
 var $author$project$Boon$Domain$new = A2(
 	$author$project$TypeDict$fromList,
 	$author$project$Boon$Domain$toString,
@@ -6982,6 +7045,12 @@ var $author$project$Boon$Skill$new = A2(
 		},
 		_List_fromArray(
 			[$author$project$Boon$Skill$Compel, $author$project$Boon$Skill$Deceive, $author$project$Boon$Skill$Hack, $author$project$Boon$Skill$Patch, $author$project$Boon$Skill$Scramble, $author$project$Boon$Skill$Scrap, $author$project$Boon$Skill$Skulk, $author$project$Boon$Skill$Investigate, $author$project$Boon$Skill$Steal, $author$project$Boon$Skill$Resist])));
+var $author$project$TypeDict$empty = function (hasher) {
+	return $author$project$TypeDict$Dict(
+		{hasher: hasher, inner: $elm$core$Dict$empty});
+};
+var $author$project$Boon$Knack$newDomains = $author$project$TypeDict$empty($author$project$Boon$Domain$toString);
+var $author$project$Boon$Knack$newSkills = $author$project$TypeDict$empty($author$project$Boon$Skill$toString);
 var $NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$custom = $elm$json$Json$Decode$map2($elm$core$Basics$apR);
 var $elm$json$Json$Decode$decodeValue = _Json_run;
 var $elm$json$Json$Decode$value = _Json_decodeValue;
@@ -7028,6 +7097,11 @@ var $NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional = F4(
 				fallback),
 			decoder);
 	});
+var $author$project$Boon$Knack$skillsDecoder = A3(
+	$author$project$TypeDict$Json$Decode$decoder,
+	$author$project$Boon$Skill$toString,
+	$author$project$Boon$Skill$skillDecoder,
+	$elm$json$Json$Decode$array($elm$json$Json$Decode$string));
 var $author$project$Character$decoder = A4(
 	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
 	'notes',
@@ -7065,35 +7139,40 @@ var $author$project$Character$decoder = A4(
 							'',
 							A4(
 								$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-								'knacks',
-								$elm$json$Json$Decode$string,
-								'',
+								'domainKnacks',
+								$author$project$Boon$Knack$domainsDecoder,
+								$author$project$Boon$Knack$newDomains,
 								A4(
 									$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-									'domains',
-									$author$project$Boon$Domain$decoder,
-									$author$project$Boon$Domain$new,
+									'skillKnacks',
+									$author$project$Boon$Knack$skillsDecoder,
+									$author$project$Boon$Knack$newSkills,
 									A4(
 										$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-										'skills',
-										$author$project$Boon$Skill$decoder,
-										$author$project$Boon$Skill$new,
+										'domains',
+										$author$project$Boon$Domain$decoder,
+										$author$project$Boon$Domain$new,
 										A4(
 											$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-											'assignment',
-											$elm$json$Json$Decode$string,
-											'',
+											'skills',
+											$author$project$Boon$Skill$decoder,
+											$author$project$Boon$Skill$new,
 											A4(
 												$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-												'class',
+												'assignment',
 												$elm$json$Json$Decode$string,
 												'',
 												A4(
 													$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-													'name',
+													'class',
 													$elm$json$Json$Decode$string,
 													'',
-													$elm$json$Json$Decode$succeed($author$project$Character$Stats))))))))))))));
+													A4(
+														$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
+														'name',
+														$elm$json$Json$Decode$string,
+														'',
+														$elm$json$Json$Decode$succeed($author$project$Character$Stats)))))))))))))));
 var $author$project$Session$decodeCharacterSession = function (key) {
 	return A3(
 		$elm$json$Json$Decode$map2,
@@ -7559,6 +7638,126 @@ var $elm$core$Basics$clamp = F3(
 	function (low, high, number) {
 		return (_Utils_cmp(number, low) < 0) ? low : ((_Utils_cmp(number, high) > 0) ? high : number);
 	});
+var $elm$core$Array$fromListHelp = F3(
+	function (list, nodeList, nodeListSize) {
+		fromListHelp:
+		while (true) {
+			var _v0 = A2($elm$core$Elm$JsArray$initializeFromList, $elm$core$Array$branchFactor, list);
+			var jsArray = _v0.a;
+			var remainingItems = _v0.b;
+			if (_Utils_cmp(
+				$elm$core$Elm$JsArray$length(jsArray),
+				$elm$core$Array$branchFactor) < 0) {
+				return A2(
+					$elm$core$Array$builderToArray,
+					true,
+					{nodeList: nodeList, nodeListSize: nodeListSize, tail: jsArray});
+			} else {
+				var $temp$list = remainingItems,
+					$temp$nodeList = A2(
+					$elm$core$List$cons,
+					$elm$core$Array$Leaf(jsArray),
+					nodeList),
+					$temp$nodeListSize = nodeListSize + 1;
+				list = $temp$list;
+				nodeList = $temp$nodeList;
+				nodeListSize = $temp$nodeListSize;
+				continue fromListHelp;
+			}
+		}
+	});
+var $elm$core$Array$fromList = function (list) {
+	if (!list.b) {
+		return $elm$core$Array$empty;
+	} else {
+		return A3($elm$core$Array$fromListHelp, list, _List_Nil, 0);
+	}
+};
+var $elm$core$Elm$JsArray$push = _JsArray_push;
+var $elm$core$Bitwise$and = _Bitwise_and;
+var $elm$core$Bitwise$shiftRightZfBy = _Bitwise_shiftRightZfBy;
+var $elm$core$Array$bitMask = 4294967295 >>> (32 - $elm$core$Array$shiftStep);
+var $elm$core$Basics$ge = _Utils_ge;
+var $elm$core$Elm$JsArray$singleton = _JsArray_singleton;
+var $elm$core$Elm$JsArray$unsafeGet = _JsArray_unsafeGet;
+var $elm$core$Elm$JsArray$unsafeSet = _JsArray_unsafeSet;
+var $elm$core$Array$insertTailInTree = F4(
+	function (shift, index, tail, tree) {
+		var pos = $elm$core$Array$bitMask & (index >>> shift);
+		if (_Utils_cmp(
+			pos,
+			$elm$core$Elm$JsArray$length(tree)) > -1) {
+			if (shift === 5) {
+				return A2(
+					$elm$core$Elm$JsArray$push,
+					$elm$core$Array$Leaf(tail),
+					tree);
+			} else {
+				var newSub = $elm$core$Array$SubTree(
+					A4($elm$core$Array$insertTailInTree, shift - $elm$core$Array$shiftStep, index, tail, $elm$core$Elm$JsArray$empty));
+				return A2($elm$core$Elm$JsArray$push, newSub, tree);
+			}
+		} else {
+			var value = A2($elm$core$Elm$JsArray$unsafeGet, pos, tree);
+			if (value.$ === 'SubTree') {
+				var subTree = value.a;
+				var newSub = $elm$core$Array$SubTree(
+					A4($elm$core$Array$insertTailInTree, shift - $elm$core$Array$shiftStep, index, tail, subTree));
+				return A3($elm$core$Elm$JsArray$unsafeSet, pos, newSub, tree);
+			} else {
+				var newSub = $elm$core$Array$SubTree(
+					A4(
+						$elm$core$Array$insertTailInTree,
+						shift - $elm$core$Array$shiftStep,
+						index,
+						tail,
+						$elm$core$Elm$JsArray$singleton(value)));
+				return A3($elm$core$Elm$JsArray$unsafeSet, pos, newSub, tree);
+			}
+		}
+	});
+var $elm$core$Bitwise$shiftLeftBy = _Bitwise_shiftLeftBy;
+var $elm$core$Array$unsafeReplaceTail = F2(
+	function (newTail, _v0) {
+		var len = _v0.a;
+		var startShift = _v0.b;
+		var tree = _v0.c;
+		var tail = _v0.d;
+		var originalTailLen = $elm$core$Elm$JsArray$length(tail);
+		var newTailLen = $elm$core$Elm$JsArray$length(newTail);
+		var newArrayLen = len + (newTailLen - originalTailLen);
+		if (_Utils_eq(newTailLen, $elm$core$Array$branchFactor)) {
+			var overflow = _Utils_cmp(newArrayLen >>> $elm$core$Array$shiftStep, 1 << startShift) > 0;
+			if (overflow) {
+				var newShift = startShift + $elm$core$Array$shiftStep;
+				var newTree = A4(
+					$elm$core$Array$insertTailInTree,
+					newShift,
+					len,
+					newTail,
+					$elm$core$Elm$JsArray$singleton(
+						$elm$core$Array$SubTree(tree)));
+				return A4($elm$core$Array$Array_elm_builtin, newArrayLen, newShift, newTree, $elm$core$Elm$JsArray$empty);
+			} else {
+				return A4(
+					$elm$core$Array$Array_elm_builtin,
+					newArrayLen,
+					startShift,
+					A4($elm$core$Array$insertTailInTree, startShift, len, newTail, tree),
+					$elm$core$Elm$JsArray$empty);
+			}
+		} else {
+			return A4($elm$core$Array$Array_elm_builtin, newArrayLen, startShift, tree, newTail);
+		}
+	});
+var $elm$core$Array$push = F2(
+	function (a, array) {
+		var tail = array.d;
+		return A2(
+			$elm$core$Array$unsafeReplaceTail,
+			A2($elm$core$Elm$JsArray$push, a, tail),
+			array);
+	});
 var $author$project$TypeDict$hash = F2(
 	function (_v0, k) {
 		var hasher = _v0.a.hasher;
@@ -7574,6 +7773,49 @@ var $author$project$TypeDict$mapInner = F2(
 				inner: f(inner)
 			});
 	});
+var $author$project$TypeDict$update = F3(
+	function (key, f, dict) {
+		return A2(
+			$author$project$TypeDict$mapInner,
+			A2(
+				$elm$core$Dict$update,
+				A2($author$project$TypeDict$hash, dict, key),
+				function (maybeKVPair) {
+					if (maybeKVPair.$ === 'Just') {
+						var _v1 = maybeKVPair.a;
+						var v = _v1.b;
+						return A2(
+							$elm$core$Maybe$map,
+							$elm$core$Tuple$pair(key),
+							f(
+								$elm$core$Maybe$Just(v)));
+					} else {
+						return A2(
+							$elm$core$Maybe$map,
+							$elm$core$Tuple$pair(key),
+							f($elm$core$Maybe$Nothing));
+					}
+				}),
+			dict);
+	});
+var $author$project$Boon$Knack$insert = F2(
+	function (key, val) {
+		return A2(
+			$author$project$TypeDict$update,
+			key,
+			function (v) {
+				if (v.$ === 'Nothing') {
+					return $elm$core$Maybe$Just(
+						$elm$core$Array$fromList(
+							_List_fromArray(
+								[val])));
+				} else {
+					var ks = v.a;
+					return $elm$core$Maybe$Just(
+						A2($elm$core$Array$push, val, ks));
+				}
+			});
+	});
 var $author$project$TypeDict$insert = F3(
 	function (key, val, dict) {
 		return A2(
@@ -7582,34 +7824,6 @@ var $author$project$TypeDict$insert = F3(
 				$elm$core$Dict$insert,
 				A2($author$project$TypeDict$hash, dict, key),
 				_Utils_Tuple2(key, val)),
-			dict);
-	});
-var $elm$core$Maybe$andThen = F2(
-	function (callback, maybeValue) {
-		if (maybeValue.$ === 'Just') {
-			var value = maybeValue.a;
-			return callback(value);
-		} else {
-			return $elm$core$Maybe$Nothing;
-		}
-	});
-var $author$project$TypeDict$update = F3(
-	function (key, f, dict) {
-		return A2(
-			$author$project$TypeDict$mapInner,
-			A2(
-				$elm$core$Dict$update,
-				A2($author$project$TypeDict$hash, dict, key),
-				$elm$core$Maybe$andThen(
-					function (_v0) {
-						var k = _v0.a;
-						var v = _v0.b;
-						return A2(
-							$elm$core$Maybe$map,
-							$elm$core$Tuple$pair(k),
-							f(
-								$elm$core$Maybe$Just(v)));
-					})),
 			dict);
 	});
 var $author$project$Character$applyBoon = F2(
@@ -7666,12 +7880,26 @@ var $author$project$Character$applyBoon = F2(
 					{
 						equipment: character.equipment + (A2($elm$core$String$join, '\n\n', equipment) + '\n\n')
 					});
-			default:
+			case 'GainRefresh':
 				var refresh = boon.a;
 				return _Utils_update(
 					character,
 					{
 						refresh: character.refresh + (A2($elm$core$String$join, '\n\n', refresh) + '\n\n')
+					});
+			case 'GainSkillKnack':
+				var skill = boon.a;
+				return _Utils_update(
+					character,
+					{
+						skillKnacks: A3($author$project$Boon$Knack$insert, skill, '', character.skillKnacks)
+					});
+			default:
+				var domain = boon.a;
+				return _Utils_update(
+					character,
+					{
+						domainKnacks: A3($author$project$Boon$Knack$insert, domain, '', character.domainKnacks)
 					});
 		}
 	});
@@ -7725,7 +7953,7 @@ var $author$project$Character$applyClass = F2(
 					character,
 					{_class: name})));
 	});
-var $author$project$Character$blank = {abilities: $elm$core$Dict$empty, assignment: '', bonds: '', _class: '', domains: $author$project$Boon$Domain$new, equipment: '', fallout: '', knacks: '', name: '', notes: '', refresh: '', resistances: $author$project$Boon$Resistance$new, skills: $author$project$Boon$Skill$new};
+var $author$project$Character$blank = {abilities: $elm$core$Dict$empty, assignment: '', bonds: '', _class: '', domainKnacks: $author$project$Boon$Knack$newDomains, domains: $author$project$Boon$Domain$new, equipment: '', fallout: '', name: '', notes: '', refresh: '', resistances: $author$project$Boon$Resistance$new, skillKnacks: $author$project$Boon$Knack$newSkills, skills: $author$project$Boon$Skill$new};
 var $elm$core$Dict$foldl = F3(
 	function (func, acc, dict) {
 		foldl:
@@ -7843,13 +8071,31 @@ var $author$project$Boon$encode = function (boon) {
 							'equipment',
 							A2($elm$json$Json$Encode$list, $elm$json$Json$Encode$string, equipment))
 						]);
-				default:
+				case 'GainRefresh':
 					var refresh = boon.a;
 					return _List_fromArray(
 						[
 							_Utils_Tuple2(
 							'refresh',
 							A2($elm$json$Json$Encode$list, $elm$json$Json$Encode$string, refresh))
+						]);
+				case 'GainSkillKnack':
+					var skill = boon.a;
+					return _List_fromArray(
+						[
+							_Utils_Tuple2(
+							'knack',
+							$elm$json$Json$Encode$string(
+								$author$project$Boon$Skill$toString(skill)))
+						]);
+				default:
+					var domain = boon.a;
+					return _List_fromArray(
+						[
+							_Utils_Tuple2(
+							'knack',
+							$elm$json$Json$Encode$string(
+								$author$project$Boon$Domain$toString(domain)))
 						]);
 			}
 		}());
@@ -7905,6 +8151,51 @@ var $author$project$TypeDict$Json$Encode$encoder = F4(
 	});
 var $author$project$TypeDict$Json$Encode$string = $author$project$TypeDict$Json$Encode$encoder($elm$core$Basics$identity);
 var $author$project$Boon$Domain$encode = A2($author$project$TypeDict$Json$Encode$string, $author$project$Boon$Domain$encodeDomain, $elm$json$Json$Encode$bool);
+var $elm$core$Elm$JsArray$foldl = _JsArray_foldl;
+var $elm$core$Array$foldl = F3(
+	function (func, baseCase, _v0) {
+		var tree = _v0.c;
+		var tail = _v0.d;
+		var helper = F2(
+			function (node, acc) {
+				if (node.$ === 'SubTree') {
+					var subTree = node.a;
+					return A3($elm$core$Elm$JsArray$foldl, helper, acc, subTree);
+				} else {
+					var values = node.a;
+					return A3($elm$core$Elm$JsArray$foldl, func, acc, values);
+				}
+			});
+		return A3(
+			$elm$core$Elm$JsArray$foldl,
+			func,
+			A3($elm$core$Elm$JsArray$foldl, helper, baseCase, tree),
+			tail);
+	});
+var $elm$json$Json$Encode$array = F2(
+	function (func, entries) {
+		return _Json_wrap(
+			A3(
+				$elm$core$Array$foldl,
+				_Json_addEntry(func),
+				_Json_emptyArray(_Utils_Tuple0),
+				entries));
+	});
+var $author$project$TypeDict$toHasher = function (_v0) {
+	var hasher = _v0.a.hasher;
+	return hasher;
+};
+var $author$project$TypeDict$toStringer = $author$project$TypeDict$toHasher;
+var $author$project$Boon$Knack$encode = function (knacks) {
+	return A3(
+		$author$project$TypeDict$Json$Encode$string,
+		A2(
+			$elm$core$Basics$composeR,
+			$author$project$TypeDict$toStringer(knacks),
+			$elm$json$Json$Encode$string),
+		$elm$json$Json$Encode$array($elm$json$Json$Encode$string),
+		knacks);
+};
 var $author$project$Boon$Resistance$encode = A2($author$project$TypeDict$Json$Encode$string, $author$project$Boon$Resistance$encodeResistance, $elm$json$Json$Encode$int);
 var $author$project$Boon$Skill$encode = A2($author$project$TypeDict$Json$Encode$string, $author$project$Boon$Skill$encodeSkill, $elm$json$Json$Encode$bool);
 var $author$project$Character$encode = function (character) {
@@ -7921,8 +8212,11 @@ var $author$project$Character$encode = function (character) {
 				'assignment',
 				$elm$json$Json$Encode$string(character.assignment)),
 				_Utils_Tuple2(
-				'knacks',
-				$elm$json$Json$Encode$string(character.knacks)),
+				'skillKnacks',
+				$author$project$Boon$Knack$encode(character.skillKnacks)),
+				_Utils_Tuple2(
+				'domainKnacks',
+				$author$project$Boon$Knack$encode(character.domainKnacks)),
 				_Utils_Tuple2(
 				'equipment',
 				$elm$json$Json$Encode$string(character.equipment)),
@@ -8423,11 +8717,18 @@ var $author$project$Character$update = F2(
 				return _Utils_update(
 					character,
 					{domains: domains});
-			case 'UpdatedKnacks':
+			case 'UpdatedSkillKnacks':
 				var knacks = msg.a;
 				return _Utils_update(
 					character,
-					{knacks: knacks});
+					{skillKnacks: knacks});
+			case 'UpdatedDomainKnacks':
+				var knacks = msg.a;
+				return _Utils_update(
+					character,
+					{
+						domainKnacks: A2($elm$core$Debug$log, 'new knacks', knacks)
+					});
 			case 'UpdatedRefresh':
 				var refresh = msg.a;
 				return _Utils_update(
@@ -9167,9 +9468,15 @@ var $author$project$Boon$toString = function (boon) {
 			case 'GainEquipment':
 				var equipment = boon.a;
 				return 'Gain ' + A2($elm$core$String$join, ', ', equipment);
-			default:
+			case 'GainRefresh':
 				var refresh = boon.a;
 				return 'Gain ' + (A2($elm$core$String$join, ', ', refresh) + ' as a refresh');
+			case 'GainSkillKnack':
+				var skill = boon.a;
+				return 'Gain a Knack in the ' + ($author$project$Boon$Skill$toString(skill) + ' skill');
+			default:
+				var domain = boon.a;
+				return 'Gain a Knack in the ' + ($author$project$Boon$Domain$toString(domain) + ' domain');
 		}
 	}() + '.';
 };
@@ -9463,6 +9770,9 @@ var $author$project$Abilities$view = function (_v0) {
 var $author$project$Character$UpdatedBonds = function (a) {
 	return {$: 'UpdatedBonds', a: a};
 };
+var $author$project$Character$UpdatedDomainKnacks = function (a) {
+	return {$: 'UpdatedDomainKnacks', a: a};
+};
 var $author$project$Character$UpdatedDomains = function (a) {
 	return {$: 'UpdatedDomains', a: a};
 };
@@ -9471,9 +9781,6 @@ var $author$project$Character$UpdatedEquipment = function (a) {
 };
 var $author$project$Character$UpdatedFallout = function (a) {
 	return {$: 'UpdatedFallout', a: a};
-};
-var $author$project$Character$UpdatedKnacks = function (a) {
-	return {$: 'UpdatedKnacks', a: a};
 };
 var $author$project$Character$UpdatedName = function (a) {
 	return {$: 'UpdatedName', a: a};
@@ -9486,6 +9793,9 @@ var $author$project$Character$UpdatedRefresh = function (a) {
 };
 var $author$project$Character$UpdatedResistances = function (a) {
 	return {$: 'UpdatedResistances', a: a};
+};
+var $author$project$Character$UpdatedSkillKnacks = function (a) {
+	return {$: 'UpdatedSkillKnacks', a: a};
 };
 var $author$project$Character$UpdatedSkills = function (a) {
 	return {$: 'UpdatedSkills', a: a};
@@ -9626,100 +9936,6 @@ var $author$project$Boon$Resistance$view = F2(
 					},
 					resistancesList)));
 	});
-var $elm$html$Html$Attributes$boolProperty = F2(
-	function (key, bool) {
-		return A2(
-			_VirtualDom_property,
-			key,
-			$elm$json$Json$Encode$bool(bool));
-	});
-var $elm$html$Html$Attributes$checked = $elm$html$Html$Attributes$boolProperty('checked');
-var $elm$html$Html$Events$targetChecked = A2(
-	$elm$json$Json$Decode$at,
-	_List_fromArray(
-		['target', 'checked']),
-	$elm$json$Json$Decode$bool);
-var $elm$html$Html$Events$onCheck = function (tagger) {
-	return A2(
-		$elm$html$Html$Events$on,
-		'change',
-		A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetChecked));
-};
-var $author$project$TypeDict$keys = $author$project$TypeDict$delegate(
-	A2(
-		$elm$core$Basics$composeR,
-		$elm$core$Dict$values,
-		$elm$core$List$map($elm$core$Tuple$first)));
-var $author$project$TypeDict$toList = function (dict) {
-	return A2(
-		$elm$core$List$filterMap,
-		$elm$core$Basics$identity,
-		A2(
-			$elm$core$List$map,
-			function (key) {
-				return A2(
-					$elm$core$Maybe$map,
-					$elm$core$Tuple$pair(key),
-					A2($author$project$TypeDict$get, key, dict));
-			},
-			$author$project$TypeDict$keys(dict)));
-};
-var $author$project$Character$viewBoolDict = F3(
-	function (toMsg, labeller, dict) {
-		var list = $author$project$TypeDict$toList(dict);
-		var labelId = A2(
-			$elm$core$Basics$composeR,
-			labeller,
-			A2(
-				$elm$core$Basics$composeR,
-				$elm$core$String$toLower,
-				$elm$core$Basics$append('cb-')));
-		var viewItem = function (_v0) {
-			var k = _v0.a;
-			var isChecked = _v0.b;
-			return A2(
-				$elm$html$Html$li,
-				_List_Nil,
-				_List_fromArray(
-					[
-						A2(
-						$elm$html$Html$input,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$id(
-								labelId(k)),
-								$elm$html$Html$Attributes$type_('checkbox'),
-								$elm$html$Html$Attributes$checked(isChecked),
-								$elm$html$Html$Events$onCheck(
-								function (b) {
-									return toMsg(
-										A3($author$project$TypeDict$insert, k, b, dict));
-								})
-							]),
-						_List_Nil),
-						A2(
-						$elm$html$Html$label,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$for(
-								labelId(k))
-							]),
-						_List_fromArray(
-							[
-								$elm$html$Html$text(
-								labeller(k))
-							]))
-					]));
-		};
-		return A2(
-			$elm$html$Html$ul,
-			_List_fromArray(
-				[
-					A2($elm$html$Html$Attributes$attribute, 'role', 'list'),
-					$elm$html$Html$Attributes$class('checkbox-list')
-				]),
-			A2($elm$core$List$map, viewItem, list));
-	});
 var $elm$html$Html$br = _VirtualDom_node('br');
 var $elm$html$Html$details = _VirtualDom_node('details');
 var $elm$html$Html$summary = _VirtualDom_node('summary');
@@ -9782,6 +9998,580 @@ var $author$project$Ability$viewCompact = function (ability) {
 						])))
 			]));
 };
+var $elm$html$Html$Attributes$boolProperty = F2(
+	function (key, bool) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			$elm$json$Json$Encode$bool(bool));
+	});
+var $elm$html$Html$Attributes$checked = $elm$html$Html$Attributes$boolProperty('checked');
+var $elm$core$Elm$JsArray$indexedMap = _JsArray_indexedMap;
+var $elm$core$Array$tailIndex = function (len) {
+	return (len >>> 5) << 5;
+};
+var $elm$core$Array$indexedMap = F2(
+	function (func, _v0) {
+		var len = _v0.a;
+		var tree = _v0.c;
+		var tail = _v0.d;
+		var initialBuilder = {
+			nodeList: _List_Nil,
+			nodeListSize: 0,
+			tail: A3(
+				$elm$core$Elm$JsArray$indexedMap,
+				func,
+				$elm$core$Array$tailIndex(len),
+				tail)
+		};
+		var helper = F2(
+			function (node, builder) {
+				if (node.$ === 'SubTree') {
+					var subTree = node.a;
+					return A3($elm$core$Elm$JsArray$foldl, helper, builder, subTree);
+				} else {
+					var leaf = node.a;
+					var offset = builder.nodeListSize * $elm$core$Array$branchFactor;
+					var mappedLeaf = $elm$core$Array$Leaf(
+						A3($elm$core$Elm$JsArray$indexedMap, func, offset, leaf));
+					return {
+						nodeList: A2($elm$core$List$cons, mappedLeaf, builder.nodeList),
+						nodeListSize: builder.nodeListSize + 1,
+						tail: builder.tail
+					};
+				}
+			});
+		return A2(
+			$elm$core$Array$builderToArray,
+			true,
+			A3($elm$core$Elm$JsArray$foldl, helper, initialBuilder, tree));
+	});
+var $elm$html$Html$Events$targetChecked = A2(
+	$elm$json$Json$Decode$at,
+	_List_fromArray(
+		['target', 'checked']),
+	$elm$json$Json$Decode$bool);
+var $elm$html$Html$Events$onCheck = function (tagger) {
+	return A2(
+		$elm$html$Html$Events$on,
+		'change',
+		A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetChecked));
+};
+var $author$project$TypeDict$keys = $author$project$TypeDict$delegate(
+	A2(
+		$elm$core$Basics$composeR,
+		$elm$core$Dict$values,
+		$elm$core$List$map($elm$core$Tuple$first)));
+var $author$project$TypeDict$toList = function (dict) {
+	return A2(
+		$elm$core$List$filterMap,
+		$elm$core$Basics$identity,
+		A2(
+			$elm$core$List$map,
+			function (key) {
+				return A2(
+					$elm$core$Maybe$map,
+					$elm$core$Tuple$pair(key),
+					A2($author$project$TypeDict$get, key, dict));
+			},
+			$author$project$TypeDict$keys(dict)));
+};
+var $elm$core$Elm$JsArray$appendN = _JsArray_appendN;
+var $elm$core$Elm$JsArray$slice = _JsArray_slice;
+var $elm$core$Array$appendHelpBuilder = F2(
+	function (tail, builder) {
+		var tailLen = $elm$core$Elm$JsArray$length(tail);
+		var notAppended = ($elm$core$Array$branchFactor - $elm$core$Elm$JsArray$length(builder.tail)) - tailLen;
+		var appended = A3($elm$core$Elm$JsArray$appendN, $elm$core$Array$branchFactor, builder.tail, tail);
+		return (notAppended < 0) ? {
+			nodeList: A2(
+				$elm$core$List$cons,
+				$elm$core$Array$Leaf(appended),
+				builder.nodeList),
+			nodeListSize: builder.nodeListSize + 1,
+			tail: A3($elm$core$Elm$JsArray$slice, notAppended, tailLen, tail)
+		} : ((!notAppended) ? {
+			nodeList: A2(
+				$elm$core$List$cons,
+				$elm$core$Array$Leaf(appended),
+				builder.nodeList),
+			nodeListSize: builder.nodeListSize + 1,
+			tail: $elm$core$Elm$JsArray$empty
+		} : {nodeList: builder.nodeList, nodeListSize: builder.nodeListSize, tail: appended});
+	});
+var $elm$core$Array$appendHelpTree = F2(
+	function (toAppend, array) {
+		var len = array.a;
+		var tree = array.c;
+		var tail = array.d;
+		var itemsToAppend = $elm$core$Elm$JsArray$length(toAppend);
+		var notAppended = ($elm$core$Array$branchFactor - $elm$core$Elm$JsArray$length(tail)) - itemsToAppend;
+		var appended = A3($elm$core$Elm$JsArray$appendN, $elm$core$Array$branchFactor, tail, toAppend);
+		var newArray = A2($elm$core$Array$unsafeReplaceTail, appended, array);
+		if (notAppended < 0) {
+			var nextTail = A3($elm$core$Elm$JsArray$slice, notAppended, itemsToAppend, toAppend);
+			return A2($elm$core$Array$unsafeReplaceTail, nextTail, newArray);
+		} else {
+			return newArray;
+		}
+	});
+var $elm$core$Array$builderFromArray = function (_v0) {
+	var len = _v0.a;
+	var tree = _v0.c;
+	var tail = _v0.d;
+	var helper = F2(
+		function (node, acc) {
+			if (node.$ === 'SubTree') {
+				var subTree = node.a;
+				return A3($elm$core$Elm$JsArray$foldl, helper, acc, subTree);
+			} else {
+				return A2($elm$core$List$cons, node, acc);
+			}
+		});
+	return {
+		nodeList: A3($elm$core$Elm$JsArray$foldl, helper, _List_Nil, tree),
+		nodeListSize: (len / $elm$core$Array$branchFactor) | 0,
+		tail: tail
+	};
+};
+var $elm$core$Array$append = F2(
+	function (a, _v0) {
+		var aTail = a.d;
+		var bLen = _v0.a;
+		var bTree = _v0.c;
+		var bTail = _v0.d;
+		if (_Utils_cmp(bLen, $elm$core$Array$branchFactor * 4) < 1) {
+			var foldHelper = F2(
+				function (node, array) {
+					if (node.$ === 'SubTree') {
+						var tree = node.a;
+						return A3($elm$core$Elm$JsArray$foldl, foldHelper, array, tree);
+					} else {
+						var leaf = node.a;
+						return A2($elm$core$Array$appendHelpTree, leaf, array);
+					}
+				});
+			return A2(
+				$elm$core$Array$appendHelpTree,
+				bTail,
+				A3($elm$core$Elm$JsArray$foldl, foldHelper, a, bTree));
+		} else {
+			var foldHelper = F2(
+				function (node, builder) {
+					if (node.$ === 'SubTree') {
+						var tree = node.a;
+						return A3($elm$core$Elm$JsArray$foldl, foldHelper, builder, tree);
+					} else {
+						var leaf = node.a;
+						return A2($elm$core$Array$appendHelpBuilder, leaf, builder);
+					}
+				});
+			return A2(
+				$elm$core$Array$builderToArray,
+				true,
+				A2(
+					$elm$core$Array$appendHelpBuilder,
+					bTail,
+					A3(
+						$elm$core$Elm$JsArray$foldl,
+						foldHelper,
+						$elm$core$Array$builderFromArray(a),
+						bTree)));
+		}
+	});
+var $elm$core$Array$length = function (_v0) {
+	var len = _v0.a;
+	return len;
+};
+var $elm$core$List$drop = F2(
+	function (n, list) {
+		drop:
+		while (true) {
+			if (n <= 0) {
+				return list;
+			} else {
+				if (!list.b) {
+					return list;
+				} else {
+					var x = list.a;
+					var xs = list.b;
+					var $temp$n = n - 1,
+						$temp$list = xs;
+					n = $temp$n;
+					list = $temp$list;
+					continue drop;
+				}
+			}
+		}
+	});
+var $elm$core$Array$sliceLeft = F2(
+	function (from, array) {
+		var len = array.a;
+		var tree = array.c;
+		var tail = array.d;
+		if (!from) {
+			return array;
+		} else {
+			if (_Utils_cmp(
+				from,
+				$elm$core$Array$tailIndex(len)) > -1) {
+				return A4(
+					$elm$core$Array$Array_elm_builtin,
+					len - from,
+					$elm$core$Array$shiftStep,
+					$elm$core$Elm$JsArray$empty,
+					A3(
+						$elm$core$Elm$JsArray$slice,
+						from - $elm$core$Array$tailIndex(len),
+						$elm$core$Elm$JsArray$length(tail),
+						tail));
+			} else {
+				var skipNodes = (from / $elm$core$Array$branchFactor) | 0;
+				var helper = F2(
+					function (node, acc) {
+						if (node.$ === 'SubTree') {
+							var subTree = node.a;
+							return A3($elm$core$Elm$JsArray$foldr, helper, acc, subTree);
+						} else {
+							var leaf = node.a;
+							return A2($elm$core$List$cons, leaf, acc);
+						}
+					});
+				var leafNodes = A3(
+					$elm$core$Elm$JsArray$foldr,
+					helper,
+					_List_fromArray(
+						[tail]),
+					tree);
+				var nodesToInsert = A2($elm$core$List$drop, skipNodes, leafNodes);
+				if (!nodesToInsert.b) {
+					return $elm$core$Array$empty;
+				} else {
+					var head = nodesToInsert.a;
+					var rest = nodesToInsert.b;
+					var firstSlice = from - (skipNodes * $elm$core$Array$branchFactor);
+					var initialBuilder = {
+						nodeList: _List_Nil,
+						nodeListSize: 0,
+						tail: A3(
+							$elm$core$Elm$JsArray$slice,
+							firstSlice,
+							$elm$core$Elm$JsArray$length(head),
+							head)
+					};
+					return A2(
+						$elm$core$Array$builderToArray,
+						true,
+						A3($elm$core$List$foldl, $elm$core$Array$appendHelpBuilder, initialBuilder, rest));
+				}
+			}
+		}
+	});
+var $elm$core$Array$fetchNewTail = F4(
+	function (shift, end, treeEnd, tree) {
+		fetchNewTail:
+		while (true) {
+			var pos = $elm$core$Array$bitMask & (treeEnd >>> shift);
+			var _v0 = A2($elm$core$Elm$JsArray$unsafeGet, pos, tree);
+			if (_v0.$ === 'SubTree') {
+				var sub = _v0.a;
+				var $temp$shift = shift - $elm$core$Array$shiftStep,
+					$temp$end = end,
+					$temp$treeEnd = treeEnd,
+					$temp$tree = sub;
+				shift = $temp$shift;
+				end = $temp$end;
+				treeEnd = $temp$treeEnd;
+				tree = $temp$tree;
+				continue fetchNewTail;
+			} else {
+				var values = _v0.a;
+				return A3($elm$core$Elm$JsArray$slice, 0, $elm$core$Array$bitMask & end, values);
+			}
+		}
+	});
+var $elm$core$Array$hoistTree = F3(
+	function (oldShift, newShift, tree) {
+		hoistTree:
+		while (true) {
+			if ((_Utils_cmp(oldShift, newShift) < 1) || (!$elm$core$Elm$JsArray$length(tree))) {
+				return tree;
+			} else {
+				var _v0 = A2($elm$core$Elm$JsArray$unsafeGet, 0, tree);
+				if (_v0.$ === 'SubTree') {
+					var sub = _v0.a;
+					var $temp$oldShift = oldShift - $elm$core$Array$shiftStep,
+						$temp$newShift = newShift,
+						$temp$tree = sub;
+					oldShift = $temp$oldShift;
+					newShift = $temp$newShift;
+					tree = $temp$tree;
+					continue hoistTree;
+				} else {
+					return tree;
+				}
+			}
+		}
+	});
+var $elm$core$Array$sliceTree = F3(
+	function (shift, endIdx, tree) {
+		var lastPos = $elm$core$Array$bitMask & (endIdx >>> shift);
+		var _v0 = A2($elm$core$Elm$JsArray$unsafeGet, lastPos, tree);
+		if (_v0.$ === 'SubTree') {
+			var sub = _v0.a;
+			var newSub = A3($elm$core$Array$sliceTree, shift - $elm$core$Array$shiftStep, endIdx, sub);
+			return (!$elm$core$Elm$JsArray$length(newSub)) ? A3($elm$core$Elm$JsArray$slice, 0, lastPos, tree) : A3(
+				$elm$core$Elm$JsArray$unsafeSet,
+				lastPos,
+				$elm$core$Array$SubTree(newSub),
+				A3($elm$core$Elm$JsArray$slice, 0, lastPos + 1, tree));
+		} else {
+			return A3($elm$core$Elm$JsArray$slice, 0, lastPos, tree);
+		}
+	});
+var $elm$core$Array$sliceRight = F2(
+	function (end, array) {
+		var len = array.a;
+		var startShift = array.b;
+		var tree = array.c;
+		var tail = array.d;
+		if (_Utils_eq(end, len)) {
+			return array;
+		} else {
+			if (_Utils_cmp(
+				end,
+				$elm$core$Array$tailIndex(len)) > -1) {
+				return A4(
+					$elm$core$Array$Array_elm_builtin,
+					end,
+					startShift,
+					tree,
+					A3($elm$core$Elm$JsArray$slice, 0, $elm$core$Array$bitMask & end, tail));
+			} else {
+				var endIdx = $elm$core$Array$tailIndex(end);
+				var depth = $elm$core$Basics$floor(
+					A2(
+						$elm$core$Basics$logBase,
+						$elm$core$Array$branchFactor,
+						A2($elm$core$Basics$max, 1, endIdx - 1)));
+				var newShift = A2($elm$core$Basics$max, 5, depth * $elm$core$Array$shiftStep);
+				return A4(
+					$elm$core$Array$Array_elm_builtin,
+					end,
+					newShift,
+					A3(
+						$elm$core$Array$hoistTree,
+						startShift,
+						newShift,
+						A3($elm$core$Array$sliceTree, startShift, endIdx, tree)),
+					A4($elm$core$Array$fetchNewTail, startShift, end, endIdx, tree));
+			}
+		}
+	});
+var $elm$core$Array$translateIndex = F2(
+	function (index, _v0) {
+		var len = _v0.a;
+		var posIndex = (index < 0) ? (len + index) : index;
+		return (posIndex < 0) ? 0 : ((_Utils_cmp(posIndex, len) > 0) ? len : posIndex);
+	});
+var $elm$core$Array$slice = F3(
+	function (from, to, array) {
+		var correctTo = A2($elm$core$Array$translateIndex, to, array);
+		var correctFrom = A2($elm$core$Array$translateIndex, from, array);
+		return (_Utils_cmp(correctFrom, correctTo) > 0) ? $elm$core$Array$empty : A2(
+			$elm$core$Array$sliceLeft,
+			correctFrom,
+			A2($elm$core$Array$sliceRight, correctTo, array));
+	});
+var $author$project$Boon$Knack$remove = F2(
+	function (key, idx) {
+		return A2(
+			$author$project$TypeDict$update,
+			key,
+			$elm$core$Maybe$map(
+				function (knacks) {
+					var start = A3($elm$core$Array$slice, 0, idx, knacks);
+					var end = A3(
+						$elm$core$Array$slice,
+						idx + 1,
+						$elm$core$Array$length(knacks),
+						knacks);
+					return A2($elm$core$Array$append, start, end);
+				}));
+	});
+var $elm$core$Array$setHelp = F4(
+	function (shift, index, value, tree) {
+		var pos = $elm$core$Array$bitMask & (index >>> shift);
+		var _v0 = A2($elm$core$Elm$JsArray$unsafeGet, pos, tree);
+		if (_v0.$ === 'SubTree') {
+			var subTree = _v0.a;
+			var newSub = A4($elm$core$Array$setHelp, shift - $elm$core$Array$shiftStep, index, value, subTree);
+			return A3(
+				$elm$core$Elm$JsArray$unsafeSet,
+				pos,
+				$elm$core$Array$SubTree(newSub),
+				tree);
+		} else {
+			var values = _v0.a;
+			var newLeaf = A3($elm$core$Elm$JsArray$unsafeSet, $elm$core$Array$bitMask & index, value, values);
+			return A3(
+				$elm$core$Elm$JsArray$unsafeSet,
+				pos,
+				$elm$core$Array$Leaf(newLeaf),
+				tree);
+		}
+	});
+var $elm$core$Array$set = F3(
+	function (index, value, array) {
+		var len = array.a;
+		var startShift = array.b;
+		var tree = array.c;
+		var tail = array.d;
+		return ((index < 0) || (_Utils_cmp(index, len) > -1)) ? array : ((_Utils_cmp(
+			index,
+			$elm$core$Array$tailIndex(len)) > -1) ? A4(
+			$elm$core$Array$Array_elm_builtin,
+			len,
+			startShift,
+			tree,
+			A3($elm$core$Elm$JsArray$unsafeSet, $elm$core$Array$bitMask & index, value, tail)) : A4(
+			$elm$core$Array$Array_elm_builtin,
+			len,
+			startShift,
+			A4($elm$core$Array$setHelp, startShift, index, value, tree),
+			tail));
+	});
+var $author$project$Boon$Knack$update = F3(
+	function (key, idx, val) {
+		return $elm$core$String$isEmpty(val) ? A2($author$project$Boon$Knack$remove, key, idx) : A2(
+			$author$project$TypeDict$update,
+			key,
+			$elm$core$Maybe$map(
+				A2($elm$core$Array$set, idx, val)));
+	});
+var $author$project$Character$viewTraitList = F4(
+	function (toMsg, knacksToMsg, dict, knacks) {
+		var list = $author$project$TypeDict$toList(dict);
+		var labeller = $author$project$TypeDict$toHasher(dict);
+		var labelId = A2(
+			$elm$core$Basics$composeR,
+			labeller,
+			A2(
+				$elm$core$Basics$composeR,
+				$elm$core$String$toLower,
+				$elm$core$Basics$append('cb-')));
+		var viewItem = function (_v1) {
+			var k = _v1.a;
+			var isChecked = _v1.b;
+			return A2(
+				$elm$html$Html$li,
+				_List_Nil,
+				A2(
+					$elm$core$List$cons,
+					A2(
+						$elm$html$Html$div,
+						_List_Nil,
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$input,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$id(
+										labelId(k)),
+										$elm$html$Html$Attributes$type_('checkbox'),
+										$elm$html$Html$Attributes$checked(isChecked),
+										$elm$html$Html$Events$onCheck(
+										function (b) {
+											return toMsg(
+												A3($author$project$TypeDict$insert, k, b, dict));
+										})
+									]),
+								_List_Nil),
+								A2(
+								$elm$html$Html$label,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$for(
+										labelId(k))
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text(
+										labeller(k))
+									])),
+								A2(
+								$elm$html$Html$button,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('add-knack-button'),
+										$elm$html$Html$Events$onClick(
+										knacksToMsg(
+											A3($author$project$Boon$Knack$insert, k, '', knacks)))
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$strong,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('+')
+											]))
+									]))
+							])),
+					function () {
+						var _v0 = A2($author$project$TypeDict$get, k, knacks);
+						if (_v0.$ === 'Just') {
+							var ks = _v0.a;
+							return _List_fromArray(
+								[
+									A2(
+									$elm$html$Html$ul,
+									_List_fromArray(
+										[
+											$elm$html$Html$Attributes$class('knacks__list')
+										]),
+									$elm$core$Array$toList(
+										A2(
+											$elm$core$Array$indexedMap,
+											F2(
+												function (idx, knack) {
+													return A2(
+														$elm$html$Html$li,
+														_List_Nil,
+														_List_fromArray(
+															[
+																A2(
+																$elm$html$Html$input,
+																_List_fromArray(
+																	[
+																		$elm$html$Html$Attributes$value(knack),
+																		$elm$html$Html$Events$onInput(
+																		function (newKnack) {
+																			return knacksToMsg(
+																				A4($author$project$Boon$Knack$update, k, idx, newKnack, knacks));
+																		})
+																	]),
+																_List_Nil)
+															]));
+												}),
+											ks)))
+								]);
+						} else {
+							return _List_Nil;
+						}
+					}()));
+		};
+		return A2(
+			$elm$html$Html$ul,
+			_List_fromArray(
+				[
+					A2($elm$html$Html$Attributes$attribute, 'role', 'list'),
+					$elm$html$Html$Attributes$class('checkbox-list')
+				]),
+			A2($elm$core$List$map, viewItem, list));
+	});
 var $author$project$Character$view = function (character) {
 	return {
 		body: _List_fromArray(
@@ -9929,7 +10719,7 @@ var $author$project$Character$view = function (character) {
 														$elm$html$Html$text('Skills')
 													]))
 											])),
-										A3($author$project$Character$viewBoolDict, $author$project$Character$UpdatedSkills, $author$project$Boon$Skill$toString, character.skills)
+										A4($author$project$Character$viewTraitList, $author$project$Character$UpdatedSkills, $author$project$Character$UpdatedSkillKnacks, character.skills, character.skillKnacks)
 									])),
 								A2(
 								$elm$html$Html$section,
@@ -9957,7 +10747,7 @@ var $author$project$Character$view = function (character) {
 														$elm$html$Html$text('Domains')
 													]))
 											])),
-										A3($author$project$Character$viewBoolDict, $author$project$Character$UpdatedDomains, $author$project$Boon$Domain$toString, character.domains)
+										A4($author$project$Character$viewTraitList, $author$project$Character$UpdatedDomains, $author$project$Character$UpdatedDomainKnacks, character.domains, character.domainKnacks)
 									]))
 							])),
 						A2(
@@ -10132,33 +10922,6 @@ var $author$project$Character$view = function (character) {
 						$elm$html$Html$section,
 						_List_fromArray(
 							[
-								$elm$html$Html$Attributes$class('knacks')
-							]),
-						_List_fromArray(
-							[
-								A2(
-								$elm$html$Html$h2,
-								_List_Nil,
-								_List_fromArray(
-									[
-										$elm$html$Html$text('Knacks')
-									])),
-								A2(
-								$elm$html$Html$textarea,
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$class('textbox'),
-										$elm$html$Html$Events$onInput($author$project$Character$UpdatedKnacks)
-									]),
-								_List_fromArray(
-									[
-										$elm$html$Html$text(character.knacks)
-									]))
-							])),
-						A2(
-						$elm$html$Html$section,
-						_List_fromArray(
-							[
 								$elm$html$Html$Attributes$class('notes')
 							]),
 						_List_fromArray(
@@ -10181,7 +10944,51 @@ var $author$project$Character$view = function (character) {
 									[
 										$elm$html$Html$text(character.notes)
 									]))
-							]))
+							])),
+						function () {
+						var skillKs = A3(
+							$author$project$Boon$Knack$insert,
+							$author$project$Boon$Skill$Resist,
+							'Torture',
+							A3(
+								$author$project$Boon$Knack$insert,
+								$author$project$Boon$Skill$Scrap,
+								'Bladed weapons',
+								A3(
+									$author$project$Boon$Knack$insert,
+									$author$project$Boon$Skill$Investigate,
+									'Murder',
+									A3(
+										$author$project$Boon$Knack$insert,
+										$author$project$Boon$Skill$Steal,
+										'Weapons',
+										A3($author$project$Boon$Knack$insert, $author$project$Boon$Skill$Steal, 'Drugs', $author$project$Boon$Knack$newSkills)))));
+						var domKs = A2(
+							$elm$core$Debug$log,
+							'domain knacks',
+							A3(
+								$author$project$Boon$Knack$insert,
+								$author$project$Boon$Domain$Science,
+								'Chemistry',
+								A3(
+									$author$project$Boon$Knack$insert,
+									$author$project$Boon$Domain$Weirdness,
+									'Wayward',
+									A3($author$project$Boon$Knack$insert, $author$project$Boon$Domain$Criminal, 'Hitmen', $author$project$Boon$Knack$newDomains))));
+						return A2(
+							$elm$html$Html$button,
+							_List_fromArray(
+								[
+									$elm$html$Html$Events$onClick(
+									$author$project$Character$UpdatedDomainKnacks(domKs)),
+									$elm$html$Html$Events$onClick(
+									$author$project$Character$UpdatedSkillKnacks(skillKs))
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('gain knacks')
+								]));
+					}()
 					]))
 			]),
 		title: character.name
