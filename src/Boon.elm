@@ -1,6 +1,7 @@
 module Boon exposing (Assignment, Boon(..), assignments, decoder, encode, toString)
 
 import Boon.Domain as Domain exposing (Domain(..))
+import Boon.Knack as Knack
 import Boon.Resistance as Resistance exposing (Resistance(..))
 import Boon.Skill as Skill exposing (Skill(..))
 import Html exposing (..)
@@ -20,6 +21,7 @@ type Boon
     | GainSkills (List Skill)
     | GainEquipment (List String)
     | GainRefresh (List String)
+    | GainKnack Knack.Type
 
 
 toString : Boon -> String
@@ -63,6 +65,9 @@ toString boon =
 
         GainRefresh refresh ->
             "Gain " ++ String.join ", " refresh ++ " as a refresh"
+
+        GainKnack ty ->
+            "Gain a Knack in " ++ Knack.toString ty
     )
         ++ "."
 
@@ -204,6 +209,9 @@ encode boon =
             GainRefresh refresh ->
                 [ ( "refresh", Encode.list Encode.string refresh ) ]
 
+            GainKnack knack ->
+                [ ( "knack", Encode.string <| Knack.toString knack ) ]
+
 
 
 -- DECODER
@@ -248,4 +256,5 @@ decoder =
         , newDomainDecoder
         , newEquipmentDecoder
         , newRefreshDecoder
+        , Decode.map GainKnack Knack.typeDecoder
         ]
