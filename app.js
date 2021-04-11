@@ -10620,7 +10620,7 @@ var $author$project$Main$view = function (model) {
 						$author$project$Main$AbilitiesMsg,
 						$author$project$Abilities$view(abilities))
 					]),
-				title: abilities.selected
+				title: 'Abilities / ' + abilities.selected
 			};
 		default:
 			var playAid = model.b;

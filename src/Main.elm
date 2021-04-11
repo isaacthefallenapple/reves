@@ -246,7 +246,7 @@ view model =
                     }
 
         Abilities abilities ->
-            { title = abilities.selected
+            { title = "Abilities / " ++ abilities.selected
             , body = [ Html.map AbilitiesMsg (Abilities.view abilities) ]
             }
 
