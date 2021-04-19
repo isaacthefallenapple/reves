@@ -7634,10 +7634,6 @@ var $author$project$Main$PickClass = function (a) {
 var $author$project$Main$ReadFile = function (a) {
 	return {$: 'ReadFile', a: a};
 };
-var $elm$core$Basics$clamp = F3(
-	function (low, high, number) {
-		return (_Utils_cmp(number, low) < 0) ? low : ((_Utils_cmp(number, high) > 0) ? high : number);
-	});
 var $elm$core$Array$fromListHelp = F3(
 	function (list, nodeList, nodeListSize) {
 		fromListHelp:
@@ -7826,6 +7822,86 @@ var $author$project$TypeDict$insert = F3(
 				_Utils_Tuple2(key, val)),
 			dict);
 	});
+var $author$project$TypeDict$toInner = function (_v0) {
+	var inner = _v0.a.inner;
+	return inner;
+};
+var $author$project$TypeDict$delegate = F2(
+	function (method, dict) {
+		return method(
+			$author$project$TypeDict$toInner(dict));
+	});
+var $elm$core$Dict$member = F2(
+	function (key, dict) {
+		var _v0 = A2($elm$core$Dict$get, key, dict);
+		if (_v0.$ === 'Just') {
+			return true;
+		} else {
+			return false;
+		}
+	});
+var $author$project$TypeDict$member = F2(
+	function (key, dict) {
+		return A2(
+			$author$project$TypeDict$delegate,
+			$elm$core$Dict$member(
+				A2($author$project$TypeDict$hash, dict, key)),
+			dict);
+	});
+var $author$project$Character$applyGainDomains = F2(
+	function (domains, character) {
+		var _v0 = _Utils_Tuple2(character.domains, character.domainKnacks);
+		var oldDomains = _v0.a;
+		var oldKnacks = _v0.b;
+		var _v1 = A3(
+			$elm$core$List$foldl,
+			F2(
+				function (s, _v2) {
+					var os = _v2.a;
+					var ok = _v2.b;
+					return A2($author$project$TypeDict$member, s, os) ? _Utils_Tuple2(
+						os,
+						A3($author$project$Boon$Knack$insert, s, '', ok)) : _Utils_Tuple2(
+						A3($author$project$TypeDict$insert, s, true, os),
+						ok);
+				}),
+			_Utils_Tuple2(oldDomains, oldKnacks),
+			domains);
+		var newDomains = _v1.a;
+		var newKnacks = _v1.b;
+		return _Utils_update(
+			character,
+			{domainKnacks: newKnacks, domains: newDomains});
+	});
+var $author$project$Character$applyGainSkills = F2(
+	function (skills, character) {
+		var _v0 = _Utils_Tuple2(character.skills, character.skillKnacks);
+		var oldSkills = _v0.a;
+		var oldKnacks = _v0.b;
+		var _v1 = A3(
+			$elm$core$List$foldl,
+			F2(
+				function (s, _v2) {
+					var os = _v2.a;
+					var ok = _v2.b;
+					return A2($author$project$TypeDict$member, s, os) ? _Utils_Tuple2(
+						os,
+						A3($author$project$Boon$Knack$insert, s, '', ok)) : _Utils_Tuple2(
+						A3($author$project$TypeDict$insert, s, true, os),
+						ok);
+				}),
+			_Utils_Tuple2(oldSkills, oldKnacks),
+			skills);
+		var newSkills = _v1.a;
+		var newKnacks = _v1.b;
+		return _Utils_update(
+			character,
+			{skillKnacks: newKnacks, skills: newSkills});
+	});
+var $elm$core$Basics$clamp = F3(
+	function (low, high, number) {
+		return (_Utils_cmp(number, low) < 0) ? low : ((_Utils_cmp(number, high) > 0) ? high : number);
+	});
 var $author$project$Character$applyBoon = F2(
 	function (boon, character) {
 		switch (boon.$) {
@@ -7847,32 +7923,10 @@ var $author$project$Character$applyBoon = F2(
 					});
 			case 'GainDomains':
 				var domains = boon.a;
-				return _Utils_update(
-					character,
-					{
-						domains: A3(
-							$elm$core$List$foldl,
-							F2(
-								function (k, doms) {
-									return A3($author$project$TypeDict$insert, k, true, doms);
-								}),
-							character.domains,
-							domains)
-					});
+				return A2($author$project$Character$applyGainDomains, domains, character);
 			case 'GainSkills':
 				var skills = boon.a;
-				return _Utils_update(
-					character,
-					{
-						skills: A3(
-							$elm$core$List$foldl,
-							F2(
-								function (k, s) {
-									return A3($author$project$TypeDict$insert, k, true, s);
-								}),
-							character.skills,
-							skills)
-					});
+				return A2($author$project$Character$applyGainSkills, skills, character);
 			case 'GainEquipment':
 				var equipment = boon.a;
 				return _Utils_update(
@@ -8137,10 +8191,6 @@ var $author$project$TypeDict$Json$Encode$encodeKVPair = F3(
 					valEncoder(v))
 				]));
 	});
-var $author$project$TypeDict$toInner = function (_v0) {
-	var inner = _v0.a.inner;
-	return inner;
-};
 var $author$project$TypeDict$Json$Encode$encoder = F4(
 	function (toKey, keyEncoder, valEncoder, dict) {
 		return A3(
@@ -8726,9 +8776,7 @@ var $author$project$Character$update = F2(
 				var knacks = msg.a;
 				return _Utils_update(
 					character,
-					{
-						domainKnacks: A2($elm$core$Debug$log, 'new knacks', knacks)
-					});
+					{domainKnacks: knacks});
 			case 'UpdatedRefresh':
 				var refresh = msg.a;
 				return _Utils_update(
@@ -9426,15 +9474,6 @@ var $author$project$Abilities$ChoseAbility = function (a) {
 var $author$project$Abilities$UnchoseAbility = function (a) {
 	return {$: 'UnchoseAbility', a: a};
 };
-var $elm$core$Dict$member = F2(
-	function (key, dict) {
-		var _v0 = A2($elm$core$Dict$get, key, dict);
-		if (_v0.$ === 'Just') {
-			return true;
-		} else {
-			return false;
-		}
-	});
 var $elm$html$Html$h3 = _VirtualDom_node('h3');
 var $elm$html$Html$i = _VirtualDom_node('i');
 var $elm$core$List$isEmpty = function (xs) {
@@ -9839,11 +9878,6 @@ var $elm$html$Html$textarea = _VirtualDom_node('textarea');
 var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
 var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
 var $elm$html$Html$Attributes$for = $elm$html$Html$Attributes$stringProperty('htmlFor');
-var $author$project$TypeDict$delegate = F2(
-	function (method, dict) {
-		return method(
-			$author$project$TypeDict$toInner(dict));
-	});
 var $author$project$TypeDict$get = F2(
 	function (key, dict) {
 		return A2(
@@ -10944,51 +10978,7 @@ var $author$project$Character$view = function (character) {
 									[
 										$elm$html$Html$text(character.notes)
 									]))
-							])),
-						function () {
-						var skillKs = A3(
-							$author$project$Boon$Knack$insert,
-							$author$project$Boon$Skill$Resist,
-							'Torture',
-							A3(
-								$author$project$Boon$Knack$insert,
-								$author$project$Boon$Skill$Scrap,
-								'Bladed weapons',
-								A3(
-									$author$project$Boon$Knack$insert,
-									$author$project$Boon$Skill$Investigate,
-									'Murder',
-									A3(
-										$author$project$Boon$Knack$insert,
-										$author$project$Boon$Skill$Steal,
-										'Weapons',
-										A3($author$project$Boon$Knack$insert, $author$project$Boon$Skill$Steal, 'Drugs', $author$project$Boon$Knack$newSkills)))));
-						var domKs = A2(
-							$elm$core$Debug$log,
-							'domain knacks',
-							A3(
-								$author$project$Boon$Knack$insert,
-								$author$project$Boon$Domain$Science,
-								'Chemistry',
-								A3(
-									$author$project$Boon$Knack$insert,
-									$author$project$Boon$Domain$Weirdness,
-									'Wayward',
-									A3($author$project$Boon$Knack$insert, $author$project$Boon$Domain$Criminal, 'Hitmen', $author$project$Boon$Knack$newDomains))));
-						return A2(
-							$elm$html$Html$button,
-							_List_fromArray(
-								[
-									$elm$html$Html$Events$onClick(
-									$author$project$Character$UpdatedDomainKnacks(domKs)),
-									$elm$html$Html$Events$onClick(
-									$author$project$Character$UpdatedSkillKnacks(skillKs))
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('gain knacks')
-								]));
-					}()
+							]))
 					]))
 			]),
 		title: character.name

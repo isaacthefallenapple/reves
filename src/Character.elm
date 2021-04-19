@@ -6,7 +6,7 @@ import Ability exposing (Ability)
 import Array exposing (Array)
 import Boon exposing (Boon(..))
 import Boon.Domain as Domains exposing (Domains)
-import Boon.Knack as Knacks exposing (Knacks)
+import Boon.Knack as Knacks exposing (Knacks, newSkills)
 import Boon.Resistance as Resistances exposing (Resistances)
 import Boon.Skill as Skills exposing (Skills)
 import Browser
@@ -88,10 +88,10 @@ applyBoon boon character =
             { character | resistances = TypeDict.update resistance (Maybe.map ((+) bonus >> clamp 0 5)) character.resistances }
 
         GainDomains domains ->
-            { character | domains = List.foldl (\k doms -> TypeDict.insert k True doms) character.domains domains }
+            applyGainDomains domains character
 
         GainSkills skills ->
-            { character | skills = List.foldl (\k s -> TypeDict.insert k True s) character.skills skills }
+            applyGainSkills skills character
 
         GainEquipment equipment ->
             { character | equipment = character.equipment ++ String.join "\n\n" equipment ++ "\n\n" }
@@ -109,6 +109,48 @@ applyBoon boon character =
 applyBoons : List Boon -> Stats -> Stats
 applyBoons boons character =
     List.foldl applyBoon character boons
+
+
+applyGainSkills : List Skills.Skill -> Stats -> Stats
+applyGainSkills skills character =
+    let
+        ( oldSkills, oldKnacks ) =
+            ( character.skills, character.skillKnacks )
+
+        ( newSkills, newKnacks ) =
+            List.foldl
+                (\s ( os, ok ) ->
+                    if TypeDict.member s os then
+                        ( os, Knacks.insert s "" ok )
+
+                    else
+                        ( TypeDict.insert s True os, ok )
+                )
+                ( oldSkills, oldKnacks )
+                skills
+    in
+    { character | skills = newSkills, skillKnacks = newKnacks }
+
+
+applyGainDomains : List Domains.Domain -> Stats -> Stats
+applyGainDomains domains character =
+    let
+        ( oldDomains, oldKnacks ) =
+            ( character.domains, character.domainKnacks )
+
+        ( newDomains, newKnacks ) =
+            List.foldl
+                (\s ( os, ok ) ->
+                    if TypeDict.member s os then
+                        ( os, Knacks.insert s "" ok )
+
+                    else
+                        ( TypeDict.insert s True os, ok )
+                )
+                ( oldDomains, oldKnacks )
+                domains
+    in
+    { character | domains = newDomains, domainKnacks = newKnacks }
 
 
 addAbilities : List Ability -> Stats -> Stats
@@ -215,7 +257,7 @@ update msg character =
             { character | skillKnacks = knacks }
 
         UpdatedDomainKnacks knacks ->
-            { character | domainKnacks = Debug.log "new knacks" knacks }
+            { character | domainKnacks = knacks }
 
         UpdatedRefresh refresh ->
             { character | refresh = refresh }
@@ -389,18 +431,6 @@ view character =
                     ]
                     [ text character.bonds ]
                 ]
-
-            -- , section
-            --     [ class "knacks" ]
-            --     [ h2
-            --         []
-            --         [ text "Knacks" ]
-            --     , textarea
-            --         [ class "textbox"
-            --         , onInput UpdatedKnacks
-            --         ]
-            --         [ text character.knacks ]
-            --     ]
             , section
                 [ class "notes" ]
                 [ h2
@@ -412,28 +442,6 @@ view character =
                     ]
                     [ text character.notes ]
                 ]
-            , let
-                domKs =
-                    Debug.log "domain knacks"
-                        (Knacks.newDomains
-                            |> Knacks.insert Domains.Criminal "Hitmen"
-                            |> Knacks.insert Domains.Weirdness "Wayward"
-                            |> Knacks.insert Domains.Science "Chemistry"
-                        )
-
-                skillKs =
-                    Knacks.newSkills
-                        |> Knacks.insert Skills.Steal "Drugs"
-                        |> Knacks.insert Skills.Steal "Weapons"
-                        |> Knacks.insert Skills.Investigate "Murder"
-                        |> Knacks.insert Skills.Scrap "Bladed weapons"
-                        |> Knacks.insert Skills.Resist "Torture"
-              in
-              button
-                [ onClick <| UpdatedDomainKnacks domKs
-                , onClick <| UpdatedSkillKnacks skillKs
-                ]
-                [ text "gain knacks" ]
             ]
         ]
     }

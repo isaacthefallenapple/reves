@@ -2,15 +2,15 @@
 
 .character {
     display: grid;
-    grid-template-columns: repeat(3, auto);
+    grid-template-columns: 1fr 2fr 2fr;
     grid-template-rows: repeat(7, auto);
     grid-template-areas:
         "name_ name_ name_"
         "class assignment ."
         "resistances resistances resistances"
-        "skills-and-domains abilities equipment"
-        "skills-and-domains knacks bonds"
-        "skills-and-domains refresh fallout"
+        "skills-and-domains abilities fallout"
+        "skills-and-domains equipment bonds"
+        "skills-and-domains refresh refresh"
         ". notes notes";
     gap: get-size("600");
     margin-bottom: footer.$height;
@@ -57,6 +57,12 @@
 
     .fallout {
         grid-area: fallout;
+
+        display: flex;
+        flex-direction: column;
+        > :last-child {
+            flex-grow: 1;
+        }
     }
 
     .notes {
