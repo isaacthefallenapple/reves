@@ -407,7 +407,7 @@ select {
   display: grid;
   grid-template-columns: 1fr 2fr 2fr;
   grid-template-rows: repeat(7, auto);
-  grid-template-areas: "name_ name_ name_" "class assignment ." "resistances resistances resistances" "skills-and-domains abilities fallout" "skills-and-domains equipment bonds" "skills-and-domains refresh refresh" ". notes notes";
+  grid-template-areas: "name_ name_ name_" "class assignment ." "resistances resistances resistances" "skills-and-domains abilities equipment" "skills-and-domains fallout bonds" "skills-and-domains refresh refresh" ". notes notes";
   gap: 1.77rem;
   margin-bottom: 4.5em;
 }
@@ -431,6 +431,11 @@ select {
 }
 .character .equipment {
   grid-area: equipment;
+  display: flex;
+  flex-direction: column;
+}
+.character .equipment > :last-child {
+  flex-grow: 1;
 }
 .character .knacks {
   grid-area: knacks;
@@ -443,11 +448,6 @@ select {
 }
 .character .fallout {
   grid-area: fallout;
-  display: flex;
-  flex-direction: column;
-}
-.character .fallout > :last-child {
-  flex-grow: 1;
 }
 .character .notes {
   grid-area: notes;

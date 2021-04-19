@@ -8,8 +8,8 @@
         "name_ name_ name_"
         "class assignment ."
         "resistances resistances resistances"
-        "skills-and-domains abilities fallout"
-        "skills-and-domains equipment bonds"
+        "skills-and-domains abilities equipment"
+        "skills-and-domains fallout bonds"
         "skills-and-domains refresh refresh"
         ". notes notes";
     gap: get-size("600");
@@ -41,6 +41,13 @@
 
     .equipment {
         grid-area: equipment;
+
+        display: flex;
+        flex-direction: column;
+
+        > :last-child {
+            flex-grow: 1;
+        }
     }
 
     .knacks {
@@ -57,12 +64,6 @@
 
     .fallout {
         grid-area: fallout;
-
-        display: flex;
-        flex-direction: column;
-        > :last-child {
-            flex-grow: 1;
-        }
     }
 
     .notes {
